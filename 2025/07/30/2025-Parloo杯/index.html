@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"linkpwn.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="这里先放一个虚拟机的配置，将附件解压后点击vmx文件就可以打开虚拟机了。            畸行的爱解压密码：Parloo&amp;zgsfsys&amp;onefox&amp;solar**juyt  这里有四个虚拟机win7,win10,mysql,wedserver 畸形的爱(复现)攻击者ip地址1先看webserver 先history命令，查看可以发现开启了docker环境，我们在升">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2025 Parloo杯">
+<meta property="og:url" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/index.html">
+<meta property="og:site_name" content="网络幻影">
+<meta property="og:description" content="这里先放一个虚拟机的配置，将附件解压后点击vmx文件就可以打开虚拟机了。            畸行的爱解压密码：Parloo&amp;zgsfsys&amp;onefox&amp;solar**juyt  这里有四个虚拟机win7,win10,mysql,wedserver 畸形的爱(复现)攻击者ip地址1先看webserver 先history命令，查看可以发现开启了docker环境，我们在升">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/1.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/2.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/3.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/4.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/5.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/7.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/8.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/9.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/10.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/11.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/12.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/13.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/14.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/15.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/16.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/17.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/18.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/19.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/20.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/21.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/22.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/24.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/23.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/25.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/26.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/27.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/28.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/29.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/30.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/31.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/32.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/33.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/34.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/35.png">
+<meta property="article:published_time" content="2025-07-30T11:04:49.000Z">
+<meta property="article:modified_time" content="2025-09-23T10:39:05.780Z">
+<meta property="article:author" content="linkpwn">
+<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/1.png">
+
+<link rel="canonical" href="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>2025 Parloo杯 | 网络幻影</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta custom-logo">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">网络幻影</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <a>
+        <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
+      </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          2025 Parloo杯
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-07-30 19:04:49" itemprop="dateCreated datePublished" datetime="2025-07-30T19:04:49+08:00">2025-07-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-09-23 18:39:05" itemprop="dateModified" datetime="2025-09-23T18:39:05+08:00">2025-09-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/" itemprop="url" rel="index"><span itemprop="name">应急响应</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/%E7%AC%AC%E4%BA%8C%E5%B1%8Aparloo%E6%9D%AF-write-up/" itemprop="url" rel="index"><span itemprop="name">第二届parloo杯 write up</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>这里先放一个虚拟机的配置，将附件解压后点击vmx文件就可以打开虚拟机了。</p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/1.png" alt="1"></p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/2.png" alt="1"></p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/3.png" alt="1"></p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/4.png" alt="1"></p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/5.png" alt="1"></p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/7.png" alt="1"></p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/8.png" alt="1"></p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/9.png" alt="1"></p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/10.png" alt="1"></p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/11.png" alt="1"></p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/12.png" alt="1"></p>
+<p>畸行的爱解压密码：<br>Parloo&amp;zgsfsys&amp;onefox&amp;solar**juyt</p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/13.png" alt="1"></p>
+<p>这里有四个虚拟机win7,win10,mysql,wedserver</p>
+<h2 id="畸形的爱-复现"><a href="#畸形的爱-复现" class="headerlink" title="畸形的爱(复现)"></a>畸形的爱(复现)</h2><h3 id="攻击者ip地址1"><a href="#攻击者ip地址1" class="headerlink" title="攻击者ip地址1"></a>攻击者ip地址1</h3><p>先看webserver</p>
+<p>先history命令，查看可以发现开启了docker环境，我们在升级到root，再history，和它一样开启docker</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker start ec87eb8a81c7 6801404902b1 192686b818fc</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/14.png" alt="1"></p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/15.png" alt="1"></p>
+<p>​               列出所有TCP协议的网络连接及其状态 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -anplt</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/16.png" alt="1"></p>
+<p>看到nginx,去看看他的日志</p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/17.png" alt="1"></p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/18.png" alt="1"></p>
+<p>看到shell.php可以确定ip</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">192.168.31.240</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="攻击者ip地址2"><a href="#攻击者ip地址2" class="headerlink" title="攻击者ip地址2"></a>攻击者ip地址2</h3><p>这题据说有bug，都是跟着其他师傅复现的。</p>
+<p>先看docker开始的环境，再进入有wendata的环境，有clean.sh很明显shell脚本。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker ps</span><br><span class="line">docker  exec -it ec87eb8a81c7(ip) /bin/sh</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/19.png" alt="1"></p>
+<p>nc的反连地址</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">192.168.31.11</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="暴力破解开始时间"><a href="#暴力破解开始时间" class="headerlink" title="暴力破解开始时间"></a>暴力破解开始时间</h3><p>先根据暴力破解一般是有登录，ssh等才能被破解</p>
+<p>根据phpmyadmin最具破解力</p>
+<p>Docker容器会把写到容器标准输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker logs phpmyadmin</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/20.png" alt="1"></p>
+<p>post ;时间密集；登录界面</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2025:03:05:58</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="flag1"><a href="#flag1" class="headerlink" title="flag1"></a>flag1</h3><p>这个flag在windows上</p>
+<p>大佬们有everything一搜索就搜索出来了，我是到任务计划程序去看的。</p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/21.png" alt="1"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">palu&#123;pc3_zgsfqwerlkssaw&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="flag2"><a href="#flag2" class="headerlink" title="flag2"></a>flag2</h3><p>再flag所在的地方的文件里看到C:\Program Files (x86)\Microsoft\a.bat</p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/22.png" alt="1"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">palu&#123;nizhidaowoyouduoainima&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="flag3"><a href="#flag3" class="headerlink" title="flag3"></a>flag3</h3><p>这里要用<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_70898474/article/details/136275566">Navicat</a></p>
+<p>我的navicat连不上mysql数据库，这题先放这。</p>
+<h3 id="提交钓鱼文件的md5"><a href="#提交钓鱼文件的md5" class="headerlink" title="提交钓鱼文件的md5"></a>提交钓鱼文件的md5</h3><p>钓鱼一般都是聊天</p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/24.png" alt="1"></p>
+<p>在回收站里去找</p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/23.png" alt="1"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certutil -hashfile &quot;C:\Users\Administrator\Desktop\简历.zip&quot; MD5</span><br></pre></td></tr></table></figure>
+
+<p>效验md5</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a69df5bdfef664d0a22b7d8b62c44718</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="提交攻击者留下的webshell-1的密码"><a href="#提交攻击者留下的webshell-1的密码" class="headerlink" title="提交攻击者留下的webshell-1的密码"></a>提交攻击者留下的webshell-1的密码</h3><p>在找ip的时候会留意到shell.php下面有个a.php</p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/25.png" alt="1"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">00232</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="提交攻击者留下的webshell-2的密码"><a href="#提交攻击者留下的webshell-2的密码" class="headerlink" title="提交攻击者留下的webshell-2的密码"></a>提交攻击者留下的webshell-2的密码</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -type f -name &quot;*.php&quot;</span><br></pre></td></tr></table></figure>
+
+<p>全局查找一下php文件太多了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -type f -name &quot;shell.php&quot;</span><br></pre></td></tr></table></figure>
+
+<p>猜一下shell.php</p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/26.png" alt="1"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hack</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="提交攻击者开放端口"><a href="#提交攻击者开放端口" class="headerlink" title="提交攻击者开放端口"></a>提交攻击者开放端口</h3><p>这题据说环境有问题，也放这里</p>
+<h3 id="提交攻击者留下的隐藏账户和密码"><a href="#提交攻击者留下的隐藏账户和密码" class="headerlink" title="提交攻击者留下的隐藏账户和密码"></a>提交攻击者留下的隐藏账户和密码</h3><p>先用D盾查</p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/27.png" alt="1"></p>
+<p>在用mimikatz跑出hash</p>
+<p>先cmd用管理员身份运行，然后输入下面两行命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cd C:\Users\Administrator\Desktop\mimikatz_trunk\x64   进入exe所在目录</span><br><span class="line">reg save hklm\sam sam.save</span><br><span class="line">reg save hklm\system system.save</span><br><span class="line">C:\Users\Administrator\Desktop\mimikatz_trunk\x64\mimikatz.exe 运行exe</span><br><span class="line">privilege::debug</span><br><span class="line">lsadump::sam /sam:sam.save /system:system.save</span><br></pre></td></tr></table></figure>
+
+<p>得到</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RID  : 000003ea (1002)</span><br><span class="line">User : system$</span><br><span class="line">  Hash NTLM: dbae99beb48fd9132e1cf77f4c746979</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://www.cmd5.com/default.aspx">在线网站破解md5</a></p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/28.png" alt="1"></p>
+<p>要付费，解出来是wmx_love</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wmx_love</span><br></pre></td></tr></table></figure>
+
+<h3 id="攻击者的邮箱-溯源"><a href="#攻击者的邮箱-溯源" class="headerlink" title="攻击者的邮箱(溯源)"></a>攻击者的邮箱(溯源)</h3><h3 id="flag4-溯源"><a href="#flag4-溯源" class="headerlink" title="flag4(溯源)"></a>flag4(溯源)</h3><p>先分析简历exe</p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/29.png" alt="1"></p>
+<p>得到黑客的名字n0k4u</p>
+<p>去github上找</p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/30.png" alt="1"></p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/31.png" alt="1"></p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/32.png" alt="1"></p>
+<p>3834239649是个QQ号</p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/33.png" alt="1"></p>
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/34.png" alt="1"></p>
+<p>我们找到了github的地址，知道了github就可以泄露出邮箱地址</p>
+<p>直接搜通过Github用户名溯源个人邮箱可以找到参考文献<a target="_blank" rel="noopener" href="https://blog.csdn.net/fishfishfishman/article/details/141320003">链接</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://api.github.com/users/&lt;name&gt;/events/public 把name换成</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/07/30/2025-Parloo%E6%9D%AF/35.png" alt="1"></p>
+<p>这里没出来，感觉是不是删了还是怎么搞的别的师傅都出来了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">n0k4u@outlook.com</span><br></pre></td></tr></table></figure>
+
+<p>到这里畸形的爱就复现完了</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>linkpwn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://linkpwn.github.io/2025/07/30/2025-Parloo%E6%9D%AF/" title="2025 Parloo杯">http://linkpwn.github.io/2025/07/30/2025-Parloo杯/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/07/29/RSA/" rel="prev" title="RSA">
+      <i class="fa fa-chevron-left"></i> RSA
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/08/01/NepCTF2025-%E9%83%A8%E5%88%86pwn%E7%9A%84wp-%E5%A4%8D%E7%8E%B0/" rel="next" title="NepCTF2025-部分pwn的wp(复现)">
+      NepCTF2025-部分pwn的wp(复现) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%95%B8%E5%BD%A2%E7%9A%84%E7%88%B1-%E5%A4%8D%E7%8E%B0"><span class="nav-number">1.</span> <span class="nav-text">畸形的爱(复现)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E8%80%85ip%E5%9C%B0%E5%9D%801"><span class="nav-number">1.1.</span> <span class="nav-text">攻击者ip地址1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E8%80%85ip%E5%9C%B0%E5%9D%802"><span class="nav-number">1.2.</span> <span class="nav-text">攻击者ip地址2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3%E5%BC%80%E5%A7%8B%E6%97%B6%E9%97%B4"><span class="nav-number">1.3.</span> <span class="nav-text">暴力破解开始时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#flag1"><span class="nav-number">1.4.</span> <span class="nav-text">flag1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#flag2"><span class="nav-number">1.5.</span> <span class="nav-text">flag2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#flag3"><span class="nav-number">1.6.</span> <span class="nav-text">flag3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E4%BA%A4%E9%92%93%E9%B1%BC%E6%96%87%E4%BB%B6%E7%9A%84md5"><span class="nav-number">1.7.</span> <span class="nav-text">提交钓鱼文件的md5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E4%BA%A4%E6%94%BB%E5%87%BB%E8%80%85%E7%95%99%E4%B8%8B%E7%9A%84webshell-1%E7%9A%84%E5%AF%86%E7%A0%81"><span class="nav-number">1.8.</span> <span class="nav-text">提交攻击者留下的webshell-1的密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E4%BA%A4%E6%94%BB%E5%87%BB%E8%80%85%E7%95%99%E4%B8%8B%E7%9A%84webshell-2%E7%9A%84%E5%AF%86%E7%A0%81"><span class="nav-number">1.9.</span> <span class="nav-text">提交攻击者留下的webshell-2的密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E4%BA%A4%E6%94%BB%E5%87%BB%E8%80%85%E5%BC%80%E6%94%BE%E7%AB%AF%E5%8F%A3"><span class="nav-number">1.10.</span> <span class="nav-text">提交攻击者开放端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E4%BA%A4%E6%94%BB%E5%87%BB%E8%80%85%E7%95%99%E4%B8%8B%E7%9A%84%E9%9A%90%E8%97%8F%E8%B4%A6%E6%88%B7%E5%92%8C%E5%AF%86%E7%A0%81"><span class="nav-number">1.11.</span> <span class="nav-text">提交攻击者留下的隐藏账户和密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E8%80%85%E7%9A%84%E9%82%AE%E7%AE%B1-%E6%BA%AF%E6%BA%90"><span class="nav-number">1.12.</span> <span class="nav-text">攻击者的邮箱(溯源)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#flag4-%E6%BA%AF%E6%BA%90"><span class="nav-number">1.13.</span> <span class="nav-text">flag4(溯源)</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="linkpwn"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">linkpwn</p>
+  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/linkpwn" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;linkpwn" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:dkj20060328@qq.com" title="E-Mail → mailto:dkj20060328@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/linkpwn" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;linkpwn" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+          <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1827600686&auto=1&height=66"></iframe>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">linkpwn</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+
+<!--单击显示文字-->
+<script type="text/javascript" src="/js/clickshowtext.js"></script>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/clicklove.js"></script>
+
+<canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas> 
+<script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script> 
+<script type="text/javascript" src="/js/fireworks.js"></script>

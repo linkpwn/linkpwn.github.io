@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"linkpwn.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="wuuu,上次烽火杯的smc没写出来，这次的nepctf的smc也没写出了，所以打算总结一下smc，并且以后碰到smc都往这个blog里面放了。 简述一下原理: 在CTF逆向工程中，SMC（Self-Modifying Code，自修改代码） 是一种常见的反分析技术。其核心原理是程序在运行时动态修改自身的指令代码，使得静态分析工具（如IDA Pro）无法直接获取完整的可执行逻辑，从而增加逆向难度。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="smc">
+<meta property="og:url" content="http://linkpwn.github.io/2025/07/28/smc/index.html">
+<meta property="og:site_name" content="网络幻影">
+<meta property="og:description" content="wuuu,上次烽火杯的smc没写出来，这次的nepctf的smc也没写出了，所以打算总结一下smc，并且以后碰到smc都往这个blog里面放了。 简述一下原理: 在CTF逆向工程中，SMC（Self-Modifying Code，自修改代码） 是一种常见的反分析技术。其核心原理是程序在运行时动态修改自身的指令代码，使得静态分析工具（如IDA Pro）无法直接获取完整的可执行逻辑，从而增加逆向难度。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/28/smc/1.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/07/28/smc/2.png">
+<meta property="article:published_time" content="2025-07-28T11:47:53.000Z">
+<meta property="article:modified_time" content="2025-09-23T13:06:40.102Z">
+<meta property="article:author" content="linkpwn">
+<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://linkpwn.github.io/2025/07/28/smc/1.png">
+
+<link rel="canonical" href="http://linkpwn.github.io/2025/07/28/smc/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>smc | 网络幻影</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta custom-logo">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">网络幻影</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <a>
+        <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
+      </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/07/28/smc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          smc
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-07-28 19:47:53" itemprop="dateCreated datePublished" datetime="2025-07-28T19:47:53+08:00">2025-07-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-09-23 21:06:40" itemprop="dateModified" datetime="2025-09-23T21:06:40+08:00">2025-09-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/reverse/" itemprop="url" rel="index"><span itemprop="name">reverse</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/reverse/%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">总结</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/reverse/%E6%80%BB%E7%BB%93/smc/" itemprop="url" rel="index"><span itemprop="name">smc</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>wuuu,上次烽火杯的smc没写出来，这次的nepctf的smc也没写出了，所以打算总结一下smc，并且以后碰到smc都往这个blog里面放了。</p>
+<p>简述一下原理:</p>
+<p>在CTF逆向工程中，<strong>SMC（Self-Modifying Code，自修改代码）</strong> 是一种常见的反分析技术。其核心原理是<strong>程序在运行时动态修改自身的指令代码</strong>，使得静态分析工具（如IDA Pro）无法直接获取完整的可执行逻辑，从而增加逆向难度。</p>
+<p>感觉smc根本就不难，动调一下基本都可以解决，但是难在有些反调试等方面感觉只单出smc的没见过。</p>
+<p>话不多说直接上例题，我目前写过的smc有：NepCTF的realme，[网鼎杯 2020 青龙组]jocker，[SCTF2019]creakme，和烽火杯的smc</p>
+<p>今天一天可能写不完四个，慢慢写吧，就按这个顺序来写。</p>
+<h2 id="NepCTF-realme"><a href="#NepCTF-realme" class="headerlink" title="NepCTF realme"></a>NepCTF realme</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __cdecl <span class="title function_">main_0</span><span class="params">(<span class="type">int</span> argc, <span class="type">const</span> <span class="type">char</span> **argv, <span class="type">const</span> <span class="type">char</span> **envp)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">char</span> v4; <span class="comment">// [esp+0h] [ebp-104h]</span></span><br><span class="line">  <span class="type">char</span> v5; <span class="comment">// [esp+0h] [ebp-104h]</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> i; <span class="comment">// [esp+D0h] [ebp-34h]</span></span><br><span class="line">  <span class="type">char</span> v7[<span class="number">40</span>]; <span class="comment">// [esp+DCh] [ebp-28h] BYREF</span></span><br><span class="line"></span><br><span class="line">  __CheckForDebuggerJustMyCode(&amp;unk_41200F);</span><br><span class="line">  qmemcpy(v7, <span class="string">&quot;PY&quot;</span>, <span class="number">2</span>);</span><br><span class="line">  v7[<span class="number">2</span>] = <span class="number">-94</span>;</span><br><span class="line">  v7[<span class="number">3</span>] = <span class="number">-108</span>;</span><br><span class="line">  v7[<span class="number">4</span>] = <span class="number">46</span>;</span><br><span class="line">  v7[<span class="number">5</span>] = <span class="number">-114</span>;</span><br><span class="line">  v7[<span class="number">6</span>] = <span class="number">92</span>;</span><br><span class="line">  v7[<span class="number">7</span>] = <span class="number">-107</span>;</span><br><span class="line">  v7[<span class="number">8</span>] = <span class="number">121</span>;</span><br><span class="line">  v7[<span class="number">9</span>] = <span class="number">22</span>;</span><br><span class="line">  v7[<span class="number">10</span>] = <span class="number">-27</span>;</span><br><span class="line">  v7[<span class="number">11</span>] = <span class="number">54</span>;</span><br><span class="line">  v7[<span class="number">12</span>] = <span class="number">96</span>;</span><br><span class="line">  v7[<span class="number">13</span>] = <span class="number">-57</span>;</span><br><span class="line">  v7[<span class="number">14</span>] = <span class="number">-24</span>;</span><br><span class="line">  v7[<span class="number">15</span>] = <span class="number">6</span>;</span><br><span class="line">  v7[<span class="number">16</span>] = <span class="number">51</span>;</span><br><span class="line">  v7[<span class="number">17</span>] = <span class="number">120</span>;</span><br><span class="line">  v7[<span class="number">18</span>] = <span class="number">-16</span>;</span><br><span class="line">  v7[<span class="number">19</span>] = <span class="number">-48</span>;</span><br><span class="line">  v7[<span class="number">20</span>] = <span class="number">54</span>;</span><br><span class="line">  v7[<span class="number">21</span>] = <span class="number">-56</span>;</span><br><span class="line">  v7[<span class="number">22</span>] = <span class="number">115</span>;</span><br><span class="line">  v7[<span class="number">23</span>] = <span class="number">27</span>;</span><br><span class="line">  v7[<span class="number">24</span>] = <span class="number">101</span>;</span><br><span class="line">  v7[<span class="number">25</span>] = <span class="number">64</span>;</span><br><span class="line">  v7[<span class="number">26</span>] = <span class="number">-75</span>;</span><br><span class="line">  v7[<span class="number">27</span>] = <span class="number">-44</span>;</span><br><span class="line">  v7[<span class="number">28</span>] = <span class="number">-24</span>;</span><br><span class="line">  v7[<span class="number">29</span>] = <span class="number">-100</span>;</span><br><span class="line">  v7[<span class="number">30</span>] = <span class="number">101</span>;</span><br><span class="line">  v7[<span class="number">31</span>] = <span class="number">-12</span>;</span><br><span class="line">  v7[<span class="number">32</span>] = <span class="number">-70</span>;</span><br><span class="line">  v7[<span class="number">33</span>] = <span class="number">98</span>;</span><br><span class="line">  v7[<span class="number">34</span>] = <span class="number">-48</span>;</span><br><span class="line">  sub_40108C(<span class="string">&quot;Please input the flag:\n&quot;</span>, v4);</span><br><span class="line">  sub_4011C2(<span class="string">&quot;%s&quot;</span>, byte_410158);</span><br><span class="line">  sub_401050(byte_410158, Str);    <span class="comment">//魔改RC4 KSA多了一个^0x66,最后的和秘钥流的异或变成了模取</span></span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; i &lt; <span class="number">0x23</span>; ++i )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( byte_410158[i] != v7[i] )</span><br><span class="line">    &#123;</span><br><span class="line">      sub_40108C(<span class="string">&quot;Wrong flag!\n&quot;</span>, v5);</span><br><span class="line">      <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  sub_40108C(<span class="string">&quot;Correct flag!\n&quot;</span>, v5);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个rc4的魔改解出来是个错的，就不详细解释了。</p>
+<p>进入正文，反思一下我这里没解出来主要是没找到反调试的地方，因为IDA没把他识别成函数，藏在汇编里面。</p>
+<p>要自己去翻汇编代码，给他P重定义一下</p>
+<p><img src="/2025/07/28/smc/1.png" alt="1"></p>
+<p><img src="/2025/07/28/smc/2.png" alt="2"></p>
+<p>只能硬找莫得办法，重定义后Tab</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// write access to const memory has been detected, the output may be wrong!</span></span><br><span class="line"><span class="type">void</span> *<span class="title function_">sub_401500</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">void</span> *result; <span class="comment">// eax</span></span><br><span class="line"></span><br><span class="line">  result = (<span class="type">void</span> *)(NtCurrentPeb()-&gt;NtGlobalFlag &amp; <span class="number">0x70</span>);</span><br><span class="line">  <span class="keyword">if</span> ( !result )</span><br><span class="line">  &#123;</span><br><span class="line">    *(&amp;loc_40902A + <span class="number">1</span>) ^= <span class="number">0x65u</span>;</span><br><span class="line">    *((_BYTE *)&amp;loc_40902A + <span class="number">2</span>) ^= <span class="number">0xFAu</span>;</span><br><span class="line">    *(&amp;loc_407080 + <span class="number">2</span>) ^= <span class="number">5u</span>;</span><br><span class="line">    result = &amp;loc_40B077;</span><br><span class="line">    loc_40B077 ^= <span class="number">0x10u</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// write access to const memory has been detected, the output may be wrong!</span></span><br><span class="line"><span class="type">void</span> *__cdecl <span class="title function_">sub_4015C0</span><span class="params">(<span class="type">int</span> a1, <span class="type">char</span> a2)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">void</span> *result; <span class="comment">// eax</span></span><br><span class="line"></span><br><span class="line">  sub_401023(<span class="string">&quot;%s&quot;</span>, a2);</span><br><span class="line">  <span class="keyword">if</span> ( CloseHandle((HANDLE)<span class="number">0x1234</span>) || GetLastError() != <span class="number">6</span> )</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  *(&amp;loc_407080 + <span class="number">1</span>) ^= <span class="number">0xD0u</span>;</span><br><span class="line">  *(&amp;loc_40B104 + <span class="number">2</span>) ^= <span class="number">0xCBu</span>;</span><br><span class="line">  loc_40B078 ^= <span class="number">0x61u</span>;</span><br><span class="line">  result = &amp;loc_40B079;</span><br><span class="line">  loc_40B079 ^= <span class="number">0x5Fu</span>;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>很明显的反调试和smc了</p>
+<p>smc没什么好讲的得会动调就全部解决了，这里要解决反调试</p>
+<p>第一个反调试我们要把(!result)改成(result)。</p>
+<p>第二个反调试我要把CloseHandle((HANDLE)0x1234) || GetLastError() !&#x3D; 6的CloseHandle((HANDLE)0x1234) nop掉,不然动调会报错。</p>
+<p>还要把if的条件反过来。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.text:0040153F                 jz      short loc_401543  --&gt; jnz      short loc_401543</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">.text:004015EE                 push    1234h           ; hObject        --&gt;nop</span><br><span class="line">.text:004015F3                 call    ds:__imp_CloseHandle             --&gt;nop</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">.text:00401607                 jnz     short loc_40161D                jnz--&gt;jz</span><br><span class="line">.text:00401609                 mov     esi, esp</span><br><span class="line">.text:0040160B                 call    ds:__imp_GetLastError</span><br><span class="line">.text:00401611                 cmp     esi, esp</span><br><span class="line">.text:00401613                 call    j___RTC_CheckEsp</span><br><span class="line">.text:00401618                 cmp     eax, 6</span><br><span class="line">.text:0040161B                 jz      short loc_401635               jz---&gt;jnz</span><br></pre></td></tr></table></figure>
+
+<p>如果不会改可以上网查一下IDA怎么patch。</p>
+<p>改完之后我们就可以看到真实的加密逻辑了</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> *__cdecl <span class="title function_">sub_40B000</span><span class="params">(<span class="type">int</span> a1, <span class="type">int</span> a2, <span class="type">unsigned</span> <span class="type">int</span> a3)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">void</span> *result; <span class="comment">// eax</span></span><br><span class="line">  <span class="type">char</span> v4; <span class="comment">// [esp+D3h] [ebp-129h]</span></span><br><span class="line">  <span class="type">char</span> v5[<span class="number">264</span>]; <span class="comment">// [esp+DCh] [ebp-120h] BYREF</span></span><br><span class="line">  <span class="type">int</span> v6; <span class="comment">// [esp+1E4h] [ebp-18h]</span></span><br><span class="line">  <span class="type">int</span> i; <span class="comment">// [esp+1F0h] [ebp-Ch]</span></span><br><span class="line"></span><br><span class="line">  v6 = <span class="number">0</span>;</span><br><span class="line">  result = <span class="built_in">memset</span>(v5, <span class="number">0</span>, <span class="number">0x100u</span>);</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; i &lt; <span class="number">256</span>; ++i )</span><br><span class="line">  &#123;</span><br><span class="line">    *(_BYTE *)(i + a1) = i ^ <span class="number">0xCF</span>;</span><br><span class="line">    v5[i] = *(_BYTE *)(a2 + i % a3);</span><br><span class="line">    result = (<span class="type">void</span> *)(i + <span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; i &lt; <span class="number">256</span>; ++i )</span><br><span class="line">  &#123;</span><br><span class="line">    v6 = ((<span class="type">unsigned</span> __int8)v5[i] + v6 + *(<span class="type">unsigned</span> __int8 *)(i + a1)) % <span class="number">256</span>;</span><br><span class="line">    v4 = *(_BYTE *)(i + a1);</span><br><span class="line">    *(_BYTE *)(i + a1) = *(_BYTE *)(v6 + a1);</span><br><span class="line">    *(_BYTE *)(v6 + a1) = v4 ^ <span class="number">0xAD</span>;</span><br><span class="line">    result = (<span class="type">void</span> *)(i + <span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">int</span> __cdecl <span class="title function_">sub_401A60</span><span class="params">(<span class="type">int</span> a1, <span class="type">int</span> a2, <span class="type">unsigned</span> <span class="type">int</span> a3)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> result; <span class="comment">// eax</span></span><br><span class="line">  <span class="type">int</span> v4; <span class="comment">// ecx</span></span><br><span class="line">  <span class="type">char</span> v5; <span class="comment">// al</span></span><br><span class="line">  <span class="type">char</span> v6; <span class="comment">// [esp+D3h] [ebp-35h]</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> i; <span class="comment">// [esp+DCh] [ebp-2Ch]</span></span><br><span class="line">  <span class="type">int</span> v8; <span class="comment">// [esp+F4h] [ebp-14h]</span></span><br><span class="line">  <span class="type">int</span> v9; <span class="comment">// [esp+100h] [ebp-8h]</span></span><br><span class="line"></span><br><span class="line">  __CheckForDebuggerJustMyCode(&amp;unk_41200F);</span><br><span class="line">  v9 = <span class="number">0</span>;</span><br><span class="line">  v8 = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; ; ++i )</span><br><span class="line">  &#123;</span><br><span class="line">    result = i;</span><br><span class="line">    <span class="keyword">if</span> ( i &gt;= a3 )</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    v9 = (v9 + <span class="number">1</span>) % <span class="number">256</span>;</span><br><span class="line">    v8 = (v8 + v9 * *(<span class="type">unsigned</span> __int8 *)(v9 + a1)) % <span class="number">256</span>;</span><br><span class="line">    v6 = *(_BYTE *)(v9 + a1);</span><br><span class="line">    *(_BYTE *)(v9 + a1) = *(_BYTE *)(v8 + a1);</span><br><span class="line">    *(_BYTE *)(v8 + a1) = v6;</span><br><span class="line">    v4 = (*(<span class="type">unsigned</span> __int8 *)(v8 + a1) + *(<span class="type">unsigned</span> __int8 *)(v9 + a1)) % <span class="number">256</span>;</span><br><span class="line">    <span class="keyword">if</span> ( i % <span class="number">2</span> )</span><br><span class="line">      v5 = *(_BYTE *)(v4 + a1) + *(_BYTE *)(i + a2);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      v5 = *(_BYTE *)(i + a2) - *(_BYTE *)(v4 + a1);</span><br><span class="line">    *(_BYTE *)(i + a2) = v5;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解密脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 密文（从main函数的v7数组转换为无符号字节）</span></span><br><span class="line">ciphertext = [</span><br><span class="line">    <span class="number">0x50</span>, <span class="number">0x59</span>, <span class="number">0xA2</span>, <span class="number">0x94</span>, <span class="number">0x2E</span>, <span class="number">0x8E</span>, <span class="number">0x5C</span>, <span class="number">0x95</span>, <span class="number">0x79</span>, <span class="number">0x16</span>,</span><br><span class="line">    <span class="number">0xE5</span>, <span class="number">0x36</span>, <span class="number">0x60</span>, <span class="number">0xC7</span>, <span class="number">0xE8</span>, <span class="number">0x06</span>, <span class="number">0x33</span>, <span class="number">0x78</span>, <span class="number">0xF0</span>, <span class="number">0xD0</span>,</span><br><span class="line">    <span class="number">0x36</span>, <span class="number">0xC8</span>, <span class="number">0x73</span>, <span class="number">0x1B</span>, <span class="number">0x65</span>, <span class="number">0x40</span>, <span class="number">0xB5</span>, <span class="number">0xD4</span>, <span class="number">0xE8</span>, <span class="number">0x9C</span>,</span><br><span class="line">    <span class="number">0x65</span>, <span class="number">0xF4</span>, <span class="number">0xBA</span>, <span class="number">0x62</span>, <span class="number">0xD0</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 密钥</span></span><br><span class="line">key = <span class="string">b&quot;Y0u_Can&#x27;t_F1nd_Me!&quot;</span></span><br><span class="line">key_len = <span class="built_in">len</span>(key)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化S盒（sub_40B000的第一个循环）</span></span><br><span class="line">S = [i ^ <span class="number">0xCF</span> <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">256</span>)]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 准备v5数组（密钥扩展）</span></span><br><span class="line">v5 = [key[i % key_len] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">256</span>)]</span><br><span class="line"></span><br><span class="line"><span class="comment"># sub_40B000的第二个循环：置换S盒</span></span><br><span class="line">v6 = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">256</span>):</span><br><span class="line">    v6 = (v5[i] + v6 + S[i]) % <span class="number">256</span></span><br><span class="line">    v4 = S[i]</span><br><span class="line">    S[i] = S[v6]</span><br><span class="line">    S[v6] = v4 ^ <span class="number">0xAD</span>  <span class="comment"># 注意这里的异或操作</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行PRGA并解密（模拟sub_401A60的逆向过程）</span></span><br><span class="line">v9 = <span class="number">0</span></span><br><span class="line">v8 = <span class="number">0</span></span><br><span class="line">plaintext_bytes = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(ciphertext)):</span><br><span class="line">    <span class="comment"># 更新v9和v8</span></span><br><span class="line">    v9 = (v9 + <span class="number">1</span>) % <span class="number">256</span></span><br><span class="line">    v8 = (v8 + v9 * S[v9]) % <span class="number">256</span>  <span class="comment"># 关键的v8计算</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 交换S[v9]和S[v8]</span></span><br><span class="line">    temp = S[v9]</span><br><span class="line">    S[v9] = S[v8]</span><br><span class="line">    S[v8] = temp</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 计算密钥流字节k</span></span><br><span class="line">    v4 = (S[v8] + S[v9]) % <span class="number">256</span></span><br><span class="line">    k = S[v4]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 根据索引奇偶性解密</span></span><br><span class="line">    <span class="keyword">if</span> i % <span class="number">2</span> == <span class="number">1</span>:  <span class="comment"># 奇数索引：密文 = 明文 + k → 明文 = 密文 - k</span></span><br><span class="line">        plain_byte = (ciphertext[i] - k) % <span class="number">256</span></span><br><span class="line">    <span class="keyword">else</span>:  <span class="comment"># 偶数索引：密文 = 明文 - k → 明文 = 密文 + k</span></span><br><span class="line">        plain_byte = (ciphertext[i] + k) % <span class="number">256</span></span><br><span class="line"></span><br><span class="line">    plaintext_bytes.append(plain_byte)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 转换为字符串并输出</span></span><br><span class="line">plaintext = <span class="built_in">bytes</span>(plaintext_bytes).decode(<span class="string">&#x27;ascii&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;解密得到的flag：&quot;</span>, plaintext)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NepCTF&#123;Y0u_FiN1sH_Th1s_E3sy_Smc!!!&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="网鼎杯-2020-青龙组-jocker"><a href="#网鼎杯-2020-青龙组-jocker" class="headerlink" title="[网鼎杯 2020 青龙组]jocker"></a>[网鼎杯 2020 青龙组]jocker</h2><p><a href="https://linkpwn.github.io/2025/07/15/%E7%BD%91%E9%BC%8E%E6%9D%AF-2020-%E9%9D%92%E9%BE%99%E7%BB%84-jocker/">链接</a></p>
+<h2 id="SCTF2019-creakme"><a href="#SCTF2019-creakme" class="headerlink" title="[SCTF2019]creakme"></a>[SCTF2019]creakme</h2><p>简述一下这里主要是反调试+smc+AES的CBC</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __cdecl <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">const</span> <span class="type">char</span> **argv, <span class="type">const</span> <span class="type">char</span> **envp)</span></span><br><span class="line">&#123;</span><br><span class="line">  HMODULE ModuleHandleW; <span class="comment">// eax</span></span><br><span class="line">  <span class="type">int</span> v4; <span class="comment">// eax</span></span><br><span class="line">  _DWORD *v5; <span class="comment">// eax</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> v6; <span class="comment">// edx</span></span><br><span class="line">  _DWORD *v7; <span class="comment">// ecx</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> v8; <span class="comment">// ebx</span></span><br><span class="line">  <span class="type">char</span> *v9; <span class="comment">// edi</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> v10; <span class="comment">// esi</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> v11; <span class="comment">// esi</span></span><br><span class="line">  <span class="type">bool</span> v12; <span class="comment">// cf</span></span><br><span class="line">  <span class="type">unsigned</span> __int8 v13; <span class="comment">// al</span></span><br><span class="line">  <span class="type">unsigned</span> __int8 v14; <span class="comment">// al</span></span><br><span class="line">  <span class="type">unsigned</span> __int8 v15; <span class="comment">// al</span></span><br><span class="line">  <span class="type">int</span> v16; <span class="comment">// esi</span></span><br><span class="line">  <span class="type">void</span> *v17; <span class="comment">// ecx</span></span><br><span class="line">  <span class="type">void</span> *v18; <span class="comment">// ecx</span></span><br><span class="line">  <span class="type">const</span> <span class="type">char</span> *v19; <span class="comment">// edx</span></span><br><span class="line">  <span class="type">int</span> v20; <span class="comment">// eax</span></span><br><span class="line">  <span class="type">int</span> v22; <span class="comment">// [esp+0h] [ebp-80h]</span></span><br><span class="line">  <span class="type">void</span> *Block[<span class="number">5</span>]; <span class="comment">// [esp+10h] [ebp-70h] BYREF</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> v24; <span class="comment">// [esp+24h] [ebp-5Ch]</span></span><br><span class="line">  <span class="type">void</span> *v25[<span class="number">5</span>]; <span class="comment">// [esp+28h] [ebp-58h] BYREF</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> v26; <span class="comment">// [esp+3Ch] [ebp-44h]</span></span><br><span class="line">  <span class="type">char</span> Src[<span class="number">48</span>]; <span class="comment">// [esp+40h] [ebp-40h] BYREF</span></span><br><span class="line">  <span class="type">int</span> v28; <span class="comment">// [esp+7Ch] [ebp-4h]</span></span><br><span class="line"></span><br><span class="line">  ModuleHandleW = GetModuleHandleW(<span class="number">0</span>);</span><br><span class="line">  sub_402320(ModuleHandleW);</span><br><span class="line">  sub_4024A0();</span><br><span class="line">  v4 = sub_402870(<span class="built_in">std</span>::<span class="built_in">cout</span>, <span class="string">&quot;welcome to 2019 sctf&quot;</span>);</span><br><span class="line">  <span class="built_in">std</span>::ostream::operator&lt;&lt;(v4, sub_402AC0);</span><br><span class="line">  sub_402870(<span class="built_in">std</span>::<span class="built_in">cout</span>, <span class="string">&quot;please input your ticket:&quot;</span>);</span><br><span class="line">  sub_402AF0(v22);</span><br><span class="line">  v25[<span class="number">4</span>] = <span class="number">0</span>;</span><br><span class="line">  v26 = <span class="number">15</span>;</span><br><span class="line">  LOBYTE(v25[<span class="number">0</span>]) = <span class="number">0</span>;</span><br><span class="line">  sub_401D30(v25, Src, <span class="built_in">strlen</span>(Src));</span><br><span class="line">  v28 = <span class="number">0</span>;</span><br><span class="line">  v5 = sub_4020D0(Block, (<span class="type">int</span>)v25);             <span class="comment">// AES的CBC模式</span></span><br><span class="line">  v6 = <span class="built_in">strlen</span>(aPvfqyc4ttc2uxr);</span><br><span class="line">  v7 = v5;</span><br><span class="line">  <span class="keyword">if</span> ( v5[<span class="number">5</span>] &gt;= <span class="number">0x10u</span> )</span><br><span class="line">    v7 = (_DWORD *)*v5;</span><br><span class="line">  v8 = v5[<span class="number">4</span>];</span><br><span class="line">  v9 = aPvfqyc4ttc2uxr;</span><br><span class="line">  v10 = v8;</span><br><span class="line">  <span class="keyword">if</span> ( v6 &lt; v8 )</span><br><span class="line">    v10 = v6;</span><br><span class="line">  v12 = v10 &lt; <span class="number">4</span>;</span><br><span class="line">  v11 = v10 - <span class="number">4</span>;</span><br><span class="line">  <span class="keyword">if</span> ( v12 )</span><br><span class="line">  &#123;</span><br><span class="line">LABEL_8:</span><br><span class="line">    <span class="keyword">if</span> ( v11 == <span class="number">-4</span> )</span><br><span class="line">      <span class="keyword">goto</span> LABEL_17;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">while</span> ( *v7 == *(_DWORD *)v9 )</span><br><span class="line">    &#123;</span><br><span class="line">      ++v7;</span><br><span class="line">      v9 += <span class="number">4</span>;</span><br><span class="line">      v12 = v11 &lt; <span class="number">4</span>;</span><br><span class="line">      v11 -= <span class="number">4</span>;</span><br><span class="line">      <span class="keyword">if</span> ( v12 )</span><br><span class="line">        <span class="keyword">goto</span> LABEL_8;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  v12 = *(_BYTE *)v7 &lt; (<span class="type">unsigned</span> __int8)*v9;</span><br><span class="line">  <span class="keyword">if</span> ( *(_BYTE *)v7 != *v9</span><br><span class="line">    || v11 != <span class="number">-3</span></span><br><span class="line">    &amp;&amp; ((v13 = *((_BYTE *)v7 + <span class="number">1</span>), v12 = v13 &lt; (<span class="type">unsigned</span> __int8)v9[<span class="number">1</span>], v13 != v9[<span class="number">1</span>])</span><br><span class="line">     || v11 != <span class="number">-2</span></span><br><span class="line">     &amp;&amp; ((v14 = *((_BYTE *)v7 + <span class="number">2</span>), v12 = v14 &lt; (<span class="type">unsigned</span> __int8)v9[<span class="number">2</span>], v14 != v9[<span class="number">2</span>])</span><br><span class="line">      || v11 != <span class="number">-1</span> &amp;&amp; (v15 = *((_BYTE *)v7 + <span class="number">3</span>), v12 = v15 &lt; (<span class="type">unsigned</span> __int8)v9[<span class="number">3</span>], v15 != v9[<span class="number">3</span>]))) )</span><br><span class="line">  &#123;</span><br><span class="line">    v16 = v12 ? <span class="number">-1</span> : <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">goto</span> LABEL_18;</span><br><span class="line">  &#125;</span><br><span class="line">LABEL_17:</span><br><span class="line">  v16 = <span class="number">0</span>;</span><br><span class="line">LABEL_18:</span><br><span class="line">  <span class="keyword">if</span> ( !v16 )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( v6 &lt;= v8 )</span><br><span class="line">      v16 = v6 &lt; v8;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      v16 = <span class="number">-1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> ( v24 &gt;= <span class="number">0x10</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    v17 = Block[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">if</span> ( v24 + <span class="number">1</span> &gt;= <span class="number">0x1000</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      v17 = (<span class="type">void</span> *)*((_DWORD *)Block[<span class="number">0</span>] - <span class="number">1</span>);</span><br><span class="line">      <span class="keyword">if</span> ( (<span class="type">unsigned</span> <span class="type">int</span>)(Block[<span class="number">0</span>] - v17 - <span class="number">4</span>) &gt; <span class="number">0x1F</span> )</span><br><span class="line">        invalid_parameter_noinfo_noreturn();</span><br><span class="line">    &#125;</span><br><span class="line">    sub_402F05(v17);</span><br><span class="line">  &#125;</span><br><span class="line">  v28 = <span class="number">-1</span>;</span><br><span class="line">  Block[<span class="number">4</span>] = <span class="number">0</span>;</span><br><span class="line">  v24 = <span class="number">15</span>;</span><br><span class="line">  LOBYTE(Block[<span class="number">0</span>]) = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">if</span> ( v26 &gt;= <span class="number">0x10</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    v18 = v25[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">if</span> ( v26 + <span class="number">1</span> &gt;= <span class="number">0x1000</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      v18 = (<span class="type">void</span> *)*((_DWORD *)v25[<span class="number">0</span>] - <span class="number">1</span>);</span><br><span class="line">      <span class="keyword">if</span> ( (<span class="type">unsigned</span> <span class="type">int</span>)(v25[<span class="number">0</span>] - v18 - <span class="number">4</span>) &gt; <span class="number">0x1F</span> )</span><br><span class="line">        invalid_parameter_noinfo_noreturn();</span><br><span class="line">    &#125;</span><br><span class="line">    sub_402F05(v18);</span><br><span class="line">  &#125;</span><br><span class="line">  v19 = <span class="string">&quot;Have fun!&quot;</span>;</span><br><span class="line">  <span class="keyword">if</span> ( v16 )</span><br><span class="line">    v19 = <span class="string">&quot;A forged ticket!!&quot;</span>;</span><br><span class="line">  v20 = sub_402870(<span class="built_in">std</span>::<span class="built_in">cout</span>, v19);</span><br><span class="line">  <span class="built_in">std</span>::ostream::operator&lt;&lt;(v20, sub_402AC0);</span><br><span class="line">  system(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>AES的CBC怎么看出来的，emmm,我暂时没深入了解这个加密，所以问ai的</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> __thiscall <span class="title function_">sub_402320</span><span class="params">(_DWORD *this)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> v1; <span class="comment">// eax</span></span><br><span class="line">  __int16 v2; <span class="comment">// bx</span></span><br><span class="line">  <span class="type">const</span> <span class="type">char</span> *v3; <span class="comment">// esi</span></span><br><span class="line">  <span class="type">int</span> i; <span class="comment">// edi</span></span><br><span class="line">  <span class="type">int</span> v5; <span class="comment">// eax</span></span><br><span class="line"></span><br><span class="line">  v1 = this[<span class="number">15</span>];</span><br><span class="line">  v2 = *(_WORD *)((<span class="type">char</span> *)this + v1 + <span class="number">6</span>);</span><br><span class="line">  v3 = (<span class="type">char</span> *)this + v1 + <span class="number">248</span>;</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; i &lt; v2; ++i )</span><br><span class="line">  &#123;</span><br><span class="line">    v5 = <span class="built_in">strcmp</span>(v3, <span class="string">&quot;.SCTF&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> ( v5 )</span><br><span class="line">      v5 = v5 &lt; <span class="number">0</span> ? <span class="number">-1</span> : <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> ( !v5 )</span><br><span class="line">    &#123;</span><br><span class="line">      DebugBreak();</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    v3 += <span class="number">40</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">sub_4024A0</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> NtGlobalFlag; <span class="comment">// [esp+10h] [ebp-20h]</span></span><br><span class="line"></span><br><span class="line">  NtGlobalFlag = NtCurrentPeb()-&gt;NtGlobalFlag;</span><br><span class="line">  <span class="keyword">if</span> ( NtCurrentPeb()-&gt;BeingDebugged || NtGlobalFlag == <span class="number">112</span> )</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">-5</span>);</span><br><span class="line">  <span class="keyword">return</span> ((<span class="type">int</span> (*)(<span class="type">void</span>))dword_404000[<span class="number">0</span>])();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这两个是反调试，这个比NepCTF好多了。至少反调试容易找到wuuuuu~~~~</p>
+<p>和nep一样直接patch掉反调试，当然你也可以动调的时候改变ZF来改变线程的走向。</p>
+<p>绕过反调试，但是到了call就会报错404000。</p>
+<p>这里参考大佬的用IDA的python脚本来手动还原</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __fastcall <span class="title function_">sub_402450</span><span class="params">(<span class="type">int</span> a1, <span class="type">int</span> a2, <span class="type">int</span> a3, <span class="type">int</span> a4)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> result; <span class="comment">// eax</span></span><br><span class="line">  <span class="type">int</span> v7; <span class="comment">// edx</span></span><br><span class="line">  <span class="type">char</span> v8; <span class="comment">// cl</span></span><br><span class="line"></span><br><span class="line">  result = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">if</span> ( a2 &gt; <span class="number">0</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">while</span> ( <span class="number">1</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      v7 = <span class="number">0</span>;</span><br><span class="line">      <span class="keyword">if</span> ( a4 &gt; <span class="number">0</span> )</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">LABEL_5:</span><br><span class="line">      <span class="keyword">if</span> ( result &gt;= a2 )</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> ( result &lt; a2 )</span><br><span class="line">    &#123;</span><br><span class="line">      v8 = aSycloversyclov[v7++];</span><br><span class="line">      *(_BYTE *)(result + a1) = ~(*(_BYTE *)(result + a1) ^ v8);</span><br><span class="line">      ++result;</span><br><span class="line">      <span class="keyword">if</span> ( v7 &gt;= a4 )</span><br><span class="line">        <span class="keyword">goto</span> LABEL_5;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>找到smc的地方，用脚本来还原</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">add1=<span class="number">0x404000</span></span><br><span class="line">add2=<span class="number">0x405000</span></span><br><span class="line">key=<span class="string">&quot;sycloversyclover&quot;</span></span><br><span class="line">bb=<span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(add1,add2,<span class="number">1</span>):</span><br><span class="line">    wr=(~(idc.get_wide_byte(i) ^ <span class="built_in">ord</span>(key[bb%<span class="built_in">len</span>(key)]))&amp;<span class="number">0xff</span>) <span class="comment">#这里&amp;0xff是避免取反时高位补一</span></span><br><span class="line">    ida_bytes.patch_byte(i,wr) </span><br><span class="line">    bb+=<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">int</span> <span class="title function_">sub_404000</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> i; <span class="comment">// edx</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> v1; <span class="comment">// esi</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> result; <span class="comment">// eax</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> v3; <span class="comment">// eax</span></span><br><span class="line">  <span class="type">char</span> v4; <span class="comment">// dl</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; i &lt; <span class="built_in">strlen</span>(aPvfqyc4ttc2uxr); ++i )</span><br><span class="line">    --aPvfqyc4ttc2uxr[i];</span><br><span class="line">  v1 = <span class="number">0</span>;</span><br><span class="line">  result = <span class="built_in">strlen</span>(aPvfqyc4ttc2uxr);</span><br><span class="line">  <span class="keyword">if</span> ( (result &amp; <span class="number">0xFFFFFFFE</span>) != <span class="number">0</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">    &#123;</span><br><span class="line">      v3 = result - v1;</span><br><span class="line">      v4 = *(_BYTE *)(v3 + <span class="number">4231191</span>);</span><br><span class="line">      *(_BYTE *)(v3 + <span class="number">4231191</span>) = aPvfqyc4ttc2uxr[v1];</span><br><span class="line">      aPvfqyc4ttc2uxr[v1++] = v4;</span><br><span class="line">      result = <span class="built_in">strlen</span>(aPvfqyc4ttc2uxr);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> ( v1 &lt; result &gt;&gt; <span class="number">1</span> );</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解密得到nKnbHsgqD3aNEB91jB3gEzAr+IklQwT1bSs3+bXpeuo&#x3D;</p>
+<p>最后秘钥为sycloversyclover，偏移量为sctfsctfsctfsctf</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sctf&#123;Ae3_C8c_I28_pKcs79ad4&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="烽火杯的smc"><a href="#烽火杯的smc" class="headerlink" title="烽火杯的smc"></a>烽火杯的smc</h2><p>这个算是最简单的反调试改jz就可以，直接linux动调就可以还原了，就不都说了xixi。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>linkpwn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://linkpwn.github.io/2025/07/28/smc/" title="smc">http://linkpwn.github.io/2025/07/28/smc/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/07/27/rc4%E5%AD%A6%E4%B9%A0/" rel="prev" title="rc4学习">
+      <i class="fa fa-chevron-left"></i> rc4学习
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/07/29/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/" rel="next" title="渗透学习">
+      渗透学习 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#NepCTF-realme"><span class="nav-number">1.</span> <span class="nav-text">NepCTF realme</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E9%BC%8E%E6%9D%AF-2020-%E9%9D%92%E9%BE%99%E7%BB%84-jocker"><span class="nav-number">2.</span> <span class="nav-text">[网鼎杯 2020 青龙组]jocker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SCTF2019-creakme"><span class="nav-number">3.</span> <span class="nav-text">[SCTF2019]creakme</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%83%BD%E7%81%AB%E6%9D%AF%E7%9A%84smc"><span class="nav-number">4.</span> <span class="nav-text">烽火杯的smc</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="linkpwn"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">linkpwn</p>
+  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/linkpwn" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;linkpwn" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:dkj20060328@qq.com" title="E-Mail → mailto:dkj20060328@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/linkpwn" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;linkpwn" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+          <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1827600686&auto=1&height=66"></iframe>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">linkpwn</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+
+<!--单击显示文字-->
+<script type="text/javascript" src="/js/clickshowtext.js"></script>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/clicklove.js"></script>
+
+<canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas> 
+<script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script> 
+<script type="text/javascript" src="/js/fireworks.js"></script>

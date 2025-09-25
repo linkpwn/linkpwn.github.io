@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"linkpwn.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="春秋杯（2025） msic  简单算术 压力大，写个脚本吧   Crypot  通往哈希的旅程    msic简单算术1.打开附件看到 1ys~xdg&#x2F;m@]mjkz@vl@z~lf&gt;b  2.根据题目意思想想异或可以想到异或运算（a^b&#x3D;c,b^c&#x3D;a,a^c&#x3D;b) 一般的flag结尾都是}，先让b和}异或 1234567891011#include &amp;lt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="春秋杯(2025)">
+<meta property="og:url" content="http://linkpwn.github.io/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/index.html">
+<meta property="og:site_name" content="网络幻影">
+<meta property="og:description" content="春秋杯（2025） msic  简单算术 压力大，写个脚本吧   Crypot  通往哈希的旅程    msic简单算术1.打开附件看到 1ys~xdg&#x2F;m@]mjkz@vl@z~lf&gt;b  2.根据题目意思想想异或可以想到异或运算（a^b&#x3D;c,b^c&#x3D;a,a^c&#x3D;b) 一般的flag结尾都是}，先让b和}异或 1234567891011#include &amp;lt">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://linkpwn.github.io/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117174125235.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117174837151.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117175112049.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117175301990.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117175558172.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117175629639.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117175853810.png">
+<meta property="og:image" content="http://linkpwn.github.io/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117182920364.png">
+<meta property="article:published_time" content="2025-01-19T12:52:28.000Z">
+<meta property="article:modified_time" content="2025-06-20T02:21:14.158Z">
+<meta property="article:author" content="linkpwn">
+<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://linkpwn.github.io/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117174125235.png">
+
+<link rel="canonical" href="http://linkpwn.github.io/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>春秋杯(2025) | 网络幻影</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta custom-logo">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">网络幻影</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <a>
+        <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
+      </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          春秋杯(2025)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-01-19 20:52:28" itemprop="dateCreated datePublished" datetime="2025-01-19T20:52:28+08:00">2025-01-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-06-20 10:21:14" itemprop="dateModified" datetime="2025-06-20T10:21:14+08:00">2025-06-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/wp/" itemprop="url" rel="index"><span itemprop="name">wp</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="春秋杯（2025）"><a href="#春秋杯（2025）" class="headerlink" title="春秋杯（2025）"></a>春秋杯（2025）</h1><ul>
+<li><p><a href="#msic">msic</a></p>
+<ul>
+<li><a href="#%E7%AE%80%E5%8D%95%E7%AE%97%E6%9C%AF">简单算术</a></li>
+<li><a href="#%E5%8E%8B%E5%8A%9B%E5%A4%A7%EF%BC%8C%E5%86%99%E4%B8%AA%E8%84%9A%E6%9C%AC%E5%90%A7">压力大，写个脚本吧</a></li>
+</ul>
+</li>
+<li><p><a href="#Crypot">Crypot</a></p>
+<ul>
+<li><a href="#%E9%80%9A%E5%BE%80%E5%93%88%E5%B8%8C%E7%9A%84%E6%97%85%E7%A8%8B">通往哈希的旅程</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="msic"><a href="#msic" class="headerlink" title="msic"></a>msic</h2><h3 id="简单算术"><a href="#简单算术" class="headerlink" title="简单算术"></a>简单算术</h3><p>1.打开附件看到</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ys~xdg/m@]mjkz@vl@z~lf&gt;b</span><br></pre></td></tr></table></figure>
+
+<p>2.根据题目意思<br>想想异或<br>可以想到异或运算（a^b&#x3D;c,b^c&#x3D;a,a^c&#x3D;b)</p>
+<p>一般的flag结尾都是}，先让b和}异或</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    char a=&#x27;b&#x27;;</span><br><span class="line">	char b=&#x27;&#125;&#x27;;</span><br><span class="line">	char c;</span><br><span class="line">	c=a^b;</span><br><span class="line">	printf(&quot;%d&quot;,c);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>得到31</p>
+<p>3.再用31依次和字符串异或</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">	</span><br><span class="line">    char a[]=&quot;ys~xdg/m@]mjkz@vl@z~lf&gt;b&quot;;</span><br><span class="line">    int lenght= strlen(a);</span><br><span class="line">	char b=&#x27;31&#x27;;</span><br><span class="line">	char c[lenght];</span><br><span class="line">	int i;</span><br><span class="line">	for(i=0;i&lt;lenght;i++)&#123;</span><br><span class="line">		c[i]=a[i]^31;</span><br><span class="line">	&#125;</span><br><span class="line">	printf(&quot;%s&quot;,c);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117174125235.png" alt="image-20250117174125235"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;x0r_Brute_is_easy!&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="压力大，写个脚本吧"><a href="#压力大，写个脚本吧" class="headerlink" title="压力大，写个脚本吧"></a>压力大，写个脚本吧</h3><p>1.发现是一个百层压缩<br>2.解了几次发现都有密码上脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line">import zipfile</span><br><span class="line">import os</span><br><span class="line">import base64</span><br><span class="line">import re</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def read_password_from_file(file_path):</span><br><span class="line">    &quot;&quot;&quot;从给定路径的文件中读取Base64编码的密码并解码&quot;&quot;&quot;</span><br><span class="line">    try:</span><br><span class="line">        with open(file_path, &#x27;r&#x27;) as file:</span><br><span class="line">            encoded_password = file.read().strip()</span><br><span class="line">            password = base64.b64decode(encoded_password).decode(&#x27;utf-8&#x27;)</span><br><span class="line">            return password</span><br><span class="line">    except Exception as e:</span><br><span class="line">        print(f&quot;Error reading password from &#123;file_path&#125;: &#123;e&#125;&quot;)</span><br><span class="line">        raise</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def un_zip(path, file_name, password):</span><br><span class="line">    &quot;&quot;&quot;解压ZIP文件到指定路径，并提供密码&quot;&quot;&quot;</span><br><span class="line">    current_file = os.path.join(path, file_name)</span><br><span class="line"></span><br><span class="line">    try:</span><br><span class="line">        with zipfile.ZipFile(current_file) as zip_file:</span><br><span class="line">            # 获取第一个非隐藏文件的名字作为新的目录名</span><br><span class="line">            for new_file in zip_file.namelist():</span><br><span class="line">                if not (new_file.startswith(&#x27;__MACOSX&#x27;) or new_file.endswith(&#x27;/&#x27;)):</span><br><span class="line">                    break</span><br><span class="line"></span><br><span class="line">            # 创建一个以解压出来的压缩包为名字的新文件夹</span><br><span class="line">            new_path = os.path.join(path, os.path.splitext(file_name)[0])</span><br><span class="line">            os.makedirs(new_path, exist_ok=True)</span><br><span class="line"></span><br><span class="line">            # 解压所有内容到新路径，并提供密码</span><br><span class="line">            zip_file.extractall(path=new_path, pwd=password.encode())</span><br><span class="line"></span><br><span class="line">            return new_path, new_file</span><br><span class="line"></span><br><span class="line">    except RuntimeError as e:</span><br><span class="line">        print(f&quot;RuntimeError: &#123;e&#125;&quot;)</span><br><span class="line">        raise</span><br><span class="line">    except Exception as e:</span><br><span class="line">        print(f&quot;An error occurred while unzipping &#123;file_name&#125;: &#123;e&#125;&quot;)</span><br><span class="line">        raise</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def find_next_password_file(base_path, last_number):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    根据上次使用的密码文件数字，在解压后的文件夹中查找下一个密码文件。</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    next_number = last_number - 1</span><br><span class="line">    next_password_filename = f&quot;password_&#123;next_number:02&#125;.txt&quot;</span><br><span class="line">    next_password_file_path = os.path.join(base_path, next_password_filename)</span><br><span class="line"></span><br><span class="line">    if os.path.exists(next_password_file_path):</span><br><span class="line">        return next_password_file_path</span><br><span class="line">    else:</span><br><span class="line">        raise FileNotFoundError(f&quot;Next password file &#123;next_password_filename&#125; not found.&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 解压缩所需的参数</span><br><span class="line">base_path = r&quot;D:\桌面\zip_100&quot;</span><br><span class="line">initial_file_to_unzip = &quot;zip_99.zip&quot;</span><br><span class="line">initial_password_file = os.path.join(base_path, &quot;password_99.txt&quot;)</span><br><span class="line"></span><br><span class="line"># 开始解压过程</span><br><span class="line">current_path = base_path</span><br><span class="line">file_to_unzip = initial_file_to_unzip</span><br><span class="line">last_password_number = 99</span><br><span class="line"></span><br><span class="line">while True:</span><br><span class="line">    try:</span><br><span class="line">        # 读取当前密码</span><br><span class="line">        password = read_password_from_file(initial_password_file)</span><br><span class="line"></span><br><span class="line">        # 解压当前ZIP文件</span><br><span class="line">        current_path, new_file = un_zip(current_path, file_to_unzip, password)</span><br><span class="line">        print(f&quot;Unzipped: &#123;new_file&#125; to &#123;current_path&#125;&quot;)</span><br><span class="line"></span><br><span class="line">        # 检查是否还有zip文件需要解压</span><br><span class="line">        if new_file.lower().endswith(&#x27;.zip&#x27;):</span><br><span class="line">            # 更新要解压的文件路径</span><br><span class="line">            file_to_unzip = new_file</span><br><span class="line"></span><br><span class="line">            # 查找下一个密码文件</span><br><span class="line">            next_password_file = find_next_password_file(current_path, last_password_number)</span><br><span class="line">            last_password_number -= 1</span><br><span class="line">            initial_password_file = next_password_file</span><br><span class="line">        else:</span><br><span class="line">            break</span><br><span class="line"></span><br><span class="line">    except Exception as e:</span><br><span class="line">        print(f&quot;Stopped unzipping process due to an error: &#123;e&#125;&quot;)</span><br><span class="line">        break</span><br><span class="line"></span><br><span class="line">print(&quot;End of unzipping process.&quot;)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117174837151.png" alt="image-20250117174837151"></p>
+<p>3.发现问题改进下脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line">import zipfile</span><br><span class="line">import os</span><br><span class="line">import base64</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def read_password_from_file(file_path):</span><br><span class="line">    &quot;&quot;&quot;从给定路径的文件中读取Base64编码的密码并解码&quot;&quot;&quot;</span><br><span class="line">    try:</span><br><span class="line">        with open(file_path, &#x27;r&#x27;) as file:</span><br><span class="line">            encoded_password = file.read().strip()</span><br><span class="line">            password = base64.b64decode(encoded_password).decode(&#x27;utf-8&#x27;)</span><br><span class="line">            return password</span><br><span class="line">    except Exception as e:</span><br><span class="line">        print(f&quot;Error reading password from &#123;file_path&#125;: &#123;e&#125;&quot;)</span><br><span class="line">        raise</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def un_zip(path, file_name, password):</span><br><span class="line">    &quot;&quot;&quot;解压ZIP文件到指定路径，并提供密码&quot;&quot;&quot;</span><br><span class="line">    current_file = os.path.join(path, file_name)</span><br><span class="line"></span><br><span class="line">    try:</span><br><span class="line">        with zipfile.ZipFile(current_file) as zip_file:</span><br><span class="line">            # 创建一个以解压出来的压缩包为名字的新文件夹</span><br><span class="line">            new_path = os.path.join(path, os.path.splitext(file_name)[0])</span><br><span class="line">            os.makedirs(new_path, exist_ok=True)</span><br><span class="line"></span><br><span class="line">            # 解压所有内容到新路径，并提供密码</span><br><span class="line">            zip_file.extractall(path=new_path, pwd=password.encode())</span><br><span class="line"></span><br><span class="line">            return new_path, zip_file.namelist()  # 返回解压的所有文件列表</span><br><span class="line">    except RuntimeError as e:</span><br><span class="line">        print(f&quot;RuntimeError: &#123;e&#125;&quot;)</span><br><span class="line">        raise</span><br><span class="line">    except Exception as e:</span><br><span class="line">        print(f&quot;An error occurred while unzipping &#123;file_name&#125;: &#123;e&#125;&quot;)</span><br><span class="line">        raise</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def find_next_password_file(base_path, last_number):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    根据上次使用的密码文件数字，在解压后的文件夹中查找下一个密码文件。</span><br><span class="line">    支持一位数和两位数的文件名。</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    next_number = last_number - 1</span><br><span class="line">    for format_str in [&#x27;%d&#x27;, &#x27;%02d&#x27;]:  # 尝试两种格式</span><br><span class="line">        next_password_filename = f&quot;password_&#123;format_str % next_number&#125;.txt&quot;</span><br><span class="line">        next_password_file_path = os.path.join(base_path, next_password_filename)</span><br><span class="line">        if os.path.exists(next_password_file_path):</span><br><span class="line">            return next_password_file_path</span><br><span class="line"></span><br><span class="line">    raise FileNotFoundError(f&quot;Next password file not found for number &#123;next_number&#125;.&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 解压缩所需的参数</span><br><span class="line">base_path = r&quot;D:\桌面\zip_100&quot;</span><br><span class="line">initial_file_to_unzip = &quot;zip_99.zip&quot;</span><br><span class="line">initial_password_file = os.path.join(base_path, &quot;password_99.txt&quot;)</span><br><span class="line"></span><br><span class="line"># 开始解压过程</span><br><span class="line">current_path = base_path</span><br><span class="line">file_to_unzip = initial_file_to_unzip</span><br><span class="line">last_password_number = 99</span><br><span class="line"></span><br><span class="line">while True:</span><br><span class="line">    try:</span><br><span class="line">        # 读取当前密码</span><br><span class="line">        password = read_password_from_file(initial_password_file)</span><br><span class="line"></span><br><span class="line">        # 解压当前ZIP文件</span><br><span class="line">        current_path, extracted_files = un_zip(current_path, file_to_unzip, password)</span><br><span class="line">        print(f&quot;Unzipped: &#123;file_to_unzip&#125; to &#123;current_path&#125;&quot;)</span><br><span class="line"></span><br><span class="line">        # 检查是否还有zip文件需要解压</span><br><span class="line">        zip_files = [f for f in extracted_files if f.lower().endswith(&#x27;.zip&#x27;)]</span><br><span class="line">        if zip_files:</span><br><span class="line">            # 更新要解压的文件路径</span><br><span class="line">            file_to_unzip = zip_files[0]  # 假设只有一个ZIP文件被解压出来</span><br><span class="line"></span><br><span class="line">            # 查找下一个密码文件</span><br><span class="line">            next_password_file = find_next_password_file(current_path, last_password_number)</span><br><span class="line">            last_password_number -= 1</span><br><span class="line">            initial_password_file = next_password_file</span><br><span class="line">        else:</span><br><span class="line">            break</span><br><span class="line"></span><br><span class="line">    except Exception as e:</span><br><span class="line">        print(f&quot;Stopped unzipping process due to an error: &#123;e&#125;&quot;)</span><br><span class="line">        break</span><br><span class="line"></span><br><span class="line">print(&quot;End of unzipping process.&quot;)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117175112049.png" alt="image-20250117175112049"></p>
+<p>完成解压</p>
+<p>3.打开最后一个文件</p>
+<p><img src="/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117175301990.png" alt="image-20250117175301990"></p>
+<p>4.可以看到密码加密码和png可以想到把base64都拼在一起可能会得到一个png的图片，拼接后：</p>
+<p><img src="/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117175558172.png" alt="image-20250117175558172"></p>
+<p>5.得到一个二维码：<br><img src="/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117175629639.png" alt="image-20250117175629639"></p>
+<p><a target="_blank" rel="noopener" href="https://online-barcode-reader.inliteresearch.com/">在线扫描二维码</a></p>
+<p><img src="/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117175853810.png" alt="image-20250117175853810"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;_PASSWORDs_is_fl@g!_&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="通往哈希的旅程"><a href="#通往哈希的旅程" class="headerlink" title="通往哈希的旅程"></a>通往哈希的旅程</h2><p>1.有题目已知前三位是188，而且是11位</p>
+<p>用脚本爆破：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">import hashlib</span><br><span class="line"></span><br><span class="line"># 给定的哈希值</span><br><span class="line">given_hash = &#x27;ca12fd8250972ec363a16593356abb1f3cf3a16d&#x27;</span><br><span class="line"></span><br><span class="line"># 检查函数</span><br><span class="line">def check_hash(value):</span><br><span class="line">    # 生成该值的SHA-1哈希</span><br><span class="line">    hash_object = hashlib.sha1(value.encode())</span><br><span class="line">    hex_dig = hash_object.hexdigest()</span><br><span class="line">    return hex_dig == given_hash</span><br><span class="line"></span><br><span class="line"># 尝试所有可能的11位数字组合</span><br><span class="line">for i in range(18800000000, 18900000000):  # 从18800000000到18899999999</span><br><span class="line">    if check_hash(str(i)):</span><br><span class="line">        print(f&quot;Found match: &#123;i&#125;&quot;)</span><br><span class="line">        break</span><br><span class="line">else:</span><br><span class="line">    print(&quot;No match found&quot;)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/assets/image-20250117182920364.png" alt="image-20250117182920364"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;18876011645&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>linkpwn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://linkpwn.github.io/2025/01/19/%E6%98%A5%E7%A7%8B%E6%9D%AF-2025/" title="春秋杯(2025)">http://linkpwn.github.io/2025/01/19/春秋杯-2025/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/01/18/BUUCTF%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/" rel="prev" title="BUUCTF刷题记录">
+      <i class="fa fa-chevron-left"></i> BUUCTF刷题记录
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/01/23/vip%E8%A7%86%E9%A2%91%E5%85%8D%E8%B4%B9%E8%A7%82%E7%9C%8Bpy%E8%84%9A%E6%9C%AC/" rel="next" title="vip视频免费观看py脚本">
+      vip视频免费观看py脚本 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%98%A5%E7%A7%8B%E6%9D%AF%EF%BC%882025%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">春秋杯（2025）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#msic"><span class="nav-number">1.1.</span> <span class="nav-text">msic</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%AE%97%E6%9C%AF"><span class="nav-number">1.1.1.</span> <span class="nav-text">简单算术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%8B%E5%8A%9B%E5%A4%A7%EF%BC%8C%E5%86%99%E4%B8%AA%E8%84%9A%E6%9C%AC%E5%90%A7"><span class="nav-number">1.1.2.</span> <span class="nav-text">压力大，写个脚本吧</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E5%BE%80%E5%93%88%E5%B8%8C%E7%9A%84%E6%97%85%E7%A8%8B"><span class="nav-number">1.2.</span> <span class="nav-text">通往哈希的旅程</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="linkpwn"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">linkpwn</p>
+  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/linkpwn" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;linkpwn" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:dkj20060328@qq.com" title="E-Mail → mailto:dkj20060328@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/linkpwn" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;linkpwn" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+          <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1827600686&auto=1&height=66"></iframe>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">linkpwn</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+
+<!--单击显示文字-->
+<script type="text/javascript" src="/js/clickshowtext.js"></script>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/clicklove.js"></script>
+
+<canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas> 
+<script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script> 
+<script type="text/javascript" src="/js/fireworks.js"></script>

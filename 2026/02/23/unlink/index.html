@@ -29,17 +29,17 @@
 <meta property="og:site_name" content="网络幻影">
 <meta property="og:description" content="Unlink原理简介unlink 是利用 glibc 在双向链表管理空闲块时执行 fd-&gt;bk &#x3D; bk; bk-&gt;fd &#x3D; fd 的机制，通过伪造 chunk 的 fd 和 bk 指针，在触发 unlink 过程时实现任意地址写，从而达到控制程序执行流的经典堆利用技术。 完整利用过程unlink的过程分成以下几步 BK &#x3D; P-&gt;bk,FD &#x3D; P-&gt;">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://linkpwn.github.io/2026/02/23/unlink/1.png">
-<meta property="og:image" content="http://linkpwn.github.io/2026/02/23/unlink/2.png">
-<meta property="og:image" content="http://linkpwn.github.io/2026/02/23/unlink/3.png">
-<meta property="og:image" content="http://linkpwn.github.io/2026/02/23/unlink/4.png">
-<meta property="og:image" content="http://linkpwn.github.io/2026/02/23/unlink/5.png">
+<meta property="og:image" content="http://linkpwn.github.io/unlink/1.png">
+<meta property="og:image" content="http://linkpwn.github.io/unlink/2.png">
+<meta property="og:image" content="http://linkpwn.github.io/unlink/3.png">
+<meta property="og:image" content="http://linkpwn.github.io/unlink/4.png">
+<meta property="og:image" content="http://linkpwn.github.io/unlink/5.png">
 <meta property="article:published_time" content="2026-02-23T03:23:37.000Z">
-<meta property="article:modified_time" content="2026-02-24T05:14:25.141Z">
+<meta property="article:modified_time" content="2026-02-24T05:14:25.000Z">
 <meta property="article:author" content="linkpwn">
-<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta property="article:tag" content="ctf学习, 编程学习, 游戏, 日常">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://linkpwn.github.io/2026/02/23/unlink/1.png">
+<meta name="twitter:image" content="http://linkpwn.github.io/unlink/1.png">
 
 <link rel="canonical" href="http://linkpwn.github.io/2026/02/23/unlink/">
 
@@ -108,7 +108,7 @@
       <h1 class="site-title">网络幻影</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
-      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <p class="site-subtitle" itemprop="description">linkpwn</p>
       <a>
         <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
       </a>
@@ -202,7 +202,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
+      <meta itemprop="description" content="linkpwn的学习记录">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -271,13 +271,13 @@
 <ol>
 <li>BK &#x3D; P-&gt;bk,FD &#x3D; P-&gt;fd。</li>
 </ol>
-<p><img src="/2026/02/23/unlink/1.png" alt="1"></p>
+<p><img src="/./unlink/1.png" alt="1"></p>
 <ol start="2">
 <li><p>FD -&gt;bk &#x3D;BK</p>
-<p><img src="/2026/02/23/unlink/2.png" alt="1"></p>
+<p><img src="/./unlink/2.png" alt="1"></p>
 </li>
 <li><p>BK - fd &#x3D;FD</p>
-<p><img src="/2026/02/23/unlink/3.png" alt="1"></p>
+<p><img src="/./unlink/3.png" alt="1"></p>
 </li>
 </ol>
 <p>接下来看看我们是怎么利用它的。</p>
@@ -285,7 +285,7 @@
 <p>此时我们把第二个堆块的的fd &#x3D; &amp;chunk1 - 3<em>size(32位size&#x3D;4,64位size&#x3D;8)，bk &#x3D; &amp;chunk1 - 2</em>size。</p>
 <p>此时我们free chunk0它是个small chunk，然后前面不是空闲的，不会向前合并；后面是空闲的，就会向后面合并。</p>
 <p>然后就会执行unlink，执行的时候：</p>
-<p><img src="/2026/02/23/unlink/4.png" alt="1"></p>
+<p><img src="/./unlink/4.png" alt="1"></p>
 <p>就可以达到</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chunk1 = &amp;chunk1 -2*size</span><br><span class="line">chunk1 = &amp;chunk1 -3*size</span><br></pre></td></tr></table></figure>
 
@@ -326,7 +326,7 @@
 <p>atoi的got表，就相当于将chunk覆盖成了atoi的got，show的时候就会展示出atoi的真实地址。</p>
 <p>计算出system的地址，此时由上面的分析可以此时chunk杯覆盖成了atoi的got表，我们更改chunk的内容就是改的atoi的真实地址。</p>
 <p>我们把atoi的地址改成system的地址，发生&#x2F;bin&#x2F;sh就能成功了。</p>
-<p><img src="/2026/02/23/unlink/5.png" alt="1"></p>
+<p><img src="/./unlink/5.png" alt="1"></p>
 
     </div>
 
@@ -433,7 +433,7 @@
     <img class="site-author-image" itemprop="image" alt="linkpwn"
       src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">linkpwn</p>
-  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+  <div class="site-description" itemprop="description">linkpwn的学习记录</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">

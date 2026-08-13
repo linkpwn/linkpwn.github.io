@@ -29,14 +29,14 @@
 <meta property="og:site_name" content="网络幻影">
 <meta property="og:description" content="rsa1.先了解rsa加密是什么rsa 2.打开pub_key(就是公钥)，用在线网站可以得到n和e  3.再用在线网站,得到p和q。 首先给出的n(C0332C5C64AE47182F6C1C876D42336910545A58F7EEFEFC0BCAAF5AF341CCDD)是16进制，换成十进制。  1234567891011121314151617181920212223242526272">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://linkpwn.github.io/2025/02/06/BUUCTF-%E9%80%86%E5%90%91-rsa/1.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/02/06/BUUCTF-%E9%80%86%E5%90%91-rsa/2.png">
+<meta property="og:image" content="http://linkpwn.github.io/BUUCTF-%E9%80%86%E5%90%91-rsa/1.png">
+<meta property="og:image" content="http://linkpwn.github.io/BUUCTF-%E9%80%86%E5%90%91-rsa/2.png">
 <meta property="article:published_time" content="2025-02-06T15:27:48.000Z">
-<meta property="article:modified_time" content="2025-09-23T12:22:19.619Z">
+<meta property="article:modified_time" content="2025-09-23T12:22:19.000Z">
 <meta property="article:author" content="linkpwn">
-<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta property="article:tag" content="ctf学习, 编程学习, 游戏, 日常">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://linkpwn.github.io/2025/02/06/BUUCTF-%E9%80%86%E5%90%91-rsa/1.png">
+<meta name="twitter:image" content="http://linkpwn.github.io/BUUCTF-%E9%80%86%E5%90%91-rsa/1.png">
 
 <link rel="canonical" href="http://linkpwn.github.io/2025/02/06/BUUCTF-%E9%80%86%E5%90%91-rsa/">
 
@@ -105,7 +105,7 @@
       <h1 class="site-title">网络幻影</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
-      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <p class="site-subtitle" itemprop="description">linkpwn</p>
       <a>
         <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
       </a>
@@ -199,7 +199,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
+      <meta itemprop="description" content="linkpwn的学习记录">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -260,10 +260,10 @@
       
         <h1 id="rsa"><a href="#rsa" class="headerlink" title="rsa"></a>rsa</h1><p>1.先了解rsa加密是什么<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51607907/article/details/123884953">rsa</a></p>
 <p>2.打开pub_key(就是公钥)，用<a target="_blank" rel="noopener" href="http://tool.chacuo.net/cryptrsakeyparse">在线网站</a>可以得到n和e</p>
-<p><img src="/2025/02/06/BUUCTF-%E9%80%86%E5%90%91-rsa/1.png" alt="1"></p>
+<p><img src="/./BUUCTF-%E9%80%86%E5%90%91-rsa/1.png" alt="1"></p>
 <p>3.再用<a target="_blank" rel="noopener" href="http://www.factordb.com/index.php">在线网站</a>,得到p和q。</p>
 <p>首先给出的n(C0332C5C64AE47182F6C1C876D42336910545A58F7EEFEFC0BCAAF5AF341CCDD)是16进制，<a target="_blank" rel="noopener" href="https://www.sojson.com/hexconvert/16to10.html">换成十进制</a>。</p>
-<p><img src="/2025/02/06/BUUCTF-%E9%80%86%E5%90%91-rsa/2.png" alt="2"></p>
+<p><img src="/./BUUCTF-%E9%80%86%E5%90%91-rsa/2.png" alt="2"></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">import gmpy2</span><br><span class="line">import rsa</span><br><span class="line"></span><br><span class="line"># 已知的RSA参数</span><br><span class="line">e = 65537</span><br><span class="line">n = 86934482296048119190666062003494800588905656017203025617216654058378322103517</span><br><span class="line">p = 285960468890451637935629440372639283459</span><br><span class="line">q = 304008741604601924494328155975272418463</span><br><span class="line"></span><br><span class="line"># 计算φ(n)</span><br><span class="line">phi_n = (p - 1) * (q - 1)</span><br><span class="line"></span><br><span class="line"># 计算私钥d</span><br><span class="line">d = int(gmpy2.invert(e, phi_n))</span><br><span class="line"></span><br><span class="line"># 使用p, q, e, d生成私钥对象</span><br><span class="line">private_key = rsa.PrivateKey(n, e, d, p, q)</span><br><span class="line"></span><br><span class="line">try:</span><br><span class="line">    # 加载密文</span><br><span class="line">    with open(&#x27;D:\\桌面\\41c4e672-98c5-43e5-adf4-49d75db307e4\\output\\flag.txt&#x27;, &quot;rb&quot;) as file:</span><br><span class="line">        ciphertext = file.read()</span><br><span class="line"></span><br><span class="line">    # 尝试解密</span><br><span class="line">    decrypted_message = rsa.decrypt(ciphertext, private_key)</span><br><span class="line">    print(&quot;解密后的消息: &quot;, decrypted_message.decode())</span><br><span class="line"></span><br><span class="line">except rsa.DecryptionError as de:</span><br><span class="line">    print(&quot;解密失败: 解密错误 - &quot;, str(de))</span><br><span class="line">except Exception as e:</span><br><span class="line">    print(&quot;解密失败: 其他错误 - &quot;, str(e))</span><br></pre></td></tr></table></figure>
 
 <p>解得flag</p>
@@ -375,7 +375,7 @@
     <img class="site-author-image" itemprop="image" alt="linkpwn"
       src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">linkpwn</p>
-  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+  <div class="site-description" itemprop="description">linkpwn的学习记录</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">

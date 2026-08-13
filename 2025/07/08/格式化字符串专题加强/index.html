@@ -29,15 +29,15 @@
 <meta property="og:site_name" content="网络幻影">
 <meta property="og:description" content="进行格式化字符串专题的加强，先写一个题目，再重温一下知识点进行总结一下。 TGCTF fmt1234567891011121314151617181920int __fastcall main(int argc, const char **argv, const char **envp)&#123;  char buf[88]; &#x2F;&#x2F; [rsp+0h] [rbp-60h] BYREF  unsig">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://linkpwn.github.io/2025/07/08/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/%E4%BE%8B%E5%AD%901.1.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/07/08/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/%E4%BE%8B%E5%AD%901.0.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/07/08/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/speak.png">
+<meta property="og:image" content="http://linkpwn.github.io/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/%E4%BE%8B%E5%AD%901.1.png">
+<meta property="og:image" content="http://linkpwn.github.io/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/%E4%BE%8B%E5%AD%901.0.png">
+<meta property="og:image" content="http://linkpwn.github.io/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/speak.png">
 <meta property="article:published_time" content="2025-07-08T07:13:34.000Z">
-<meta property="article:modified_time" content="2026-02-14T15:52:44.285Z">
+<meta property="article:modified_time" content="2026-02-14T15:52:44.000Z">
 <meta property="article:author" content="linkpwn">
-<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta property="article:tag" content="ctf学习, 编程学习, 游戏, 日常">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://linkpwn.github.io/2025/07/08/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/%E4%BE%8B%E5%AD%901.1.png">
+<meta name="twitter:image" content="http://linkpwn.github.io/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/%E4%BE%8B%E5%AD%901.1.png">
 
 <link rel="canonical" href="http://linkpwn.github.io/2025/07/08/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/">
 
@@ -106,7 +106,7 @@
       <h1 class="site-title">网络幻影</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
-      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <p class="site-subtitle" itemprop="description">linkpwn</p>
       <a>
         <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
       </a>
@@ -200,7 +200,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
+      <meta itemprop="description" content="linkpwn的学习记录">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -286,8 +286,8 @@
 
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">payload = <span class="string">b&quot;%4669c%11$hn&quot;</span>          <span class="comment">#hex(4669) = 0x123d --&gt;read地址的后两字节</span></span><br><span class="line">payload += <span class="string">b&quot;%19$p&quot;</span>                <span class="comment">#泄露libc_start_main+地址</span></span><br><span class="line">payload = payload.ljust(<span class="number">0x28</span>, <span class="string">b&#x27;\x00&#x27;</span>)</span><br><span class="line">payload += p64(stack_addr - <span class="number">8</span>)      <span class="comment">#p64(stack_addr - 8)----&gt;printf的返回地址</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2025/07/08/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/%E4%BE%8B%E5%AD%901.1.png" alt="1"></p>
-<p><img src="/2025/07/08/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/%E4%BE%8B%E5%AD%901.0.png" alt="1"></p>
+<p><img src="/./%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/%E4%BE%8B%E5%AD%901.1.png" alt="1"></p>
+<p><img src="/./%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/%E4%BE%8B%E5%AD%901.0.png" alt="1"></p>
 <p>可以看到0x7fffffffdd08 &#x3D; 0x7fffffffdd10 - 0x08从而定位printf_ret的地址。</p>
 <p>然后我们可以看到libc_start_main+122的地址在栈上的位置；</p>
 <p>0x7fffffffdd78 - 0x7fffffffdd10 &#x3D; 104，104&#x2F;8  &#x3D; 13，此时我们用%19$p就可以泄露出libc_start_main+122的地址，再减去122就可以得到</p>
@@ -382,7 +382,7 @@
 <p>mov rsp rbp;</p>
 <p>pop rbp;</p>
 <p>pop rip;</p>
-<p><img src="/2025/07/08/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/speak.png" alt="1"></p>
+<p><img src="/./%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%93%E9%A2%98%E5%8A%A0%E5%BC%BA/speak.png" alt="1"></p>
 <p>现在开始格式化字符串漏洞的知识点的总结。</p>
 <p>什么是格式化字符串？</p>
 <ul>
@@ -522,7 +522,7 @@
     <img class="site-author-image" itemprop="image" alt="linkpwn"
       src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">linkpwn</p>
-  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+  <div class="site-description" itemprop="description">linkpwn的学习记录</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">

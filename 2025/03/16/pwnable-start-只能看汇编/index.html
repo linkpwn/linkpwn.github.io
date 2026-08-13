@@ -29,13 +29,13 @@
 <meta property="og:site_name" content="网络幻影">
 <meta property="og:description" content="这题主要记录一下怎么看汇编   这题的思路就是在栈上写入shellcode,所以我们就要去找栈的地址。 这里就需要要一个payload 1payload &#x3D; b&#x27;a&#x27;* 0x14 + p32(0x8048037)  0x8048037就是write的返回地址，send这个payload后esp的内容就是栈上0x8048037的内容，将stack上的内容泄露出来。还就就是为什么">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://linkpwn.github.io/2025/03/16/pwnable-start-%E5%8F%AA%E8%83%BD%E7%9C%8B%E6%B1%87%E7%BC%96/1.png">
+<meta property="og:image" content="http://linkpwn.github.io/pwnable-start-%E5%8F%AA%E8%83%BD%E7%9C%8B%E6%B1%87%E7%BC%96/1.png">
 <meta property="article:published_time" content="2025-03-16T01:44:41.000Z">
-<meta property="article:modified_time" content="2025-09-23T12:52:14.674Z">
+<meta property="article:modified_time" content="2025-09-23T12:52:14.000Z">
 <meta property="article:author" content="linkpwn">
-<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta property="article:tag" content="ctf学习, 编程学习, 游戏, 日常">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://linkpwn.github.io/2025/03/16/pwnable-start-%E5%8F%AA%E8%83%BD%E7%9C%8B%E6%B1%87%E7%BC%96/1.png">
+<meta name="twitter:image" content="http://linkpwn.github.io/pwnable-start-%E5%8F%AA%E8%83%BD%E7%9C%8B%E6%B1%87%E7%BC%96/1.png">
 
 <link rel="canonical" href="http://linkpwn.github.io/2025/03/16/pwnable-start-%E5%8F%AA%E8%83%BD%E7%9C%8B%E6%B1%87%E7%BC%96/">
 
@@ -104,7 +104,7 @@
       <h1 class="site-title">网络幻影</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
-      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <p class="site-subtitle" itemprop="description">linkpwn</p>
       <a>
         <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
       </a>
@@ -198,7 +198,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
+      <meta itemprop="description" content="linkpwn的学习记录">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -263,7 +263,7 @@
       
         <ol>
 <li><p>这题主要记录一下怎么看汇编</p>
-<p><img src="/2025/03/16/pwnable-start-%E5%8F%AA%E8%83%BD%E7%9C%8B%E6%B1%87%E7%BC%96/1.png" alt="1"></p>
+<p><img src="/./pwnable-start-%E5%8F%AA%E8%83%BD%E7%9C%8B%E6%B1%87%E7%BC%96/1.png" alt="1"></p>
 </li>
 <li><p>这题的思路就是在栈上写入shellcode,所以我们就要去找栈的地址。</p>
 <p>这里就需要要一个payload</p>
@@ -383,7 +383,7 @@
     <img class="site-author-image" itemprop="image" alt="linkpwn"
       src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">linkpwn</p>
-  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+  <div class="site-description" itemprop="description">linkpwn的学习记录</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">

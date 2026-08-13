@@ -29,14 +29,14 @@
 <meta property="og:site_name" content="网络幻影">
 <meta property="og:description" content="wuuu,上次烽火杯的smc没写出来，这次的nepctf的smc也没写出了，所以打算总结一下smc，并且以后碰到smc都往这个blog里面放了。 简述一下原理: 在CTF逆向工程中，SMC（Self-Modifying Code，自修改代码） 是一种常见的反分析技术。其核心原理是程序在运行时动态修改自身的指令代码，使得静态分析工具（如IDA Pro）无法直接获取完整的可执行逻辑，从而增加逆向难度。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://linkpwn.github.io/2025/07/28/smc/1.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/07/28/smc/2.png">
+<meta property="og:image" content="http://linkpwn.github.io/smc/1.png">
+<meta property="og:image" content="http://linkpwn.github.io/smc/2.png">
 <meta property="article:published_time" content="2025-07-28T11:47:53.000Z">
-<meta property="article:modified_time" content="2025-09-23T13:06:40.102Z">
+<meta property="article:modified_time" content="2025-09-23T13:06:40.000Z">
 <meta property="article:author" content="linkpwn">
-<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta property="article:tag" content="ctf学习, 编程学习, 游戏, 日常">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://linkpwn.github.io/2025/07/28/smc/1.png">
+<meta name="twitter:image" content="http://linkpwn.github.io/smc/1.png">
 
 <link rel="canonical" href="http://linkpwn.github.io/2025/07/28/smc/">
 
@@ -105,7 +105,7 @@
       <h1 class="site-title">网络幻影</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
-      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <p class="site-subtitle" itemprop="description">linkpwn</p>
       <a>
         <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
       </a>
@@ -199,7 +199,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
+      <meta itemprop="description" content="linkpwn的学习记录">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -273,8 +273,8 @@
 <p>这个rc4的魔改解出来是个错的，就不详细解释了。</p>
 <p>进入正文，反思一下我这里没解出来主要是没找到反调试的地方，因为IDA没把他识别成函数，藏在汇编里面。</p>
 <p>要自己去翻汇编代码，给他P重定义一下</p>
-<p><img src="/2025/07/28/smc/1.png" alt="1"></p>
-<p><img src="/2025/07/28/smc/2.png" alt="2"></p>
+<p><img src="/./smc/1.png" alt="1"></p>
+<p><img src="/./smc/2.png" alt="2"></p>
 <p>只能硬找莫得办法，重定义后Tab</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// write access to const memory has been detected, the output may be wrong!</span></span><br><span class="line"><span class="type">void</span> *<span class="title function_">sub_401500</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">void</span> *result; <span class="comment">// eax</span></span><br><span class="line"></span><br><span class="line">  result = (<span class="type">void</span> *)(NtCurrentPeb()-&gt;NtGlobalFlag &amp; <span class="number">0x70</span>);</span><br><span class="line">  <span class="keyword">if</span> ( !result )</span><br><span class="line">  &#123;</span><br><span class="line">    *(&amp;loc_40902A + <span class="number">1</span>) ^= <span class="number">0x65u</span>;</span><br><span class="line">    *((_BYTE *)&amp;loc_40902A + <span class="number">2</span>) ^= <span class="number">0xFAu</span>;</span><br><span class="line">    *(&amp;loc_407080 + <span class="number">2</span>) ^= <span class="number">5u</span>;</span><br><span class="line">    result = &amp;loc_40B077;</span><br><span class="line">    loc_40B077 ^= <span class="number">0x10u</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -435,7 +435,7 @@
     <img class="site-author-image" itemprop="image" alt="linkpwn"
       src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">linkpwn</p>
-  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+  <div class="site-description" itemprop="description">linkpwn的学习记录</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">

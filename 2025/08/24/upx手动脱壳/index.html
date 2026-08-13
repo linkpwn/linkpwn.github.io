@@ -29,27 +29,27 @@
 <meta property="og:site_name" content="网络幻影">
 <meta property="og:description" content="感谢霍爷教我upx脱壳 第一步设置入口处断点，只保留入口处断点  调试–&gt;运行 ,达到pushad  在堆栈区下断点  F9运行到popad  看到循环F4跳过  接着看到一大部分寄存器初始化  F7单步进入  达到入口  用syclla  先点击转储，出现一个dump.exe在用IAT两次确定后获取导入，最后修复转储是选择刚刚的dump.exe就可以得到dump_SCY.exe，用IDA打">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://linkpwn.github.io/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/1.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/2.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/3.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/4.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/5.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/6.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/7.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/8.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/9.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/10.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/11.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/12.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/13.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/14.png">
-<meta property="og:image" content="http://linkpwn.github.io/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/15.png">
+<meta property="og:image" content="http://linkpwn.github.io/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/1.png">
+<meta property="og:image" content="http://linkpwn.github.io/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/2.png">
+<meta property="og:image" content="http://linkpwn.github.io/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/3.png">
+<meta property="og:image" content="http://linkpwn.github.io/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/4.png">
+<meta property="og:image" content="http://linkpwn.github.io/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/5.png">
+<meta property="og:image" content="http://linkpwn.github.io/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/6.png">
+<meta property="og:image" content="http://linkpwn.github.io/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/7.png">
+<meta property="og:image" content="http://linkpwn.github.io/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/8.png">
+<meta property="og:image" content="http://linkpwn.github.io/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/9.png">
+<meta property="og:image" content="http://linkpwn.github.io/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/10.png">
+<meta property="og:image" content="http://linkpwn.github.io/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/11.png">
+<meta property="og:image" content="http://linkpwn.github.io/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/12.png">
+<meta property="og:image" content="http://linkpwn.github.io/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/13.png">
+<meta property="og:image" content="http://linkpwn.github.io/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/14.png">
+<meta property="og:image" content="http://linkpwn.github.io/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/15.png">
 <meta property="article:published_time" content="2025-08-24T02:43:01.000Z">
-<meta property="article:modified_time" content="2025-10-09T07:29:57.844Z">
+<meta property="article:modified_time" content="2025-10-09T07:29:57.000Z">
 <meta property="article:author" content="linkpwn">
-<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta property="article:tag" content="ctf学习, 编程学习, 游戏, 日常">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://linkpwn.github.io/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/1.png">
+<meta name="twitter:image" content="http://linkpwn.github.io/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/1.png">
 
 <link rel="canonical" href="http://linkpwn.github.io/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/">
 
@@ -118,7 +118,7 @@
       <h1 class="site-title">网络幻影</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
-      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <p class="site-subtitle" itemprop="description">linkpwn</p>
       <a>
         <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
       </a>
@@ -212,7 +212,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
+      <meta itemprop="description" content="linkpwn的学习记录">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -277,43 +277,43 @@
       
         <p>感谢霍爷教我upx脱壳</p>
 <p>第一步设置入口处断点，只保留入口处断点</p>
-<p><img src="/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/1.png" alt="1"></p>
+<p><img src="/./upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/1.png" alt="1"></p>
 <p>调试–&gt;运行 ,达到pushad</p>
-<p><img src="/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/2.png" alt="2"></p>
+<p><img src="/./upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/2.png" alt="2"></p>
 <p>在堆栈区下断点</p>
-<p><img src="/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/3.png" alt="3"></p>
+<p><img src="/./upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/3.png" alt="3"></p>
 <p>F9运行到popad</p>
-<p><img src="/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/4.png" alt="4"></p>
+<p><img src="/./upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/4.png" alt="4"></p>
 <p>看到循环F4跳过</p>
-<p><img src="/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/5.png" alt="5"></p>
+<p><img src="/./upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/5.png" alt="5"></p>
 <p>接着看到一大部分寄存器初始化</p>
-<p><img src="/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/6.png" alt="6"></p>
+<p><img src="/./upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/6.png" alt="6"></p>
 <p>F7单步进入</p>
-<p><img src="/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/7.png" alt="7"></p>
+<p><img src="/./upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/7.png" alt="7"></p>
 <p>达到入口</p>
-<p><img src="/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/8.png" alt="8"></p>
+<p><img src="/./upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/8.png" alt="8"></p>
 <p>用syclla</p>
-<p><img src="/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/9.png" alt="9"></p>
+<p><img src="/./upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/9.png" alt="9"></p>
 <p>先点击转储，出现一个dump.exe在用IAT两次确定后获取导入，最后修复转储是选择刚刚的dump.exe就可以得到dump_SCY.exe，用IDA打开</p>
-<p><img src="/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/10.png" alt="10"></p>
+<p><img src="/./upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/10.png" alt="10"></p>
 <p>成功脱壳。</p>
 <p>变异upx</p>
 <p>这个是0xGame2025的一个upx，用工具根本脱不了，手托也好难。</p>
 <p>这里记录一下</p>
 <p>首先这个是个elf文件只能到kali上动调，而且这里还有个细节问题，</p>
-<p><img src="/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/11.png" alt="11"></p>
+<p><img src="/./upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/11.png" alt="11"></p>
 <p>e_type字段的可能值：<br>0x01 &#x3D; ET_REL - 可重定位文件<br>0x02 &#x3D; ET_EXEC - 可执行文件<br>0x03 &#x3D; ET_DYN - 共享目标文件<br>0x04 &#x3D; ET_CORE - 核心转储文件</p>
 <p>我们这里03会导致远程连接出现问题要共享库的参数之类的，所以行不通，要把03改成02，但是放在虚拟记得文件不能改，只要改放如IDA的附件，不然也会出错。</p>
-<p><img src="/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/12.png" alt="11"></p>
-<p><img src="/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/13.png" alt="11"></p>
+<p><img src="/./upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/12.png" alt="11"></p>
+<p><img src="/./upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/13.png" alt="11"></p>
 <p>flag长度是56</p>
 <p>运行debug</p>
-<p><img src="/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/14.png" alt="11"></p>
+<p><img src="/./upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/14.png" alt="11"></p>
 <p>用脚本dump</p>
 <p>在IDA内运行</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> ida_bytes <span class="keyword">import</span> get_bytes</span><br><span class="line"><span class="keyword">from</span> ida_kernwin <span class="keyword">import</span> ask_addr, ask_file, warning, info</span><br><span class="line"><span class="keyword">import</span> ida_segment</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dump_memory_to_file</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    从IDA数据库中dump指定范围的内存到文件中。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># 1. 获取要dump的内存范围</span></span><br><span class="line">    <span class="comment"># 尝试获取当前光标所在的段作为默认范围</span></span><br><span class="line">    current_ea = get_screen_ea()</span><br><span class="line">    current_seg = ida_segment.getseg(current_ea)</span><br><span class="line">    </span><br><span class="line">    default_start = current_seg.start_ea <span class="keyword">if</span> current_seg <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">    default_end = current_seg.end_ea <span class="keyword">if</span> current_seg <span class="keyword">else</span> <span class="number">0x10000</span></span><br><span class="line"></span><br><span class="line">    start_addr = ask_addr(default_start, <span class="string">&quot;请输入起始地址 (start address):&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> start_addr <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        info(<span class="string">&quot;操作已取消。&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    end_addr = ask_addr(default_end, <span class="string">&quot;请输入结束地址 (end address):&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> end_addr <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        info(<span class="string">&quot;操作已取消。&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 2. 地址合法性校验</span></span><br><span class="line">    <span class="keyword">if</span> start_addr &gt;= end_addr:</span><br><span class="line">        warning(<span class="string">f&quot;起始地址 $<span class="subst">&#123;start_addr:x&#125;</span>$ 不能大于或等于结束地址 $<span class="subst">&#123;end_addr:x&#125;</span>$。&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    size = end_addr - start_addr</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;准备从 $<span class="subst">&#123;start_addr:x&#125;</span>$ dump 到 $<span class="subst">&#123;end_addr:x&#125;</span>$ (大小: <span class="subst">&#123;size&#125;</span> 字节)...&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 3. 获取内存内容</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        content = get_bytes(start_addr, size)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> content:</span><br><span class="line">            warning(<span class="string">f&quot;无法从地址范围 $<span class="subst">&#123;start_addr:x&#125;</span>$ - $<span class="subst">&#123;end_addr:x&#125;</span>$ 读取到有效数据。&quot;</span>)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        warning(<span class="string">f&quot;使用 get_bytes 时发生错误: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 4. 获取保存路径</span></span><br><span class="line">    <span class="comment"># 建议默认文件名，并允许用户修改</span></span><br><span class="line">    default_filename = <span class="string">f&quot;dump_<span class="subst">&#123;start_addr:x&#125;</span>_<span class="subst">&#123;end_addr:x&#125;</span>.bin&quot;</span></span><br><span class="line">    save_path = ask_file(<span class="number">1</span>, default_filename, <span class="string">&quot;请选择保存路径和文件名&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> save_path:</span><br><span class="line">        info(<span class="string">&quot;操作已取消。&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 5. 写入文件 (使用 with 语句)</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(save_path, <span class="string">&quot;wb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">            f.write(content)</span><br><span class="line">        info(<span class="string">f&quot;成功将 <span class="subst">&#123;<span class="built_in">len</span>(content)&#125;</span> 字节的数据写入到:\n<span class="subst">&#123;save_path&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">except</span> IOError <span class="keyword">as</span> e:</span><br><span class="line">        warning(<span class="string">f&quot;写入文件时发生错误: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># --- 执行脚本 ---</span></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    dump_memory_to_file()</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2025/08/24/upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/15.png" alt="11"></p>
+<p><img src="/./upx%E6%89%8B%E5%8A%A8%E8%84%B1%E5%A3%B3/15.png" alt="11"></p>
 
     </div>
 
@@ -419,7 +419,7 @@
     <img class="site-author-image" itemprop="image" alt="linkpwn"
       src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">linkpwn</p>
-  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+  <div class="site-description" itemprop="description">linkpwn的学习记录</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">

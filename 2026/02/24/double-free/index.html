@@ -29,13 +29,13 @@
 <meta property="og:site_name" content="网络幻影">
 <meta property="og:description" content="double free简介Double Free 是一种常见的内存漏洞，发生在程序错误地两次释放同一块内存时。程序在使用 free() 函数释放内存后，如果不小心再次释放同一块内存，就会破坏堆内存的管理结构。 这种漏洞让攻击者可以利用程序的错误，操控堆内存的结构，进而可能控制程序的执行流程，执行恶意代码，甚至窃取敏感信息。为了避免这种情况，通常需要在释放内存后将指针设为 NULL，确保不会再次释放">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://linkpwn.github.io/2026/02/24/double-free/1.png">
+<meta property="og:image" content="http://linkpwn.github.io/double-free/1.png">
 <meta property="article:published_time" content="2026-02-24T07:25:29.000Z">
-<meta property="article:modified_time" content="2026-02-25T11:45:20.566Z">
+<meta property="article:modified_time" content="2026-02-25T11:45:20.000Z">
 <meta property="article:author" content="linkpwn">
-<meta property="article:tag" content="ctf学习，编程学习，游戏，日常">
+<meta property="article:tag" content="ctf学习, 编程学习, 游戏, 日常">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://linkpwn.github.io/2026/02/24/double-free/1.png">
+<meta name="twitter:image" content="http://linkpwn.github.io/double-free/1.png">
 
 <link rel="canonical" href="http://linkpwn.github.io/2026/02/24/double-free/">
 
@@ -104,7 +104,7 @@
       <h1 class="site-title">网络幻影</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
-      <p class="site-subtitle" itemprop="description">linkpwn太卷了?</p>
+      <p class="site-subtitle" itemprop="description">linkpwn</p>
       <a>
         <img class="custom-logo-image" src="/uploads/custom-logo.jpg" alt="网络幻影">
       </a>
@@ -198,7 +198,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
+      <meta itemprop="description" content="linkpwn的学习记录">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -305,7 +305,7 @@
 
 <p>这样系统不会检测到。</p>
 <p>那我们怎么利用它呢？</p>
-<p><img src="/2026/02/24/double-free/1.png" alt="1"></p>
+<p><img src="/./double-free/1.png" alt="1"></p>
 <p>然后我接着申请就会依次申请回来chunk2 ,chunk1,第三次申请就会把malloc_hook当做一个堆块申请过来，我们就可以该他的地址里保存</p>
 <p>的内容。</p>
 <h2 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h2><p>伪代码</p>
@@ -362,8 +362,8 @@
       <i class="fa fa-chevron-left"></i> unlink
     </a></div>
       <div class="post-nav-item">
-    <a href="/2026/07/07/%E6%9A%91%E6%9C%9F%E7%BA%BF%E4%B8%8B%E8%B5%9B%E8%AE%AD%E7%BB%83/" rel="next" title="暑期线下赛训练">
-      暑期线下赛训练 <i class="fa fa-chevron-right"></i>
+    <a href="/2026/04/08/hello-world/" rel="next" title="Hello World">
+      Hello World <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -432,7 +432,7 @@
     <img class="site-author-image" itemprop="image" alt="linkpwn"
       src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">linkpwn</p>
-  <div class="site-description" itemprop="description">linkpwn的学习经历</div>
+  <div class="site-description" itemprop="description">linkpwn的学习记录</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">

